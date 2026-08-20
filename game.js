@@ -402,79 +402,69 @@ class Game {
     document.body.classList.add('in-menu');
     this.setupThree();
     this.setupEvents();
-    this.updateHighScoreDisplay();
-    
-    // Initialize both audio engines
-    audio.init();
-    audio.setGameState('menu');
-    menuAudio.init();
-    
-    // FORCED AUTOMATIC BGM START — aggressive global listener unlocks
-    // high-volume opening menu music on the very first user interaction.
-    const forceStartOpeningAudio = () => {
-      // Resume audio context if suspended
-      if (menuAudio.ctx && menuAudio.ctx.state === 'suspended') {
-        menuAudio.ctx.resume();
-      }
-      // Force high-volume menu BGM (master gain hardcoded to 0.5 in WebMenuAudio)
-      menuAudio.playMenuBGM();
-      audio.setGameState('menu');
-      
-      // Unlock Speech Synthesis (TTS) for item collection voice readout
-      if ('speechSynthesis' in window) {
-        const silentUtterance = new SpeechSynthesisUtterance('');
-        window.speechSynthesis.speak(silentUtterance);
-        window.speechSynthesis.getVoices();
-      }
-      
-      // Remove listeners once audio has successfully unlocked and started
-      ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
-        document.removeEventListener(evt, forceStartOpeningAudio);
-        window.removeEventListener(evt, forceStartOpeningAudio);
-      });
-    };
-    
-    // Attach to both document and window for maximum coverage
-    ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
-      document.addEventListener(evt, forceStartOpeningAudio, { once: true, passive: true });
-      window.addEventListener(evt, forceStartOpeningAudio, { once: true, passive: true });
-    });
-    
-    // MOBILE AUDIO UNLOCKER — dedicated aggressive unlock for mobile WebAudio
-    // Runs on touchstart/touchend/click to ensure audio context is resumed
-    // and menu BGM plays immediately on first mobile gesture.
-    const unlockMobileAudio = () => {
-      if (window.menuAudio && window.menuAudio.ctx) {
-        if (window.menuAudio.ctx.state === 'suspended') {
-          window.menuAudio.ctx.resume().then(() => {
-            window.menuAudio.playMenuBGM();
-          });
-        } else {
-          window.menuAudio.playMenuBGM();
-        }
-      }
-      // Also resume main audio engine if needed
-      if (window.audio && window.audio.ctx && window.audio.ctx.state === 'suspended') {
-        window.audio.ctx.resume();
-      }
-      // Unlock Speech Synthesis (TTS) for item collection voice readout
-      if ('speechSynthesis' in window) {
-        const silentUtterance = new SpeechSynthesisUtterance('');
-        window.speechSynthesis.speak(silentUtterance);
-        // Preload voices for female voice selection
-        window.speechSynthesis.getVoices();
-      }
-      ['touchstart', 'touchend', 'click'].forEach(evt => {
-        document.removeEventListener(evt, unlockMobileAudio);
-        window.removeEventListener(evt, unlockMobileAudio);
-      });
-    };
-    
-    // Attach mobile audio unlocker to both document and window
-    ['touchstart', 'touchend', 'click'].forEach(evt => {
-      document.addEventListener(evt, unlockMobileAudio, { passive: true });
-      window.addEventListener(evt, unlockMobileAudio, { passive: true });
-    });
+this.updateHighScoreDisplay();
+     
+     // Initialize both audio engines
+     audio.init();
+     audio.setGameState('menu');
+     menuAudio.init();
+     
+     // Audio unlocker — only resumes context on first interaction, does NOT start BGM on menu
+     const unlockAudioOnInteraction = () => {
+       // Resume audio contexts if suspended
+       if (menuAudio.ctx && menuAudio.ctx.state === 'suspended') {
+         menuAudio.ctx.resume();
+       }
+       if (audio.ctx && audio.ctx.state === 'suspended') {
+         audio.ctx.resume();
+       }
+       // Unlock Speech Synthesis (TTS) for item collection voice readout
+       if ('speechSynthesis' in window) {
+         const silentUtterance = new SpeechSynthesisUtterance('');
+         window.speechSynthesis.speak(silentUtterance);
+         window.speechSynthesis.getVoices();
+       }
+       
+       // Remove listeners once audio context is unlocked
+       ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+         document.removeEventListener(evt, unlockAudioOnInteraction);
+         window.removeEventListener(evt, unlockAudioOnInteraction);
+       });
+     };
+     
+     // Attach to both document and window for maximum coverage
+     ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+       document.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
+       window.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
+     });
+     
+     // MOBILE AUDIO UNLOCKER — dedicated aggressive unlock for mobile WebAudio
+     // Runs on touchstart/touchend/click to ensure audio context is resumed
+     // Does NOT start BGM on menu — only unlocks context.
+     const unlockMobileAudio = () => {
+       if (window.menuAudio && window.menuAudio.ctx && window.menuAudio.ctx.state === 'suspended') {
+         window.menuAudio.ctx.resume();
+       }
+       if (window.audio && window.audio.ctx && window.audio.ctx.state === 'suspended') {
+         window.audio.ctx.resume();
+       }
+       // Unlock Speech Synthesis (TTS) for item collection voice readout
+       if ('speechSynthesis' in window) {
+         const silentUtterance = new SpeechSynthesisUtterance('');
+         window.speechSynthesis.speak(silentUtterance);
+         window.speechSynthesis.getVoices();
+       }
+       ['touchstart', 'touchend', 'click'].forEach(evt => {
+         document.removeEventListener(evt, unlockMobileAudio);
+         window.removeEventListener(evt, unlockMobileAudio);
+       });
+     };
+     
+     // Attach mobile audio unlocker to both document and window
+     ['touchstart', 'touchend', 'click'].forEach(evt => {
+       document.addEventListener(evt, unlockMobileAudio, { passive: true });
+       window.addEventListener(evt, unlockMobileAudio, { passive: true });
+     });
     
     // Check persistent unlocks against stored stats (high score / level)
     // before rendering the skin grid so already-earned skins display unlocked.
@@ -1652,9 +1642,9 @@ class Game {
     this.inputCooldownUntil = performance.now() + 600; // brief cooldown so trailing touches don't immediately hit menu buttons
     if (this.dom.pauseScreen) this.dom.pauseScreen.classList.remove('active');
     if (this.dom.pauseBtn) this.dom.pauseBtn.style.display = 'none';
-    audio.resume();
     audio.setGameState('menu');
-    menuAudio.playMenuBGM(); // Restart procedural menu music
+    menuAudio.stopBGM(); // Ensure menu music is stopped — menu is silent
+    audio.suspend(); // Suspend audio context to silence all SFX/music
     this.resetGameValues();
     this.showMenuScreen();
   }
@@ -2638,8 +2628,8 @@ class Game {
     if (this.dom.pauseBtn) {
       this.dom.pauseBtn.style.display = 'none';
     }
-    audio.setGameState('menu'); // return soundtrack to menu state
-    menuAudio.playMenuBGM(); // Restart procedural menu music
+    audio.setGameState('menu'); // return soundtrack to menu state (silent)
+    menuAudio.stopBGM(); // Ensure menu music is stopped — menu is silent
     
     // Voice speech synthesis congratulating the player (female voice)
     this.speakFemale("Congratulations! You won!");

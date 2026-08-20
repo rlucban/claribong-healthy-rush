@@ -3115,12 +3115,12 @@ body:not(.playing) #pause-btn {
     padding: 3px 12px;
   }
 
-  /* Radial menu container - fixed circular layout */
+  /* Radial menu container - increased size for proper satellite orbit */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: 280px !important;
-    height: 280px !important;
-    margin: 20px auto !important;
+    width: 320px !important;
+    height: 320px !important;
+    margin: 15px auto !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -3129,22 +3129,26 @@ body:not(.playing) #pause-btn {
   /* Base button - prevent flex collapse, use absolute positioning */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: 70px !important;
-    height: 70px !important;
+    width: 72px !important;
+    height: 72px !important;
+    flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
-    font-size: 0.65rem !important;
-    hyphens: none !important;
+    font-size: 0.62rem !important;
+    font-weight: 800 !important;
+    line-height: 1.1 !important;
+    overflow: visible !important;
     word-break: normal !important;
-    white-space: normal !important;
-    line-height: 1.0 !important;
+    hyphens: manual !important;
+    text-align: center !important;
+    padding: 2px !important;
   }
 
-  /* Center PLAY button */
+  /* Center PLAY button - proportional sizing */
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
-    width: 90px !important;
-    height: 90px !important;
+    width: 95px !important;
+    height: 95px !important;
     border-width: 6px;
     background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%);
   }
@@ -3154,27 +3158,34 @@ body:not(.playing) #pause-btn {
   }
 
   .fruit-btn--play .fruit-label {
-    font-size: clamp(0.85rem, 3vh, 1.4rem);
-    hyphens: none !important;
+    font-size: 0.85rem !important;
+    hyphens: manual !important;
     word-break: normal !important;
     white-space: normal !important;
-    line-height: 1.0 !important;
+    line-height: 1.1 !important;
+    overflow: visible !important;
+    text-align: center !important;
+    padding: 2px !important;
   }
 
-  /* Satellite buttons - radial positioning */
-  .fruit-btn--red    { top: 0% !important; left: 50% !important; transform: translate(-50%, 0) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }       /* Top */
-  .fruit-btn--yellow { top: 35% !important; right: 0% !important; transform: translate(0, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }    /* Right */
-  .fruit-btn--kiwi   { top: 35% !important; left: 0% !important; transform: translate(0, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }    /* Left */
-  .fruit-btn--orange { bottom: 5% !important; right: 15% !important; transform: translate(0, 0) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* Bottom-Right */
-  .fruit-btn--grape  { bottom: 5% !important; left: 15% !important; transform: translate(0, 0) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* Bottom-Left */
+  /* Satellite buttons - radial positioning with increased orbit radius (~125px from center) */
+  .fruit-btn--red    { top: 0% !important; left: 50% !important; transform: translate(-50%, 0) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }       /* Top (Character Select) */
+  .fruit-btn--yellow { top: 22% !important; right: 0% !important; transform: translate(0, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }    /* Right (Fruit Trivia) */
+  .fruit-btn--kiwi   { top: 22% !important; left: 0% !important; transform: translate(0, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }    /* Left (Leaderboard) */
+  .fruit-btn--orange { bottom: 10% !important; right: 8% !important; transform: translate(0, 0) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* Bottom-Right (Grading System) */
+  .fruit-btn--grape  { bottom: 10% !important; left: 8% !important; transform: translate(0, 0) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* Bottom-Left (Settings) */
 
-/* Label text wrapping fix for all buttons */
+  /* Label text wrapping fix for all buttons - prevent clipping */
   #start-screen .fruit-label {
-    hyphens: none !important;
+    hyphens: manual !important;
     word-break: normal !important;
     white-space: normal !important;
-    line-height: 1.0 !important;
-    font-size: 0.65rem !important;
+    line-height: 1.1 !important;
+    font-size: 0.62rem !important;
+    font-weight: 800 !important;
+    overflow: visible !important;
+    text-align: center !important;
+    padding: 2px !important;
   }
 }
 

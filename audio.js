@@ -487,8 +487,12 @@ class AudioEngine {
   }
 
   scheduleNote(beat, time) {
-    if (this.gameState === 'menu' || this.gameState === 'gameover') {
-      // Play a simple slow ambient background chord
+    // Completely silent in menu state — no ambient chords, no music
+    if (this.gameState === 'menu') {
+      return;
+    }
+    if (this.gameState === 'gameover') {
+      // Play a simple slow ambient background chord only on gameover
       if (beat === 0) {
         this.playChord(time, [110, 165, 220], 2.0, 'sine'); // A minor 5th chord
       }
