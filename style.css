@@ -3036,20 +3036,75 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.55rem, 2.5vw, 0.75rem);
     padding: 3px 12px;
   }
+  /* Radial menu container with responsive scale - matches desktop exactly */
   #start-screen .arcade-cluster {
-    width: min(50vh, 88vw);
-    height: min(50vh, 88vw);
+    position: relative;
+    width: 380px;
+    height: 380px;
+    max-width: 90vw;
+    max-height: 90vw;
+    transform: scale(min(1, calc(100vw / 380)));
+    transform-origin: center center;
   }
+
+  /* Base button - fixed 80px diameter for outer buttons */
   #start-screen .fruit-btn {
-    width: clamp(70px, 24%, 90px);
-    height: clamp(70px, 24%, 90px);
+    width: 80px !important;
+    height: 80px !important;
     padding: 6px;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
+
+  /* Center PLAY button - 110px diameter */
   #start-screen .fruit-btn--play {
-    width: 42%;
-    height: 42%;
+    width: 110px !important;
+    height: 110px !important;
+    border-width: 6px;
   }
+
+  /* Icon sizing */
+  #start-screen .fruit-btn .fruit-icon {
+    font-size: 1.8rem;
+    line-height: 1;
+    margin-bottom: 2px;
+  }
+
+  #start-screen .fruit-btn--play .fruit-icon {
+    font-size: 2.8rem;
+  }
+
+  /* Label styling - compact, no overlap */
+  #start-screen .fruit-btn .fruit-label {
+    font-size: 0.65rem !important;
+    line-height: 1;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    padding: 0 4px;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  #start-screen .fruit-btn--play .fruit-icon {
+    font-size: 2.8rem;
+  }
+
+  #start-screen .fruit-btn--play .fruit-label {
+    font-size: 0.7rem !important;
+    line-height: 1;
+  }
+
+  /* Radial positions - 35% radius from center, matching desktop */
+  .fruit-btn--red    { left: 50%; top: 15%; }
+  .fruit-btn--yellow { left: 83%; top: 39%; }
+  .fruit-btn--kiwi   { left: 17%; top: 39%; }
+  .fruit-btn--orange { left: 71%; top: 78%; }
+  .fruit-btn--grape  { left: 29%; top: 78%; }
   #start-screen .fruit-btn--play .fruit-label {
     font-size: 0.75rem !important;
     line-height: 1.1;
@@ -3091,49 +3146,11 @@ body:not(.playing) #pause-btn {
   .fruit-btn--orange { left: 71%; top: 78%; }
   .fruit-btn--grape  { left: 29%; top: 78%; }
 
-  /* Extra small mobile (≤ 600px): larger buttons, more radial spread */
+  /* Extra small mobile (≤ 600px) - use same fixed layout, just scale container */
   @media (max-width: 600px) {
     #start-screen .arcade-cluster {
-      width: min(54vh, 92vw);
-      height: min(54vh, 92vw);
+      transform: scale(min(1, calc(100vw / 380)));
     }
-    #start-screen .fruit-btn {
-      width: clamp(80px, 26%, 95px);
-      height: clamp(80px, 26%, 95px);
-      padding: 8px;
-      box-sizing: border-box;
-    }
-    #start-screen .fruit-btn .fruit-icon {
-      font-size: clamp(1.4rem, 5vh, 2.2rem);
-      margin-bottom: 4px;
-    }
-    #start-screen .fruit-btn .fruit-label {
-      font-size: 0.65rem !important;
-      line-height: 1.1;
-      word-wrap: break-word;
-      white-space: normal;
-      max-width: 100%;
-      padding: 0 4px;
-    }
-    #start-screen .fruit-btn--play {
-      width: 110px !important;
-      height: 110px !important;
-      max-width: 42%;
-      max-height: 42%;
-    }
-    #start-screen .fruit-btn--play .fruit-icon {
-      font-size: clamp(2.2rem, 9vh, 3.8rem);
-    }
-    #start-screen .fruit-btn--play .fruit-label {
-      font-size: 0.75rem !important;
-      line-height: 1.1;
-    }
-
-    .fruit-btn--red    { left: 50%; top: calc(11% - 14px); }
-    .fruit-btn--yellow { left: calc(86% + 10px); top: calc(36% - 8px); }
-    .fruit-btn--kiwi   { left: calc(14% - 10px); top: calc(36% - 8px); }
-    .fruit-btn--orange { left: calc(74% + 9px); top: calc(81% + 8px); }
-    .fruit-btn--grape  { left: calc(26% - 9px); top: calc(81% + 8px); }
   }
 
   /* Run Summary Box - Mobile */
@@ -3215,35 +3232,34 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.4rem, 0.8vh, 0.52rem);
   }
   #start-screen .fruit-btn {
-    width: clamp(70px, 24%, 85px);
-    height: clamp(70px, 24%, 85px);
+    width: 80px !important;
+    height: 80px !important;
     padding: 6px;
     box-sizing: border-box;
   }
+  #start-screen .fruit-btn--play {
+    width: 110px !important;
+    height: 110px !important;
+  }
   #start-screen .fruit-btn .fruit-icon {
-    font-size: clamp(1.2rem, 4vh, 1.8rem);
-    margin-bottom: 4px;
+    font-size: 1.8rem;
+    margin-bottom: 2px;
   }
   #start-screen .fruit-btn .fruit-label {
-    font-size: 0.6rem !important;
-    line-height: 1.05;
+    font-size: 0.65rem !important;
+    line-height: 1;
     word-wrap: break-word;
     white-space: normal;
     max-width: 100%;
     padding: 0 4px;
-  }
-  #start-screen .fruit-btn--play {
-    width: 100px !important;
-    height: 100px !important;
-    max-width: 42%;
-    max-height: 42%;
+    pointer-events: none;
   }
   #start-screen .fruit-btn--play .fruit-icon {
-    font-size: clamp(1.8rem, 8vh, 3.2rem);
+    font-size: 2.8rem;
   }
   #start-screen .fruit-btn--play .fruit-label {
     font-size: 0.7rem !important;
-    line-height: 1.05;
+    line-height: 1;
   }
   .fruit-icon {
     font-size: clamp(1rem, 3.5vh, 1.6rem);
@@ -3265,31 +3281,11 @@ body:not(.playing) #pause-btn {
   .fruit-btn--grape  { left: 29%; top: 78%; }
 }
 
-/* Extra-small phones (≤ 480px): further increase radial offset,
-   shrink buttons more, and tighten text sizing. */
+/* Extra-small phones (≤ 480px) - same fixed layout, scale container */
 @media (max-width: 480px) {
   #start-screen .arcade-cluster {
-    width: min(50vh, 90vw);
-    height: min(50vh, 90vw);
-  }
-  #start-screen .fruit-btn {
-    width: clamp(48px, 20%, 68px);
-    height: clamp(48px, 20%, 68px);
-  }
-  #start-screen .fruit-btn .fruit-label {
-    font-size: clamp(0.45rem, 1.2vh, 0.65rem);
-    line-height: 1.05;
-  }
-  #start-screen .fruit-btn--kiwi .fruit-label {
-    padding-left: clamp(6px, 1.5vw, 10px);
-    padding-right: clamp(6px, 1.5vw, 10px);
-  }
-
-  .fruit-btn--red    { left: 50%; top: 15%; }
-  .fruit-btn--yellow { left: 83%; top: 39%; }
-  .fruit-btn--kiwi   { left: 17%; top: 39%; }
-  .fruit-btn--orange { left: 71%; top: 78%; }
-  .fruit-btn--grape  { left: 29%; top: 78%; }
+    transform: scale(min(1, calc(100vw / 380)));
+}
 
   /* Run Summary Box - Extra small phones */
   .run-summary-box {
