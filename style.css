@@ -1455,10 +1455,10 @@ h1.game-title span {
   min-width: 48px;
   min-height: 48px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  background: #ffffff;
-  color: #2D3748;
+  border: 2px solid #88C999 !important;
+  box-shadow: 0 4px 10px rgba(40, 25, 5, 0.3);
+  background: #FFFDF0 !important;
+  color: #3D2E1E !important;
   font-size: clamp(1.4rem, 3vw, 1.6rem);
   font-weight: 900;
   display: flex !important;
@@ -1468,7 +1468,7 @@ h1.game-title span {
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
 /* Hide only outside an active run (main menu / Game Over / Victory). */
@@ -1478,11 +1478,13 @@ body:not(.playing) #pause-btn {
 
 #pause-btn:hover {
   transform: scale(1.1);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 16px rgba(40, 25, 5, 0.4);
+  border-color: #6eb87c !important;
 }
 
 #pause-btn:active {
   transform: scale(0.9);
+  border-color: #88C999 !important;
 }
 
 /* Low Health/High Junk Warning Screen Flash */
@@ -3332,15 +3334,23 @@ body.playing #grading-screen {
   z-index: 10000000 !important;
 }
 
-/* Wider card so the mission cards breathe; keep the parchment surface */
+/* Wider card so the mission cards breathe; cream theme */
 .pause-card {
   max-width: min(560px, 94vw);
   width: 100%;
   padding: clamp(22px, 5vw, 32px);
   gap: clamp(12px, 2.4vh, 18px);
+  background: #FFFDF0 !important;
+  border: 4px solid #88C999 !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 20px 60px rgba(40, 25, 5, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 0 rgba(160, 110, 60, 0.2) !important;
+  color: #3D2E1E !important;
 }
 
-/* ---- Large, glowing GAME PAUSED title ---- */
+/* ---- GAME PAUSED title - dark text ---- */
 .pause-title {
   margin: 0 auto;
   font-family: var(--font-display);
@@ -3349,15 +3359,12 @@ body.playing #grading-screen {
   text-transform: uppercase;
   letter-spacing: 0.03em;
   text-align: center;
-  background: linear-gradient(135deg, var(--glow-yellow) 0%, var(--glow-orange) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  text-shadow:
-    0 0 12px rgba(255, 234, 0, 0.65),
-    0 0 26px rgba(255, 145, 0, 0.55),
-    0 2px 8px rgba(0, 0, 0, 0.45);
-  filter: drop-shadow(0 0 8px rgba(255, 234, 0, 0.35));
-  animation: pause-glow-pulse 2.6s ease-in-out infinite;
+  color: #3D2E1E !important;
+  -webkit-text-fill-color: #3D2E1E !important;
+  background: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+  animation: none !important;
 }
 
 @keyframes pause-glow-pulse {
@@ -3383,20 +3390,20 @@ body.playing #grading-screen {
   margin: 0 auto;
   padding: clamp(6px, 1.5vh, 10px) clamp(16px, 3vw, 26px);
   border-radius: 999px;
-  background: linear-gradient(90deg, var(--glow-pink-bright) 0%, var(--pink-main) 100%);
-  color: #ffffff;
+  background: #E8F3E8 !important;
+  border: 2px solid #88C999 !important;
+  color: #3D2E1E !important;
   font-family: var(--font-display);
   font-size: clamp(0.75rem, 1.9vw, 0.95rem);
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  box-shadow: 0 4px 14px rgba(255, 96, 136, 0.4), 0 0 0 2px rgba(255,255,255,0.25);
-  text-shadow: 0 1px 3px rgba(0,0,0,0.35);
+  box-shadow: 0 4px 14px rgba(136, 201, 153, 0.3);
+  text-shadow: none !important;
 }
 
 .missions-banner-icon {
   font-size: clamp(1rem, 2.6vw, 1.25rem);
-  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
 }
 
 /* ---- Mission card list ---- */
@@ -3413,25 +3420,25 @@ body.playing #grading-screen {
   gap: clamp(10px, 2vw, 16px);
   padding: clamp(12px, 2.4vw, 18px);
   border-radius: 18px;
-  background: #ffffff;
-  border: 2px solid #e2e8f0;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  background: #FFFDF0 !important;
+  border: 2px solid #88C999 !important;
+  box-shadow: 0 4px 14px rgba(40, 25, 5, 0.1);
   text-align: left;
-  color: var(--text-main);
+  color: #3D2E1E !important;
 }
 
-/* DO'S — healthy missions (green tint) */
+/* DO'S — healthy missions (sage tint) */
 .mission-card.mission-do {
-  background: linear-gradient(135deg, #eafaf1 0%, #ffffff 100%);
-  border-color: #4caf50;
-  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.18);
+  background: #E8F3E8 !important;
+  border-color: #88C999 !important;
+  box-shadow: 0 4px 16px rgba(136, 201, 153, 0.2);
 }
 
-/* DON'TS — obstacle warning (amber/red tint) */
+/* DON'TS — obstacle warning (cream/amber tint) */
 .mission-card.mission-dont {
-  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
-  border-color: #ff9800;
-  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.22);
+  background: #F4EEDD !important;
+  border-color: #FFA500 !important;
+  box-shadow: 0 4px 16px rgba(255, 165, 0, 0.15);
 }
 
 .mission-icon {
@@ -3442,10 +3449,10 @@ body.playing #grading-screen {
   align-items: center;
   justify-content: center;
   font-size: clamp(1.3rem, 3.6vw, 1.8rem);
-  background: #ffffff;
-  border: 2px solid rgba(0, 0, 0, 0.08);
+  background: #FFFDF0 !important;
+  border: 2px solid #88C999 !important;
   border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(40, 25, 5, 0.1);
 }
 
 .mission-body {
@@ -3460,7 +3467,7 @@ body.playing #grading-screen {
   font-family: var(--font-display);
   font-size: clamp(0.78rem, 1.9vw, 0.95rem);
   font-weight: 800;
-  color: var(--text-main);
+  color: #3D2E1E !important;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -3475,7 +3482,8 @@ body.playing #grading-screen {
   flex: 1;
   height: 10px;
   min-width: 60px;
-  background: #e2e8f0;
+  background: #F4EEDD !important;
+  border: 2px solid #88C999 !important;
   border-radius: 999px;
   overflow: hidden;
 }
@@ -3488,12 +3496,12 @@ body.playing #grading-screen {
 }
 
 .progress-fill--green {
-  background: linear-gradient(90deg, var(--glow-green-bright) 0%, var(--glow-green) 100%);
+  background: linear-gradient(90deg, #48bb78 0%, #2ed573 100%);
   box-shadow: 0 0 8px rgba(0, 230, 118, 0.45);
 }
 
 .progress-fill--blue {
-  background: linear-gradient(90deg, var(--glow-blue-bright) 0%, var(--glow-blue) 100%);
+  background: linear-gradient(90deg, #2979ff 0%, #6fa8ff 100%);
   box-shadow: 0 0 8px rgba(41, 121, 255, 0.45);
 }
 
@@ -3501,14 +3509,14 @@ body.playing #grading-screen {
   font-family: var(--font-display);
   font-size: clamp(0.6rem, 1.5vw, 0.75rem);
   font-weight: 800;
-  color: var(--text-main);
+  color: #3D2E1E !important;
   min-width: 36px;
   text-align: center;
 }
 
 .mission-complete {
   font-size: clamp(0.85rem, 2.2vw, 1rem);
-  color: var(--glow-green);
+  color: #2F855A !important;
   font-weight: 800;
   opacity: 0;
   visibility: hidden;
@@ -3521,7 +3529,7 @@ body.playing #grading-screen {
   opacity: 1;
   visibility: visible;
   transform: scale(1);
-  filter: drop-shadow(0 0 8px var(--glow-green));
+  filter: drop-shadow(0 0 8px #2F855A);
 }
 
 .mission-warning-banner {
@@ -3531,15 +3539,15 @@ body.playing #grading-screen {
   gap: clamp(4px, 1vw, 8px);
   padding: clamp(4px, 1vh, 6px) clamp(10px, 2vw, 14px);
   border-radius: 12px;
-  background: rgba(255, 59, 48, 0.08);
-  border: 1px solid rgba(255, 59, 48, 0.35);
+  background: #FFF3E0 !important;
+  border: 2px solid #FFA500 !important;
 }
 
 .warning-text {
   font-family: var(--font-display);
   font-size: clamp(0.62rem, 1.5vw, 0.72rem);
   font-weight: 800;
-  color: #b3202e;
+  color: #B3202E !important;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -3548,7 +3556,7 @@ body.playing #grading-screen {
   font-family: var(--font-display);
   font-size: clamp(0.58rem, 1.4vw, 0.7rem);
   font-weight: 800;
-  color: #ce3a8a;
+  color: #CE3A8A !important;
 }
 
 /* ---- Pause control button row ---- */
