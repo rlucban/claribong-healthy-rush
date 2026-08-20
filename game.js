@@ -330,18 +330,7 @@ class Game {
       flashWordOverlay: document.getElementById('flash-word-overlay'),
       pauseScreen: document.getElementById('pause-screen'),
       resumeBtn: document.getElementById('resume-btn'),
-      
-      // Pause mission card references (Fruit Ninja-style MISSIONS & RULES)
-      pauseMission1: document.getElementById('pause-mission1'),
-      pauseMission2: document.getElementById('pause-mission2'),
-      pauseMission3: document.getElementById('pause-mission3'),
-      pauseM1Fill: document.getElementById('pause-m1-fill'),
-      pauseM1Count: document.getElementById('pause-m1-count'),
-      pauseM1Check: document.getElementById('pause-m1-check'),
-      pauseM2Fill: document.getElementById('pause-m2-fill'),
-      pauseM2Count: document.getElementById('pause-m2-count'),
-      pauseM2Check: document.getElementById('pause-m2-check'),
-      pauseM3Count: document.getElementById('pause-m3-count'),
+      pauseCardsContainer: document.getElementById('pause-cards-container'),
       
       restartBtnPause: document.getElementById('restart-btn-pause'),
       quitBtn: document.getElementById('quit-btn'),
@@ -526,6 +515,10 @@ class Game {
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
     this.renderer.toneMappingExposure = 1.3;
     this.container.appendChild(this.renderer.domElement);
+    // Tag the WebGL canvas so CSS state rules (#game-canvas, .threejs-canvas)
+    // can hide it in the menu and show it during gameplay.
+    this.renderer.domElement.id = 'game-canvas';
+    this.renderer.domElement.classList.add('threejs-canvas', 'game-canvas');
 
     // 4. Lighting System - warm, bright, welcoming
     const ambientLight = new THREE.AmbientLight(0xffeedd, 0.9);
@@ -1521,6 +1514,8 @@ class Game {
     // Main Menu back — it can only re-appear via "QUIT TO MENU" in the
     // Pause modal (quitToMenu) or after the game ends (gameOver/victory).
     document.body.classList.remove('in-menu');
+    document.body.classList.remove('gameover');
+    document.body.classList.remove('victory');
     document.body.classList.add('playing');
     if (this.dom.charSelectScreen) this.dom.charSelectScreen.classList.remove('active');
     if (this.dom.settingsScreen) this.dom.settingsScreen.classList.remove('active');
@@ -1598,34 +1593,53 @@ class Game {
   }
 
   updatePauseMissions() {
-    if (!this.dom.pauseMission1 || !this.dom.pauseMission2 || !this.dom.pauseMission3) {
-      return;
-    }
+    const container = document.getElementById('pause-cards-container');
+    if (!container) return;
 
     // Mission 1 — DO'S: Fresh Fruits & Vegetables (combined count)
     const produceCount = this.fruitsCollectedInRun + this.veggiesCollectedInRun;
     const produceTarget = this.missionTargets.produce;
     const producePct = Math.min(100, (produceCount / produceTarget) * 100);
-    if (this.dom.pauseM1Count) this.dom.pauseM1Count.textContent = `${produceCount}/${produceTarget}`;
-    if (this.dom.pauseM1Fill) this.dom.pauseM1Fill.style.width = `${producePct}%`;
-    if (this.dom.pauseM1Check) {
-      this.dom.pauseM1Check.classList.toggle('show', produceCount >= produceTarget);
-    }
 
     // Mission 2 — DO'S: Water Bottles (hydration)
     const waterCount = this.waterCollectedInRun;
     const waterTarget = this.missionTargets.water;
     const waterPct = Math.min(100, (waterCount / waterTarget) * 100);
-    if (this.dom.pauseM2Count) this.dom.pauseM2Count.textContent = `${waterCount}/${waterTarget}`;
-    if (this.dom.pauseM2Fill) this.dom.pauseM2Fill.style.width = `${waterPct}%`;
-    if (this.dom.pauseM2Check) {
-      this.dom.pauseM2Check.classList.toggle('show', waterCount >= waterTarget);
-    }
 
-    // Rule 3 — DON'TS: Junk Food + Slime warning (no completion — obstacle to avoid)
-    if (this.dom.pauseM3Count) {
-      this.dom.pauseM3Count.textContent = `${this.junkHitInRun} JUNK HITS`;
-    }
+    // Rule 3 — DON'TS: Junk Food + Slime warning
+    const junkHits = this.junkHitInRun;
+
+    // Generate full card DOM structures
+    container.innerHTML = `
+      <!-- Mission 1 Card -->
+      <div class="pause-card-item green-border">
+        <div class="pause-card-icon">🍎🥦</div>
+        <div class="pause-card-content">
+          <div class="pause-card-title">COLLECT 5 FRESH FRUITS & VEGETABLES</div>
+          <div class="pause-card-progress-bar"><div class="fill" style="width: ${producePct}%;"></div></div>
+        </div>
+        <div class="pause-card-count">${produceCount}/${produceTarget}</div>
+      </div>
+
+      <!-- Mission 2 Card -->
+      <div class="pause-card-item green-border">
+        <div class="pause-card-icon">💧</div>
+        <div class="pause-card-content">
+          <div class="pause-card-title">DRINK 3 WATER BOTTLES</div>
+          <div class="pause-card-progress-bar"><div class="fill" style="width: ${waterPct}%;"></div></div>
+        </div>
+        <div class="pause-card-count">${waterCount}/${waterTarget}</div>
+      </div>
+
+      <!-- Mission 3 Card (Junk Warning) -->
+      <div class="pause-card-item orange-border">
+        <div class="pause-card-icon">🚫🍔</div>
+        <div class="pause-card-content">
+          <div class="pause-card-title">AVOID PROCESSED JUNK FOOD & SLIME!</div>
+          <div class="pause-warning-pill">⚠ DRAINS YOUR HEALTH BAR! <b>${junkHits} JUNK HITS</b></div>
+        </div>
+      </div>
+    `;
   }
 
   showRandomTip(targetEl) {
@@ -1652,6 +1666,8 @@ class Game {
     // Menu" button (Condition A) or after a game ends — never while the
     // game is actively PLAYING.
     document.body.classList.remove('playing');
+    document.body.classList.remove('gameover');
+    document.body.classList.remove('victory');
     document.body.classList.add('in-menu');
     this.unlockMenuScreens();
     this.dom.startScreen.classList.add('active');
@@ -1662,6 +1678,7 @@ class Game {
 
   showCharSelect() {
     if (this.state !== 'menu') return; // menu-only: never during gameplay
+    document.body.classList.add('in-menu');
     this.dom.startScreen.classList.remove('active');
     if (this.dom.charSelectScreen) this.dom.charSelectScreen.classList.add('active');
     if (this.dom.settingsScreen) this.dom.settingsScreen.classList.remove('active');
@@ -1682,6 +1699,7 @@ class Game {
 
   showSettings() {
     if (this.state !== 'menu') return; // menu-only: never during gameplay
+    document.body.classList.add('in-menu');
     this.dom.startScreen.classList.remove('active');
     if (this.dom.charSelectScreen) this.dom.charSelectScreen.classList.remove('active');
     if (this.dom.settingsScreen) this.dom.settingsScreen.classList.add('active');
@@ -1689,6 +1707,8 @@ class Game {
 
   goToMenu() {
     document.body.classList.remove('playing');
+    document.body.classList.remove('gameover');
+    document.body.classList.remove('victory');
     document.body.classList.add('in-menu');
     this.unlockMenuScreens();
     if (this.dom.charSelectScreen) this.dom.charSelectScreen.classList.remove('active');
@@ -1702,6 +1722,7 @@ class Game {
 
   showTriviaBook() {
     if (this.state !== 'menu') return; // menu-only: never during gameplay
+    document.body.classList.add('in-menu');
     this.dom.startScreen.classList.remove('active');
     if (this.dom.charSelectScreen) this.dom.charSelectScreen.classList.remove('active');
     if (this.dom.settingsScreen) this.dom.settingsScreen.classList.remove('active');
@@ -1883,6 +1904,8 @@ class Game {
     // Condition B: the game ended — lift the in-game menu protection so
     // the Game Over screen (and menu navigation from it) may show.
     document.body.classList.remove('playing');
+    document.body.classList.remove('victory');
+    document.body.classList.add('gameover');
     if (this.dom.pauseBtn) {
       this.dom.pauseBtn.style.display = 'none';
     }
@@ -2610,6 +2633,8 @@ class Game {
     // The race ended — lift the in-game menu protection so the Victory
     // screen may show.
     document.body.classList.remove('playing');
+    document.body.classList.remove('gameover');
+    document.body.classList.add('victory');
     if (this.dom.pauseBtn) {
       this.dom.pauseBtn.style.display = 'none';
     }
@@ -2839,6 +2864,7 @@ class Game {
 
   showLeaderboard() {
     if (this.state !== 'menu') return; // menu-only: never during gameplay
+    document.body.classList.add('in-menu');
     const list = document.getElementById('leaderboard-list');
     const board = JSON.parse(localStorage.getItem('fr_leaderboard') || '[]');
     if (!list) return;

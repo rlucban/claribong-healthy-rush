@@ -31,12 +31,12 @@
    <button id="pause-btn" title="Pause Game" aria-label="Pause Game" tabindex="0">⏸️</button>
 
    <!-- Interactive Overlays -->
-   <div id="ui-overlay">
+   <div id="ui-overlay" class="hud-container">
 
     <!-- ============================================ -->
     <!-- DESKTOP HUD (>= 768px)                        -->
     <!-- ============================================ -->
-    <header id="hud" class="hud-desktop">
+    <header id="hud" class="hud-desktop in-game-hud">
 
       <!-- TOP-LEFT CARDS -->
       <div class="hud-top-left">
@@ -135,7 +135,7 @@
     <!-- ============================================ -->
 
     <!-- TOP PANEL: DAILY GOAL overall progress -->
-    <div class="hud-mobile-goal">
+    <div class="hud-mobile-goal in-game-hud">
       <div class="hud-card mobile-goal-card">
         <span class="goal-emoji">📋</span>
         <div class="goal-bar"><div class="goal-fill" id="mobile-goal-fill"></div></div>
@@ -144,7 +144,7 @@
     </div>
 
     <!-- SECOND ROW (3 columns) -->
-    <div class="hud-mobile-row">
+    <div class="hud-mobile-row in-game-hud">
       <div class="hud-card mobile-score-card">
         <div class="mobile-stat">
           <span class="hud-card-label">SCORE</span>
@@ -179,7 +179,7 @@
     </div>
 
     <!-- BOTTOM NAVIGATION DOCK -->
-    <nav id="mobile-dock">
+    <nav id="mobile-dock" class="in-game-hud">
       <button class="dock-btn" id="dock-trivia" title="Fruit Trivia" aria-label="Fruit Trivia">💡</button>
       <button class="dock-btn" id="dock-fruits" title="Eat Fruits" aria-label="Eat Fruits">🍎</button>
       <button class="dock-btn" id="dock-veggies" title="Eat Vegetables" aria-label="Eat Vegetables">🥦</button>
@@ -192,7 +192,7 @@
 
   <!-- 2. Main Start Menu Screen — Fruit Ninja full-screen layout -->
   <section class="screen active" id="start-screen">
-    <div class="start-menu">
+    <div class="start-menu" id="main-menu">
 
       <!-- TOP: brand + centered title / subtitle + high score -->
       <header class="start-menu__header">
@@ -464,72 +464,29 @@
     </div>
   </section>
 
-  <!-- 5. Pause Screen — Fruit Ninja-style "MISSIONS & RULES" modal -->
+<!-- 5. Pause Screen — Fruit Ninja-style "MISSIONS & RULES" modal -->
   <section class="screen" id="pause-screen">
-    <div class="menu-card glass-panel pause-card">
+    <div class="menu-card cream-panel pause-card">
 
-      <!-- Glowing GAME PAUSED title -->
+      <!-- Golden GAME PAUSED title -->
       <h1 class="pause-title">GAME PAUSED</h1>
 
-      <!-- Missions & Rules banner -->
-      <div class="missions-banner" role="region" aria-label="Current level missions">
-        <span class="missions-banner-icon" aria-hidden="true">🎯</span>
-        <span class="missions-banner-text">CURRENT LEVEL MISSIONS / GOALS</span>
+      <!-- Missions & Rules sub-pill -->
+      <div class="pause-subtitle" role="region" aria-label="Current level missions">
+        <span class="pause-subtitle-icon" aria-hidden="true">🎯</span>
+        <span class="pause-subtitle-text">CURRENT LEVEL MISSIONS / GOALS</span>
       </div>
 
-      <!-- Dynamic Mission / Rule cards -->
-      <div class="missions-list">
+      <!-- Mission cards container - populated by JS -->
+      <div class="pause-cards-container" id="pause-cards-container"></div>
 
-        <!-- Mission 1 — DO'S (HEALTHY): Fruits & Vegetables -->
-        <div class="mission-card mission-do" id="pause-mission1">
-          <div class="mission-icon" aria-hidden="true">🍎🥦</div>
-          <div class="mission-body">
-            <div class="mission-title">Collect 5 Fresh Fruits &amp; Vegetables</div>
-            <div class="mission-row">
-              <div class="progress-track">
-                <div class="progress-fill progress-fill--green" id="pause-m1-fill"></div>
-              </div>
-              <span class="progress-count" id="pause-m1-count">0/5</span>
-              <span class="mission-complete" id="pause-m1-check" aria-label="Mission complete">✓</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mission 2 — DO'S (HYDRATION): Water Bottles -->
-        <div class="mission-card mission-do" id="pause-mission2">
-          <div class="mission-icon" aria-hidden="true">💧</div>
-          <div class="mission-body">
-            <div class="mission-title">Drink 3 Water Bottles</div>
-            <div class="mission-row">
-              <div class="progress-track">
-                <div class="progress-fill progress-fill--blue" id="pause-m2-fill"></div>
-              </div>
-              <span class="progress-count" id="pause-m2-count">0/3</span>
-              <span class="mission-complete" id="pause-m2-check" aria-label="Mission complete">✓</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Rule 3 — DON'TS (OBSTACLE WARNING) -->
-        <div class="mission-card mission-dont" id="pause-mission3">
-          <div class="mission-icon" aria-hidden="true">🚫🍔</div>
-          <div class="mission-body">
-            <div class="mission-title">AVOID Processed Junk Food &amp; Slime!</div>
-            <div class="mission-warning-banner">
-              <span class="warning-text">⚠ Drains your Health Bar!</span>
-              <span class="warning-stats" id="pause-m3-count">0 JUNK HITS</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Control buttons — bold Fruit Ninja styling -->
+      <!-- Colorful button trio -->
       <div class="btn-row pause-btn-row">
         <button class="btn btn-resume" id="resume-btn" aria-label="Resume game">RESUME</button>
         <button class="btn btn-restart" id="restart-btn-pause" aria-label="Restart level">RESTART</button>
         <button class="btn btn-quit" id="quit-btn" aria-label="Quit to main menu">QUIT TO MENU</button>
       </div>
+
     </div>
   </section>
 

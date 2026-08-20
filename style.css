@@ -2743,8 +2743,12 @@ body:not(.playing) #pause-btn {
 #start-screen {
   padding: clamp(6px, 1.8vh, 18px);
   overflow: hidden;
-  /* Dark forest-green overlay so bright UI elements pop on the menu */
-  background: radial-gradient(ellipse at 50% 32%, rgba(30, 58, 43, 0.55) 0%, rgba(13, 28, 20, 0.9) 100%);
+  /* Full static dark green fruit pattern background across the entire viewport */
+  background-color: #14281D;
+  background-image: radial-gradient(ellipse at 50% 32%, rgba(20, 40, 29, 0.75) 0%, rgba(10, 25, 18, 0.95) 100%), url('background.png');
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 400px;
+  background-position: center;
 }
 
 #start-screen .start-menu {
@@ -3121,6 +3125,201 @@ body:not(.playing) #pause-btn {
   #start-screen .fruit-btn {
     width: clamp(80px, 24%, 110px);
     height: clamp(80px, 24%, 110px);
+top: 50%;
+  width: 46%;
+  height: 46%;
+  border-width: 6px;
+  background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%);
+}
+
+.fruit-btn--play .fruit-icon {
+  font-size: clamp(2rem, 8vh, 3.5rem);
+}
+
+.fruit-btn--play .fruit-label {
+  font-size: clamp(0.85rem, 3vh, 1.4rem);
+}
+
+/* Surrounding nodes — 5 buttons evenly distributed at 72° intervals around PLAY
+    button for perfect symmetry. Uniform radius = 35% from center (50%, 50%).
+    Calculated positions: 90° (top), 18° (top-right), 162° (top-left), 306°/-54° (bottom-right), 234°/-126° (bottom-left).
+    All 5 buttons share identical circular offset distance for equal gaps and breathing room. */
+.fruit-btn--red    { left: 50%; top: 15%;  background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }       /* 90° (top) */
+.fruit-btn--yellow { left: 83%; top: 39%; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }    /* 18° (top-right) */
+.fruit-btn--kiwi   { left: 17%; top: 39%; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }    /* 162° (top-left) */
+.fruit-btn--orange { left: 71%; top: 78%; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* 306° / -54° (bottom-right) */
+.fruit-btn--grape  { left: 29%; top: 78%; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* 234° / -126° (bottom-left) */
+
+/* ---- BOTTOM: centered horizontal skin carousel ---- */
+#start-screen .start-menu__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 12px);
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+#start-screen .skin-section-title {
+  display: inline-block;
+  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  margin-bottom: 0;
+  color: #2D3748;
+  padding: 4px 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f2e2bd 100%);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 2px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+#start-screen .skin-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 16px);
+  max-width: min(600px, 94vw);
+  padding: 0 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+#start-screen .skin-grid::-webkit-scrollbar {
+  display: none;
+}
+
+#start-screen .skin-card {
+  flex: 0 0 auto;
+  width: clamp(55px, 8vw, 75px);
+  height: clamp(75px, 10vw, 95px);
+  padding: clamp(4px, 0.8vh, 8px) 3px;
+  gap: 2px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Equipped skin card gets a bright green ring so its status pops on the
+   dark solid card. */
+#start-screen .skin-card.active {
+  border-color: var(--glow-green);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.5), inset 0 0 12px rgba(0, 255, 136, 0.12);
+}
+
+/* Keep a locked look on the ball preview — dimmed grayscale + padlock
+   so the requirement text stays readable but the skin is clearly locked. */
+#start-screen .skin-card.locked {
+  opacity: 0.6;
+  filter: grayscale(70%);
+  pointer-events: none;
+}
+
+#start-screen .skin-card.locked .skin-preview {
+  filter: grayscale(70%);
+  opacity: 0.7;
+}
+
+#start-screen .skin-card.locked:hover {
+  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
+  transform: none;
+}
+
+#start-screen .skin-preview {
+  width: 35px;
+  height: 35px;
+  position: relative;
+}
+
+#start-screen .skin-name {
+  font-size: clamp(0.5rem, 1.2vh, 0.7rem);
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Unlock requirements + status read bright yellow/green on the dark cards */
+#start-screen .skin-req {
+  font-size: clamp(0.42rem, 0.9vh, 0.58rem);
+  color: #ffea00;
+  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#start-screen .skin-card.active .skin-req {
+  color: #69ffb4;
+  text-shadow: 0 0 8px rgba(105, 255, 180, 0.5), 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#start-screen .skin-card .equipped-badge {
+  background: var(--glow-green);
+  color: #06281a;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+  font-weight: 900;
+}
+
+/* ============================================ */
+/* MAIN MENU — DESKTOP / WEB (min-width: 769px) */
+/* ============================================ */
+@media (min-width: 769px) {
+  #start-screen h1.game-title {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+  }
+  #start-screen .fruit-btn {
+    width: clamp(80px, 24%, 110px);
+    height: clamp(80px, 24%, 110px);
+  }
+  #start-screen .fruit-btn--play {
+    width: 46%;
+    height: 46%;
+  }
+  #start-screen .skin-grid {
+    justify-content: center;
+    gap: clamp(8px, 1.5vw, 16px);
+    max-width: min(600px, 94vw);
+  }
+}
+
+/* ============================================ */
+/* MAIN MENU — MOBILE / PHONE (max-width: 768px) */
+/* ============================================ */
+@media (max-width: 768px) {
+  #start-screen {
+    padding: clamp(6px, 1.5vh, 12px);
+  }
+  #start-screen .start-menu,
+  #start-screen .start-menu__header,
+  #start-screen .start-menu__footer {
+    gap: clamp(4px, 1.2vh, 10px);
+  }
+  #start-screen h1.game-title {
+    font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+  }
+  #start-screen h1.game-title span {
+    font-size: clamp(0.6rem, 3vw, 0.85rem);
+  }
+  #start-screen .nutrition-title-badge {
+    font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+    padding: 6px 18px;
+  }
+  #start-screen .nutrition-sub-ribbon {
+    font-size: clamp(0.55rem, 2.5vw, 0.75rem);
+    padding: 3px 12px;
+  }
+  /* Radial menu container - matches desktop: viewport-relative sizing */
+  #start-screen .arcade-cluster {
+    position: relative;
+    width: min(50vh, 88vw);
+    height: min(50vh, 88vw);
+  }
+
+  /* Base button - same percentage-based sizing as desktop */
+  #start-screen .fruit-btn {
+    width: clamp(80px, 24%, 110px);
+    height: clamp(80px, 24%, 110px);
     padding: 6px;
     box-sizing: border-box;
     display: flex;
@@ -3143,27 +3342,6 @@ body:not(.playing) #pause-btn {
     line-height: 1;
     margin-bottom: 2px;
   }
-
-  #start-screen .fruit-btn--play .fruit-icon {
-    font-size: clamp(2rem, 8vh, 3.5rem);
-  }
-
-  /* Label styling - compact, no overlap */
-  #start-screen .fruit-btn .fruit-label {
-    font-size: 0.65rem !important;
-    line-height: 1.0 !important;
-    margin: 0 !important;
-    padding: 0 4px !important;
-    word-break: break-word;
-    text-align: center;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    padding: 0 4px;
-    pointer-events: none;
-    overflow: hidden;
-  }
-
   #start-screen .fruit-btn--play .fruit-icon {
     font-size: clamp(2rem, 8vh, 3.5rem);
   }
@@ -3178,19 +3356,29 @@ body:not(.playing) #pause-btn {
     word-wrap: break-word;
     white-space: normal;
     max-width: 100%;
-    padding: 0 4px;
   }
 
-  /* Radial positions - same 35% radius from center as desktop */
+  #start-screen .fruit-btn .fruit-label {
+    font-size: 0.65rem !important;
+    line-height: 1.0 !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    word-break: break-word;
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* Radial positions matching web version - 35% radius from center */
   .fruit-btn--red    { left: 50%; top: 15%; }
   .fruit-btn--yellow { left: 83%; top: 39%; }
   .fruit-btn--kiwi   { left: 17%; top: 39%; }
   .fruit-btn--orange { left: 71%; top: 78%; }
   .fruit-btn--grape  { left: 29%; top: 78%; }
-  #start-screen .fruit-btn--play .fruit-label {
-    font-size: 0.75rem !important;
-    line-height: 1.1;
-  }
+
   #start-screen .skin-section-title {
     font-size: clamp(0.8rem, 2.2vh, 1rem);
     transform: scale(0.9);
@@ -3220,13 +3408,6 @@ body:not(.playing) #pause-btn {
   #start-screen .skin-req {
     font-size: clamp(0.4rem, 0.9vh, 0.52rem);
   }
-
-/* Radial positions matching web version - 35% radius from center */
-  .fruit-btn--red    { left: 50%; top: 15%; }
-  .fruit-btn--yellow { left: 83%; top: 39%; }
-  .fruit-btn--kiwi   { left: 17%; top: 39%; }
-  .fruit-btn--orange { left: 71%; top: 78%; }
-  .fruit-btn--grape  { left: 29%; top: 78%; }
 
   /* Run Summary Box - Mobile */
   .run-summary-box {
@@ -3327,20 +3508,6 @@ body:not(.playing) #pause-btn {
     line-height: 1;
     margin-bottom: 2px;
   }
-  #start-screen .fruit-btn .fruit-label {
-    font-size: 0.65rem !important;
-    line-height: 1.0 !important;
-    margin: 0 !important;
-    padding: 0 4px !important;
-    word-break: break-word;
-    text-align: center;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    padding: 0 4px;
-    pointer-events: none;
-    overflow: hidden;
-  }
   #start-screen .fruit-btn--play .fruit-icon {
     font-size: clamp(2rem, 8vh, 3.5rem);
   }
@@ -3356,67 +3523,101 @@ body:not(.playing) #pause-btn {
     max-width: 100%;
     padding: 0 4px;
   }
-  .fruit-icon {
-    font-size: clamp(1rem, 3.5vh, 1.6rem);
-  }
-  .fruit-label {
-    font-size: clamp(0.45rem, 1.3vh, 0.7rem);
-  }
-  .fruit-btn--play .fruit-icon {
-    font-size: clamp(1.6rem, 7vh, 2.8rem);
-  }
-  .fruit-btn--play .fruit-label {
-    font-size: clamp(0.7rem, 2.6vh, 1.1rem);
-  }
-
-  }
-
-/* Extra-small phones (≤ 480px) - same layout, slightly larger cluster */
-  @media (max-width: 480px) {
-    #start-screen .arcade-cluster {
-      width: min(50vh, 92vw);
-      height: min(50vh, 92vw);
-    }
-  }
-
-  /* Run Summary Box - Extra small phones */
-  .run-summary-box {
-    padding: 10px;
-    border-radius: 12px;
-  }
-  .run-summary-title {
-    font-size: clamp(0.8rem, 2.5vw, 0.95rem);
-  }
-  .criteria-item {
-    font-size: clamp(9px, 2vw, 11px);
-    gap: 5px;
-  }
-  .criteria-item .checkmark {
-    font-size: clamp(10px, 2.2vw, 12px);
+  #start-screen .fruit-btn .fruit-label {
+    font-size: 0.65rem !important;
+    line-height: 1.0 !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    word-break: break-word;
+    text-align: center;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    padding: 0 4px;
+    pointer-events: none;
+    overflow: hidden;
   }
 }
 
 /* ============================================ */
-/* MENU STATE: gameplay HUD hidden in the back  */
+/* MENU STATE: CANVAS & HUD VISIBILITY CONTROL   */
 /* ============================================ */
 
-/* While the main menu (or any pre-game screen) is open, all gameplay
-   HUD elements (Score, Level, Daily Goal, dock, touch controls) are
-   hidden. The 3D backdrop stays rendered but softly blurred. */
+/* 1. CANVAS VISIBILITY MANAGEMENT:
+   - When in MAIN MENU state (gameState === 'MENU' / body.in-menu / page load):
+     * Hide the 3D rendering canvas completely: #game-canvas, #threejs-canvas, canvas { display: none !important; }
+   - When player clicks "PLAY GAME" (gameState === 'PLAYING' / body.playing):
+     * Show the canvas: #game-canvas, canvas { display: block !important; }
+     * Hide the Main Menu UI overlay completely (#main-menu { display: none !important; }). */
+
+body.in-menu #canvas-container,
+body.in-menu #game-canvas,
+body.in-menu #threejs-canvas,
+body.in-menu canvas,
+body:not(.playing):not(.gameover):not(.victory) #canvas-container,
+body:not(.playing):not(.gameover):not(.victory) #game-canvas,
+body:not(.playing):not(.gameover):not(.victory) #threejs-canvas,
+body:not(.playing):not(.gameover):not(.victory) canvas {
+  display: none !important;
+}
+
+body.playing #canvas-container,
+body.playing #game-canvas,
+body.playing #threejs-canvas,
+body.playing canvas {
+  display: block !important;
+}
+
+body.playing #main-menu,
+body.playing #start-screen,
+body.playing .start-menu {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/* 2. HIDE IN-GAME HUD IN MAIN MENU:
+   - Hide all active gameplay HUD elements (top-left score/level box, daily goals,
+     audio widget, pause button) while in the main menu:
+     .hud-container, .in-game-hud, #pause-btn { display: none !important; }
+   - Only make the HUD visible when active gameplay starts. */
+
+body.in-menu .hud-container,
+body.in-menu .in-game-hud,
 body.in-menu #hud,
+body.in-menu .hud-desktop,
 body.in-menu .hud-mobile-goal,
 body.in-menu .hud-mobile-row,
 body.in-menu #mobile-dock,
 body.in-menu #mobile-controls,
-body.in-menu #swipe-area {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-  transition: opacity 0.4s ease, visibility 0.4s ease;
+body.in-menu #swipe-area,
+body.in-menu #pause-btn,
+body.in-menu #mobile-pause-btn,
+body.in-menu #warning-overlay,
+body.in-menu #danger-overlay,
+body.in-menu #flash-word-overlay,
+body.in-menu .audio-widget,
+body.in-menu .health-card,
+body.in-menu .goal-card,
+body.in-menu .hud-card,
+body:not(.playing) .hud-container,
+body:not(.playing) .in-game-hud,
+body:not(.playing) #hud,
+body:not(.playing) .hud-desktop,
+body:not(.playing) .hud-mobile-goal,
+body:not(.playing) .hud-mobile-row,
+body:not(.playing) #mobile-dock,
+body:not(.playing) #pause-btn,
+body:not(.playing) #mobile-pause-btn {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
-/* During active gameplay, hide the bottom navigation dock.
-   The pause button is hoisted separately and remains visible via its own z-index. */
+/* During active gameplay, hide the bottom navigation dock and pre-game menu screens */
 body.playing #mobile-dock {
   display: none !important;
   visibility: hidden !important;
@@ -3424,22 +3625,6 @@ body.playing #mobile-dock {
   pointer-events: none !important;
 }
 
-body.in-menu #canvas-container {
-  filter: blur(6px) brightness(0.65);
-  transform: scale(1.02);
-}
-
-/* ============================================ */
-/* STRICT GAME-STATE SCREEN PROTECTION          */
-/* ============================================ */
-
-/* While the game is actively PLAYING (or PAUSED), every pre-game menu
-   screen is COMPLETELY removed from the document (display:none) and made
-   inert (pointer-events:none). This makes it impossible for a stray
-   touch, swipe, or ghost click to re-open the Main Menu. Only the Pause
-   modal (#pause-screen), Game Over and Victory overlays may ever appear
-   during this state, and they declare their own pointer-events:auto. */
-body.playing #start-screen,
 body.playing #char-select-screen,
 body.playing #settings-screen,
 body.playing #trivia-screen,
@@ -3495,24 +3680,23 @@ body.playing #grading-screen {
 /* PAUSE SCREEN — Fruit Ninja MISSIONS & RULES  */
 /* ============================================ */
 
-/* The pause overlay keeps the blurred 3D track visible behind the card */
 #pause-screen {
   background: transparent;
 }
+
 #pause-screen.active {
   display: flex !important;
   z-index: 10000000 !important;
 }
 
-/* Wider card so the mission cards breathe; cream theme */
+/* Modal card - clean cream theme */
 .pause-card {
-  max-width: min(560px, 94vw);
+  max-width: 450px !important;
   width: 100%;
-  padding: clamp(22px, 5vw, 32px);
-  gap: clamp(12px, 2.4vh, 18px);
+  padding: 24px 28px !important;
+  border-radius: 20px !important;
+  border: 3px solid #88C999 !important;
   background: #FFFDF0 !important;
-  border: 4px solid #88C999 !important;
-  border-radius: 24px !important;
   box-shadow:
     0 20px 60px rgba(40, 25, 5, 0.6),
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
@@ -3520,110 +3704,399 @@ body.playing #grading-screen {
   color: #3D2E1E !important;
 }
 
-/* ---- GAME PAUSED title - dark text ---- */
+/* ---- GAME PAUSED title - GOLD GLOW ---- */
 .pause-title {
-  margin: 0 auto;
+  margin: 0 auto 12px !important;
   font-family: var(--font-display);
   font-size: clamp(2rem, 6vw, 3.2rem);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   text-align: center;
-  color: #3D2E1E !important;
-  -webkit-text-fill-color: #3D2E1E !important;
+  color: #EAB308 !important;
+  -webkit-text-fill-color: #EAB308 !important;
   background: none !important;
-  text-shadow: none !important;
+  text-shadow: 0 0 12px rgba(234, 179, 8, 0.6) !important;
   filter: none !important;
   animation: none !important;
 }
 
-@keyframes pause-glow-pulse {
-  0%, 100% {
-    text-shadow:
-      0 0 12px rgba(255, 234, 0, 0.65),
-      0 0 26px rgba(255, 145, 0, 0.55),
-      0 2px 8px rgba(0, 0, 0, 0.45);
-  }
-  50% {
-    text-shadow:
-      0 0 22px rgba(255, 234, 0, 0.95),
-      0 0 40px rgba(255, 145, 0, 0.75),
-      0 2px 8px rgba(0, 0, 0, 0.45);
-  }
-}
-
-/* ---- CURRENT LEVEL MISSIONS / GOALS banner ---- */
-.missions-banner {
+/* ---- CURRENT LEVEL MISSIONS / GOALS sub-pill ---- */
+.missions-subpill {
   display: inline-flex;
   align-items: center;
-  gap: clamp(6px, 1.5vw, 10px);
-  margin: 0 auto;
-  padding: clamp(6px, 1.5vh, 10px) clamp(16px, 3vw, 26px);
-  border-radius: 999px;
-  background: #E8F3E8 !important;
-  border: 2px solid #88C999 !important;
-  color: #3D2E1E !important;
+  gap: 8px;
+  margin: 0 auto 16px !important;
+  padding: 4px 16px !important;
+  border-radius: 20px !important;
+  background: #FFE4E6 !important;
+  color: #991B1B !important;
   font-family: var(--font-display);
-  font-size: clamp(0.75rem, 1.9vw, 0.95rem);
-  font-weight: 800;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  box-shadow: 0 4px 14px rgba(136, 201, 153, 0.3);
-  text-shadow: none !important;
+  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.2) !important;
 }
 
-.missions-banner-icon {
-  font-size: clamp(1rem, 2.6vw, 1.25rem);
+.missions-subpill-icon {
+  font-size: 0.9rem !important;
 }
 
 /* ---- Mission card list ---- */
 .missions-list {
   display: flex;
   flex-direction: column;
-  gap: clamp(8px, 1.8vh, 14px);
+  gap: 10px !important;
   width: 100%;
 }
 
 .mission-card {
-  display: flex;
-  align-items: center;
-  gap: clamp(10px, 2vw, 16px);
-  padding: clamp(12px, 2.4vw, 18px);
-  border-radius: 18px;
-  background: #FFFDF0 !important;
-  border: 2px solid #88C999 !important;
-  box-shadow: 0 4px 14px rgba(40, 25, 5, 0.1);
-  text-align: left;
-  color: #3D2E1E !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 12px !important;
+  border-radius: 16px !important;
+  background: #FFFFFF !important;
+  border: 2px solid #86EFAC !important;
+  margin-bottom: 10px !important;
 }
 
-/* DO'S — healthy missions (sage tint) */
 .mission-card.mission-do {
-  background: #E8F3E8 !important;
-  border-color: #88C999 !important;
-  box-shadow: 0 4px 16px rgba(136, 201, 153, 0.2);
+  background: #FFFFFF !important;
+  border-color: #86EFAC !important;
 }
 
-/* DON'TS — obstacle warning (cream/amber tint) */
 .mission-card.mission-dont {
-  background: #F4EEDD !important;
-  border-color: #FFA500 !important;
-  box-shadow: 0 4px 16px rgba(255, 165, 0, 0.15);
+  background: #FFFFFF !important;
+  border: 2px solid #FDBA74 !important;
 }
 
-.mission-icon {
-  width: clamp(44px, 9vw, 56px);
-  height: clamp(44px, 9vw, 56px);
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: clamp(1.3rem, 3.6vw, 1.8rem);
-  background: #FFFDF0 !important;
-  border: 2px solid #88C999 !important;
-  border-radius: 16px;
-  box-shadow: 0 2px 6px rgba(40, 25, 5, 0.1);
+.mission-icon-box {
+  width: 48px !important;
+  height: 48px !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.5rem !important;
+  background: #F3F4F6 !important;
+  border-radius: 12px !important;
 }
+
+.mission-content {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
+
+.mission-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  color: #2D3748 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.3;
+}
+
+.mission-progress-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  width: 100% !important;
+}
+
+.progress-track {
+  flex: 1 !important;
+  height: 8px !important;
+  min-width: 0 !important;
+  background: #E5E7EB !important;
+  border-radius: 4px !important;
+  overflow: hidden !important;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 4px;
+  transition: width 0.32s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.progress-fill--green {
+  background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+  box-shadow: 0 0 8px rgba(16, 185, 129, 0.4);
+}
+
+.progress-fill--blue {
+  background: linear-gradient(90deg, #3B82F6 0%, #2563EB 100%);
+  box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+}
+
+.progress-count {
+  font-family: var(--font-display);
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  color: #374151 !important;
+  min-width: 40px;
+  text-align: right;
+}
+
+/* ---- Junk Food Warning Card ---- */
+.mission-card.mission-dont .mission-warning-banner {
+  margin-top: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  background: #FEF2F2 !important;
+  border: 1px solid #FECACA !important;
+  color: #DC2626 !important;
+  font-family: var(--font-display);
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+/* ---- Pause button row ---- */
+.pause-btn-row {
+  display: flex !important;
+  gap: 12px !important;
+  margin-top: 20px !important;
+}
+
+.pause-btn-row .btn {
+  flex: 1 !important;
+  min-width: 0 !important;
+  padding: 12px 16px !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+  font-size: 0.85rem !important;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  text-align: center;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+}
+
+.btn-resume {
+  background: #10B981 !important;
+  color: #042F2E !important;
+}
+
+.btn-resume:hover {
+  background: #059669 !important;
+}
+
+.btn-restart {
+  background: #FACC15 !important;
+  color: #422006 !important;
+}
+
+.btn-restart:hover {
+  background: #EAB308 !important;
+}
+
+.btn-quit {
+  background: #F43F5E !important;
+  color: #881337 !important;
+}
+
+.btn-quit:hover {
+  background: #E11D48 !important;
+}
+
+/* Mobile adjustments */
+@media (max-width: 560px) {
+  .pause-card {
+    padding: 20px !important;
+  }
+  .pause-title {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+  .missions-subpill {
+    font-size: 0.65rem !important;
+    padding: 3px 12px !important;
+  }
+  .mission-card {
+    padding: 10px !important;
+  }
+  .mission-title {
+    font-size: 0.8rem !important;
+  }
+  .pause-btn-row {
+    gap: 8px !important;
+  }
+.pause-btn-row .btn {
+    font-size: 0.75rem !important;
+    padding: 10px 12px !important;
+  }
+}
+}
+
+/* ============================================ */
+/* PAUSE MODAL — HARDCODED CARD CONTAINERS      */
+/* ============================================ */
+
+/* Header Glow */
+#pause-modal h2,
+#pause-screen .pause-title {
+  color: #EAB308 !important;
+  text-shadow: 0 0 10px rgba(234, 179, 8, 0.5) !important;
+  font-weight: 900 !important;
+}
+
+/* Sub-header Pill */
+.pause-subtitle {
+  background: #FFE4E6 !important;
+  border-radius: 20px !important;
+  padding: 6px 16px !important;
+  color: #991B1B !important;
+  width: fit-content !important;
+  margin: 0 auto 16px auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  font-family: var(--font-display) !important;
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.04em !important;
+  box-shadow: 0 2px 8px rgba(153, 27, 27, 0.2) !important;
+}
+
+/* White Card Box */
+.pause-card-item {
+  background: #FFFFFF !important;
+  border-radius: 16px !important;
+  padding: 12px 16px !important;
+  margin-bottom: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 14px !important;
+  text-align: left !important;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05) !important;
+}
+
+/* Card Borders */
+.pause-card-item.green-border {
+  border: 2px solid #86EFAC !important;
+}
+
+.pause-card-item.orange-border {
+  border: 2px solid #FDBA74 !important;
+}
+
+/* Icon Container Box */
+.pause-card-icon {
+  background: #F3F4F6 !important;
+  min-width: 48px !important;
+  height: 48px !important;
+  border-radius: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 1.2rem !important;
+  flex-shrink: 0 !important;
+}
+
+/* Card Content */
+.pause-card-content {
+  flex: 1 !important;
+  min-width: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 6px !important;
+}
+
+/* Card Title */
+.pause-card-title {
+  font-family: var(--font-display);
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  color: #2D3748 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.02em !important;
+  line-height: 1.3 !important;
+}
+
+/* Progress Bar Track */
+.pause-card-progress-bar {
+  background: #E5E7EB !important;
+  height: 10px !important;
+  border-radius: 5px !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  margin-top: 6px !important;
+}
+
+/* Progress Fill */
+.pause-card-progress-bar .fill {
+  background: #10B981 !important;
+  height: 100% !important;
+  border-radius: 5px !important;
+  transition: width 0.32s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Card Count */
+.pause-card-count {
+  font-family: var(--font-display);
+  font-size: 0.75rem !important;
+  font-weight: 800 !important;
+  color: #374151 !important;
+  min-width: 50px !important;
+  text-align: right !important;
+  flex-shrink: 0 !important;
+}
+
+/* Warning Pill for Junk Card */
+.pause-warning-pill {
+  margin-top: 8px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 6px 12px !important;
+  border-radius: 8px !important;
+  background: #FEF2F2 !important;
+  border: 1px solid #FECACA !important;
+  color: #DC2626 !important;
+  font-family: var(--font-display) !important;
+  font-size: 0.65rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.03em !important;
+}
+
+/* Mobile adjustments for new card structure */
+@media (max-width: 560px) {
+  .pause-card-item {
+    padding: 10px 12px !important;
+    gap: 10px !important;
+  }
+  .pause-card-icon {
+    min-width: 40px !important;
+    height: 40px !important;
+    font-size: 1rem !important;
+  }
+  .pause-card-title {
+    font-size: 0.75rem !important;
+  }
+  .pause-card-count {
+    font-size: 0.7rem !important;
+    min-width: 45px !important;
+  }
+  .pause-warning-pill {
+    font-size: 0.6rem !important;
+    padding: 4px 10px !important;
+  }
+}
+
+/* ============================================ */
 
 .mission-body {
   flex: 1;
@@ -3635,9 +4108,9 @@ body.playing #grading-screen {
 
 .mission-title {
   font-family: var(--font-display);
-  font-size: clamp(0.78rem, 1.9vw, 0.95rem);
+  font-size: 0.95rem !important;
   font-weight: 800;
-  color: #3D2E1E !important;
+  color: #2D3748 !important;
   text-transform: uppercase;
   letter-spacing: 0.03em;
 }
@@ -3731,7 +4204,8 @@ body.playing #grading-screen {
 
 /* ---- Pause control button row ---- */
 .pause-btn-row {
-  gap: clamp(8px, 2vw, 14px);
+  gap: 12px !important;
+  margin-top: 20px !important;
 }
 
 /* Override the generic .btn base so the pause buttons stay bold & distinct */
@@ -3789,29 +4263,58 @@ body.playing #grading-screen {
   color: #fff;
 }
 
-/* Mobile: keep pause buttons stacked & tappable */
+}
+
+/* ---- Pause mission cards (new structure) ---- */
+.pause-mission-card {
+  background: #FFFFFF !important;
+  border: 2px solid #E2E8F0 !important;
+  border-radius: 12px !important;
+  padding: 10px 16px !important;
+  margin: 8px 0 !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05) !important;
+  color: #2D3748 !important;
+  font-weight: 600 !important;
+}
+
+.pause-mission-card .mission-text {
+  flex: 1;
+  text-align: left;
+}
+
+.pause-mission-card .mission-count {
+  text-align: right;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.pause-mission-card.pause-mission-warning {
+  border-color: #FFA500 !important;
+  background: #FFF8E7 !important;
+}
+
+.pause-mission-card.pause-mission-warning .mission-count {
+  color: #FFA500 !important;
+}
+
+/* Pause modal content spacing */
+#pause-screen .pause-card {
+  padding: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+}
+
+/* Mobile pause card spacing */
 @media (max-width: 560px) {
-  .pause-card {
-    padding: clamp(16px, 4vw, 24px);
-  }
-  .pause-title {
-    font-size: clamp(1.6rem, 7vw, 2.4rem);
-  }
-  .missions-banner {
-    font-size: clamp(0.65rem, 2.2vw, 0.8rem);
-    padding: clamp(4px, 1.3vh, 8px) clamp(14px, 3vw, 22px);
-  }
-  .mission-card {
-    padding: clamp(10px, 2vw, 14px);
-  }
-  .mission-title {
-    font-size: clamp(0.72rem, 2.2vw, 0.85rem);
-  }
-  .pause-btn-row {
-    gap: clamp(6px, 1.8vw, 10px);
-  }
-  #pause-screen .btn {
-    font-size: clamp(0.72rem, 2.4vw, 0.9rem);
+  .pause-mission-card {
+    padding: 12px 16px !important;
+    margin: 6px 0 !important;
   }
 }
 
