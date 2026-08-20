@@ -631,7 +631,7 @@ class Game {
 
     this.refreshSkinGrid();
 
-    // Add click listeners
+    // Add click listeners - only in menu state
     this.bindPress(skinGrid, (e) => {
       const card = e.target.closest('.skin-card');
       if (!card) return;
@@ -643,7 +643,7 @@ class Game {
 
       this.applySkin(skinId);
       this.refreshSkinGrid();
-    });
+    }, ['menu']);
   }
 
   refreshSkinGrid() {
@@ -754,7 +754,7 @@ class Game {
   //    debounce window, that click would re-fire the handler (and restart the
   //    run / reopen the menu). Any press that originated from touch/pen marks
   //    the element so its trailing synthesized click is dropped entirely.
-  bindPress(el, handler) {
+  bindPress(el, handler, allowedStates = null) {
     if (!el) return;
     let lastFired = 0;
     let firedByTouch = false;
@@ -763,6 +763,8 @@ class Game {
       const now = performance.now();
       if (now < this.inputCooldownUntil) return; // start-transition cooldown
       if (now - lastFired < 400) return; // debounce click/tap duplicates
+      // State guard: if allowedStates is provided, only fire when current state matches
+      if (allowedStates !== null && !allowedStates.includes(this.state)) return;
       lastFired = now;
       if (e.cancelable) e.preventDefault();
       handler(e);
@@ -949,56 +951,56 @@ class Game {
     });
 
     // Button interactions
-    this.bindPress(this.dom.startBtn, () => this.startGame());
-    this.bindPress(this.dom.restartBtn, () => this.startGame());
-    this.bindPress(this.dom.muteBtn, () => this.toggleMute());
+    this.bindPress(this.dom.startBtn, () => this.startGame(), ['menu']);
+    this.bindPress(this.dom.restartBtn, () => this.startGame(), ['gameover']);
+    this.bindPress(this.dom.muteBtn, () => this.toggleMute()); // global
 
-    // Menu navigation
-    this.bindPress(this.dom.charBtn, () => this.showCharSelect());
-    this.bindPress(this.dom.settingsBtn, () => this.showSettings());
-    this.bindPress(this.dom.charBackBtn, () => this.goToMenu());
-    this.bindPress(this.dom.charSaveBtn, () => this.saveCharSelection());
-    this.bindPress(this.dom.settingsBackBtn, () => this.goToMenu());
+    // Menu navigation - only in menu state
+    this.bindPress(this.dom.charBtn, () => this.showCharSelect(), ['menu']);
+    this.bindPress(this.dom.settingsBtn, () => this.showSettings(), ['menu']);
+    this.bindPress(this.dom.charBackBtn, () => this.goToMenu(), ['menu']);
+    this.bindPress(this.dom.charSaveBtn, () => this.saveCharSelection(), ['menu']);
+    this.bindPress(this.dom.settingsBackBtn, () => this.goToMenu(), ['menu']);
     this.bindPress(this.dom.settingsHowToPlayBtn, () => {
       if (this.state !== 'menu') return;
       this.openHowToPlayModal();
-    });
+    }, ['menu']);
 
-    // Leaderboard
+    // Leaderboard - only in menu state
     const ldBtn = document.getElementById('leaderboard-btn');
-    this.bindPress(ldBtn, () => this.showLeaderboard());
+    this.bindPress(ldBtn, () => this.showLeaderboard(), ['menu']);
     const ldBackBtn = document.getElementById('leaderboard-back-btn');
     this.bindPress(ldBackBtn, () => {
       this.unlockMenuScreens();
       document.getElementById('leaderboard-screen').classList.remove('active');
       this.dom.startScreen.classList.add('active');
       document.body.classList.add('in-menu');
-    });
+    }, ['menu']);
 
-    // Trivia Book
-    this.bindPress(this.dom.triviaBtn, () => this.showTriviaBook());
-    this.bindPress(this.dom.triviaBackBtn, () => this.hideTriviaBook());
+    // Trivia Book - only in menu state
+    this.bindPress(this.dom.triviaBtn, () => this.showTriviaBook(), ['menu']);
+    this.bindPress(this.dom.triviaBackBtn, () => this.hideTriviaBook(), ['menu']);
 
-    // Grading System Screen
+    // Grading System Screen - only in menu state
     this.bindPress(this.dom.gradingBtn, () => {
-      if (this.state !== 'menu') return; // menu-only: never during gameplay
       this.dom.startScreen.classList.remove('active');
       this.dom.gradingScreen.classList.add('active');
-    });
+    }, ['menu']);
     this.bindPress(this.dom.gradingBackBtn, () => {
       this.unlockMenuScreens();
       this.dom.gradingScreen.classList.remove('active');
       this.dom.startScreen.classList.add('active');
       document.body.classList.add('in-menu');
-    });
+    }, ['menu']);
 
-    this.bindPress(this.dom.modalCloseBtn, () => this.closeHowToPlayModal());
-    this.bindPress(this.dom.modalBackdrop, () => this.closeHowToPlayModal());
+    this.bindPress(this.dom.modalCloseBtn, () => this.closeHowToPlayModal(), ['menu']);
+    this.bindPress(this.dom.modalBackdrop, () => this.closeHowToPlayModal(), ['menu']);
 
-    this.bindPress(this.dom.vicRestartBtn, () => this.startGame());
+    // Victory restart - only in victory state
+    this.bindPress(this.dom.vicRestartBtn, () => this.startGame(), ['victory']);
 
-    // Music track cycling button
-    this.bindPress(this.dom.musicBtn, () => this.cycleTrack());
+    // Music track cycling button - only in menu state
+    this.bindPress(this.dom.musicBtn, () => this.cycleTrack(), ['menu']);
 
     // Music on/off + volume bar (inside the audio widget)
     this.bindPress(this.dom.musicPlayBtn, () => this.toggleMusic());
@@ -1084,19 +1086,19 @@ class Game {
         }
       });
     }
-    this.bindPress(this.dom.mobilePauseBtn, () => this.togglePause());
-    this.bindPress(this.dom.resumeBtn, () => this.togglePause());
-    this.bindPress(this.dom.quitBtn, () => this.quitToMenu());
-    this.bindPress(this.dom.restartBtnPause, () => this.startGame());
+    this.bindPress(this.dom.mobilePauseBtn, () => this.togglePause(), ['playing', 'paused']);
+    this.bindPress(this.dom.resumeBtn, () => this.togglePause(), ['paused']);
+    this.bindPress(this.dom.quitBtn, () => this.quitToMenu(), ['paused']);
+    this.bindPress(this.dom.restartBtnPause, () => this.startGame(), ['paused']);
 
-    // Mobile navigation dock
-    this.bindPress(this.dom.dockTrivia, () => this.showTriviaBook());
-    this.bindPress(this.dom.dockStats, () => this.showLeaderboard());
-    this.bindPress(this.dom.dockMusic, () => this.cycleTrack());
-    this.bindPress(this.dom.dockMute, () => this.toggleMute());
-    this.bindPress(this.dom.dockFruits, () => this.showFlashWord('COLLECT FRUITS!', 0xff6b81));
-    this.bindPress(this.dom.dockVeggies, () => this.showFlashWord('EAT VEGGIES!', 0x48bb78));
-    this.bindPress(this.dom.dockWater, () => this.showFlashWord('DRINK WATER!', 0x38bdf8));
+    // Mobile navigation dock - only in menu state (hidden during gameplay via CSS)
+    this.bindPress(this.dom.dockTrivia, () => this.showTriviaBook(), ['menu']);
+    this.bindPress(this.dom.dockStats, () => this.showLeaderboard(), ['menu']);
+    this.bindPress(this.dom.dockMusic, () => this.cycleTrack(), ['menu']);
+    this.bindPress(this.dom.dockMute, () => this.toggleMute()); // global
+    this.bindPress(this.dom.dockFruits, () => this.showFlashWord('COLLECT FRUITS!', 0xff6b81), ['menu']);
+    this.bindPress(this.dom.dockVeggies, () => this.showFlashWord('EAT VEGGIES!', 0x48bb78), ['menu']);
+    this.bindPress(this.dom.dockWater, () => this.showFlashWord('DRINK WATER!', 0x38bdf8), ['menu']);
 
     // Show mobile controls on touch devices
     if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
@@ -1119,6 +1121,23 @@ class Game {
     window.addEventListener('orientationchange', () => {
       setTimeout(handleResize, 300);
     });
+
+    // Extra safeguard: prevent browser gestures (pull-to-refresh, swipe-back)
+    // on the canvas container during gameplay. This catches any touches that
+    // might not be handled by the window-level steering listeners.
+    const canvasContainer = document.getElementById('canvas-container');
+    if (canvasContainer) {
+      canvasContainer.addEventListener('touchstart', (e) => {
+        if (this.state === 'playing' || this.state === 'paused') {
+          e.preventDefault();
+        }
+      }, { passive: false });
+      canvasContainer.addEventListener('touchmove', (e) => {
+        if (this.state === 'playing' || this.state === 'paused') {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    }
   }
 
   moveLane(direction) {
@@ -1763,7 +1782,7 @@ class Game {
 
       // Preview on 3D ball
       this.previewCharColor(color);
-    });
+    }, ['menu']);
 
     // Highlight saved
     if (savedColor) {
@@ -1830,7 +1849,7 @@ class Game {
           btn.classList.add('active');
           this.gameSpeedMode = btn.dataset.speed;
           localStorage.setItem('fr_game_speed', this.gameSpeedMode);
-        });
+        }, ['menu']);
       });
 
       // Restore saved speed

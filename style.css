@@ -907,6 +907,46 @@ canvas {
   display: none;
 }
 
+/* Glass panel variant for Game Over / Victory / Pause / Settings etc.
+   Dark semi-transparent background with blur for readability over 3D scene. */
+.glass-panel {
+  background: rgba(20, 40, 30, 0.92) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 2px solid rgba(255, 255, 255, 0.18);
+  box-shadow:
+    0 24px 64px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Game Over / Victory specific card constraints */
+#game-over-screen .menu-card,
+#victory-screen .menu-card {
+  max-height: min(85vh, 620px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+}
+
+#game-over-screen .menu-card::-webkit-scrollbar,
+#victory-screen .menu-card::-webkit-scrollbar {
+  width: 6px;
+  display: block;
+}
+
+#game-over-screen .menu-card::-webkit-scrollbar-thumb,
+#victory-screen .menu-card::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+}
+
+/* Ensure title stays visible */
+#game-over-screen .game-title,
+#victory-screen .game-title {
+  flex-shrink: 0;
+  margin-bottom: clamp(4px, 1vh, 8px);
+}
+
 h1.game-title {
   font-family: var(--font-display);
   font-size: var(--title-size);
@@ -1165,6 +1205,128 @@ h1.game-title span {
   gap: 6px;
   margin-bottom: 4px;
   font-size: 0.8rem;
+}
+
+/* ============================================ */
+/* RUN SUMMARY BOX (Game Over / Victory)        */
+/* ============================================ */
+.run-summary-box {
+  background: #7D7A75 !important;
+  border-radius: 16px;
+  padding: 14px;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-top: 12px;
+}
+
+/* Screen tip on dark glass-panel (Game Over / Victory) */
+.glass-panel .screen-tip {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.glass-panel .screen-tip .tip-icon {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffd700;
+}
+
+/* Health verdict on dark glass-panel */
+.glass-panel .health-verdict {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.95);
+}
+
+.glass-panel .health-verdict.unhealthy {
+  background: rgba(255, 59, 48, 0.2);
+  border: 1px solid var(--glow-red);
+  color: #ff6b6b;
+}
+
+.glass-panel .health-verdict.healthy {
+  background: rgba(0, 255, 136, 0.2);
+  border: 1px solid var(--glow-green);
+  color: #69ffb4;
+}
+
+.run-summary-title {
+  margin: 0 0 10px 0;
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  text-align: center;
+  font-weight: 800;
+}
+
+.run-summary-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: clamp(6px, 1.5vw, 10px);
+  align-items: start;
+}
+
+.run-summary-stars {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-align: center;
+}
+
+.run-summary-star-rating {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.run-summary-star-title {
+  font-size: clamp(0.7rem, 2vw, 0.85rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.run-summary-star-count {
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  opacity: 0.8;
+}
+
+.run-summary-criteria {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.criteria-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: clamp(10px, 2vw, 12px);
+  line-height: 1.25;
+  text-align: left;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.criteria-item .checkmark {
+  flex-shrink: 0;
+  font-size: clamp(11px, 2.2vw, 14px);
+  line-height: 1;
+  margin-top: 1px;
+}
+
+.criteria-item .criteria-label {
+  flex: 1;
+  min-width: 0;
+  color: #2979ff;
+  font-weight: 600;
 }
 
 /* Health status styles in game over */
@@ -2549,6 +2711,8 @@ body:not(.playing) #pause-btn {
   align-items: center;
   justify-content: center;
   gap: clamp(1px, 0.4vh, 4px);
+  padding: clamp(4px, 1vh, 8px);
+  box-sizing: border-box;
   cursor: pointer;
   font-family: var(--font-display);
   color: #1a202c;
@@ -2598,6 +2762,10 @@ body:not(.playing) #pause-btn {
   line-height: 1.15;
   text-align: center;
   color: #1a202c;
+  word-wrap: break-word;
+  white-space: normal;
+  max-width: 100%;
+  padding: 0 clamp(2px, 0.5vw, 4px);
 }
 
 /* Giant watermelon PLAY button — dead center of the cluster */
@@ -2792,12 +2960,25 @@ body:not(.playing) #pause-btn {
     height: min(48vh, 86vw);
   }
   #start-screen .fruit-btn {
-    width: clamp(60px, 24%, 85px);
-    height: clamp(60px, 24%, 85px);
+    width: clamp(55px, 22%, 77px);
+    height: clamp(55px, 22%, 77px);
+    padding: clamp(4px, 1vh, 8px);
+    box-sizing: border-box;
   }
   #start-screen .fruit-btn--play {
     width: 46%;
     height: 46%;
+  }
+  #start-screen .fruit-btn .fruit-label {
+    word-wrap: break-word;
+    white-space: normal;
+    line-height: 1.1;
+    padding: 0 clamp(2px, 0.5vw, 4px);
+    max-width: 100%;
+  }
+  #start-screen .fruit-btn--kiwi .fruit-label {
+    padding-left: clamp(4px, 1vw, 8px);
+    padding-right: clamp(4px, 1vw, 8px);
   }
   #start-screen .skin-section-title {
     font-size: clamp(0.8rem, 2.2vh, 1rem);
@@ -2823,6 +3004,38 @@ body:not(.playing) #pause-btn {
   }
   #start-screen .skin-req {
     font-size: clamp(0.4rem, 0.9vh, 0.52rem);
+  }
+
+  .fruit-btn--red    { left: 50%; top: calc(15% - 8px); }
+  .fruit-btn--yellow { left: calc(83% + 6px); top: calc(39% - 4px); }
+  .fruit-btn--kiwi   { left: calc(17% - 6px); top: calc(39% - 4px); }
+  .fruit-btn--orange { left: calc(71% + 5px); top: calc(78% + 4px); }
+  .fruit-btn--grape  { left: calc(29% - 5px); top: calc(78% + 4px); }
+
+  /* Run Summary Box - Mobile */
+  .run-summary-box {
+    padding: 12px;
+    margin-top: 10px;
+  }
+  .run-summary-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    text-align: center;
+  }
+  .run-summary-stars {
+    order: 1;
+  }
+  .run-summary-criteria {
+    order: 2;
+    align-items: center;
+  }
+  .criteria-item {
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+  }
+  .criteria-item .criteria-label {
+    text-align: left;
   }
 }
 
@@ -2872,8 +3085,21 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.4rem, 0.8vh, 0.52rem);
   }
   #start-screen .fruit-btn {
-    width: clamp(44px, 24%, 60px);
-    height: clamp(44px, 24%, 60px);
+    width: clamp(40px, 22%, 55px);
+    height: clamp(40px, 22%, 55px);
+    padding: clamp(3px, 0.8vh, 6px);
+    box-sizing: border-box;
+  }
+  #start-screen .fruit-btn .fruit-label {
+    word-wrap: break-word;
+    white-space: normal;
+    line-height: 1.05;
+    padding: 0 clamp(2px, 0.5vw, 4px);
+    max-width: 100%;
+  }
+  #start-screen .fruit-btn--kiwi .fruit-label {
+    padding-left: clamp(4px, 1vw, 8px);
+    padding-right: clamp(4px, 1vw, 8px);
   }
   #start-screen .fruit-btn--play {
     width: 46%;
@@ -2890,6 +3116,56 @@ body:not(.playing) #pause-btn {
   }
   .fruit-btn--play .fruit-label {
     font-size: clamp(0.7rem, 2.6vh, 1.1rem);
+  }
+
+  .fruit-btn--red    { left: 50%; top: calc(15% - 7px); }
+  .fruit-btn--yellow { left: calc(83% + 5px); top: calc(39% - 3px); }
+  .fruit-btn--kiwi   { left: calc(17% - 5px); top: calc(39% - 3px); }
+  .fruit-btn--orange { left: calc(71% + 4px); top: calc(78% + 3px); }
+  .fruit-btn--grape  { left: calc(29% - 4px); top: calc(78% + 3px); }
+}
+
+/* Extra-small phones (≤ 480px): further increase radial offset,
+   shrink buttons more, and tighten text sizing. */
+@media (max-width: 480px) {
+  #start-screen .arcade-cluster {
+    width: min(50vh, 90vw);
+    height: min(50vh, 90vw);
+  }
+  #start-screen .fruit-btn {
+    width: clamp(48px, 20%, 68px);
+    height: clamp(48px, 20%, 68px);
+    padding: clamp(3px, 0.8vh, 6px);
+  }
+  #start-screen .fruit-btn .fruit-label {
+    font-size: clamp(0.45rem, 1.2vh, 0.65rem);
+    line-height: 1.05;
+  }
+  #start-screen .fruit-btn--kiwi .fruit-label {
+    padding-left: clamp(6px, 1.5vw, 10px);
+    padding-right: clamp(6px, 1.5vw, 10px);
+  }
+
+  .fruit-btn--red    { left: 50%; top: calc(12% - 10px); }
+  .fruit-btn--yellow { left: calc(85% + 8px); top: calc(37% - 6px); }
+  .fruit-btn--kiwi   { left: calc(15% - 8px); top: calc(37% - 6px); }
+  .fruit-btn--orange { left: calc(73% + 7px); top: calc(80% + 6px); }
+  .fruit-btn--grape  { left: calc(27% - 7px); top: calc(80% + 6px); }
+
+  /* Run Summary Box - Extra small phones */
+  .run-summary-box {
+    padding: 10px;
+    border-radius: 12px;
+  }
+  .run-summary-title {
+    font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+  }
+  .criteria-item {
+    font-size: clamp(9px, 2vw, 11px);
+    gap: 5px;
+  }
+  .criteria-item .checkmark {
+    font-size: clamp(10px, 2.2vw, 12px);
   }
 }
 
@@ -2910,6 +3186,18 @@ body.in-menu #swipe-area {
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+/* During active gameplay, hide the bottom navigation dock and HUD
+   so the canvas is the only touch target. The pause button is hoisted
+   separately and remains visible via its own z-index. */
+body.playing #mobile-dock,
+body.playing .hud-mobile-goal,
+body.playing .hud-mobile-row {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 body.in-menu #canvas-container {

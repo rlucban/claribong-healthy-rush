@@ -351,25 +351,42 @@
         <span class="tip-text" id="gameover-tip-text"></span>
       </div>
 
-      <!-- Nutrition Report Card -->
-      <div class="nutrition-report glass-panel" style="margin-top: 15px; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);">
-        <h3 style="margin:0 0 10px 0; font-family:var(--font-display); text-transform:uppercase; font-size:1rem; color:var(--glow-orange); text-align:center;">Run Summary</h3>
-        <div style="display:flex; justify-content:space-around; align-items:center;">
-          <div style="text-align:center;">
-            <div class="star-rating">
+      <!-- Run Summary Box -->
+      <div class="run-summary-box">
+        <h3 class="run-summary-title" style="color: var(--glow-orange);">Run Summary</h3>
+        <div class="run-summary-grid">
+          <div class="run-summary-stars">
+            <div class="run-summary-star-rating">
               <span id="go-star1" class="star-icon">⭐</span>
               <span id="go-star2" class="star-icon">⭐</span>
               <span id="go-star3" class="star-icon">⭐</span>
             </div>
-            <div id="go-star-title" style="font-size:0.85rem; font-weight:600; text-transform:uppercase; margin:5px 0; color:#ff1744;">TRY AGAIN!</div>
-            <div id="go-star-count" style="font-size:0.7rem; color:rgba(255,255,255,0.5);">0/3 Stars</div>
+            <div id="go-star-title" class="run-summary-star-title" style="color:#ff1744;">TRY AGAIN!</div>
+            <div id="go-star-count" class="run-summary-star-count">0/3 Stars</div>
           </div>
-          <div style="text-align:left; font-size:0.85rem; line-height:1.6;">
-            <div style="margin-bottom:6px;"><span style="color:var(--glow-green-bright);">Purity:</span> <span id="go-purity" style="font-weight:bold;">0%</span> | <span style="color:#4caf50;">Healthy:</span> <span id="go-healthy" style="font-weight:bold;">0</span>/<span id="go-total" style="font-weight:bold;">0</span></div>
-            <div style="margin-bottom:6px;"><span style="color:#ffea00;">Max Combo:</span> <span id="go-combo" style="font-weight:bold;">0</span></div>
-            <div class="checklist-item"><span id="go-check1">❌</span> <span style="color:#2979ff;">Reached Level 5+ or finished</span></div>
-            <div class="checklist-item"><span id="go-check2">❌</span> <span style="color:#2979ff;">All nutrition goals (3F/3V/5W)</span></div>
-            <div class="checklist-item"><span id="go-check3">❌</span> <span style="color:#2979ff;">5x combo OR 75% purity</span></div>
+          <div class="run-summary-criteria">
+            <div style="margin-bottom:4px; font-size: clamp(10px, 2vw, 12px);">
+              <span style="color:var(--glow-green-bright);">Purity:</span>
+              <span id="go-purity" style="font-weight:bold;">0%</span>
+              <span style="color:#4caf50;"> | Healthy:</span>
+              <span id="go-healthy" style="font-weight:bold;">0</span>/<span id="go-total" style="font-weight:bold;">0</span>
+            </div>
+            <div style="margin-bottom:4px; font-size: clamp(10px, 2vw, 12px);">
+              <span style="color:#ffea00;">Max Combo:</span>
+              <span id="go-combo" style="font-weight:bold;">0</span>
+            </div>
+            <div class="criteria-item">
+              <span id="go-check1" class="checkmark">❌</span>
+              <span class="criteria-label">Reached Level 5+ or finished</span>
+            </div>
+            <div class="criteria-item">
+              <span id="go-check2" class="checkmark">❌</span>
+              <span class="criteria-label">All nutrition goals (3F/3V/5W)</span>
+            </div>
+            <div class="criteria-item">
+              <span id="go-check3" class="checkmark">❌</span>
+              <span class="criteria-label">5x combo OR 75% purity</span>
+            </div>
           </div>
         </div>
       </div>
@@ -403,25 +420,42 @@
         YOU DID IT!
       </div>
 
-      <!-- Nutrition Report Card -->
-      <div class="nutrition-report glass-panel" style="margin-top: 15px; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);">
-        <h3 style="margin:0 0 10px 0; font-family:var(--font-display); text-transform:uppercase; font-size:1rem; color:var(--glow-green); text-align:center;">Run Summary</h3>
-        <div style="display:flex; justify-content:space-around; align-items:center;">
-          <div style="text-align:center;">
-            <div class="star-rating">
+      <!-- Run Summary Box -->
+      <div class="run-summary-box">
+        <h3 class="run-summary-title" style="color: var(--glow-green);">Run Summary</h3>
+        <div class="run-summary-grid">
+          <div class="run-summary-stars">
+            <div class="run-summary-star-rating">
               <span id="vic-star1" class="star-icon">⭐</span>
               <span id="vic-star2" class="star-icon">⭐</span>
               <span id="vic-star3" class="star-icon">⭐</span>
             </div>
-            <div id="vic-star-title" style="font-size:0.85rem; font-weight:600; text-transform:uppercase; margin:5px 0; color:#00e676;">PERFECT RUN!</div>
-            <div id="vic-star-count" style="font-size:0.7rem; color:rgba(255,255,255,0.5);">3/3 Stars</div>
+            <div id="vic-star-title" class="run-summary-star-title" style="color:#00e676;">PERFECT RUN!</div>
+            <div id="vic-star-count" class="run-summary-star-count">3/3 Stars</div>
           </div>
-          <div style="text-align:left; font-size:0.85rem; line-height:1.6;">
-            <div style="margin-bottom:6px;"><span style="color:var(--glow-green-bright);">Purity:</span> <span id="vic-purity" style="font-weight:bold;">100%</span> | <span style="color:#4caf50;">Healthy:</span> <span id="vic-healthy" style="font-weight:bold;">0</span>/<span id="vic-total" style="font-weight:bold;">0</span></div>
-            <div style="margin-bottom:6px;"><span style="color:#ffea00;">Max Combo:</span> <span id="vic-combo" style="font-weight:bold;">0</span></div>
-            <div class="checklist-item"><span id="vic-check1">✅</span> <span style="color:#2979ff;">Reached Level 5+ or finished</span></div>
-            <div class="checklist-item"><span id="vic-check2">✅</span> <span style="color:#2979ff;">All nutrition goals (3F/3V/5W)</span></div>
-            <div class="checklist-item"><span id="vic-check3">✅</span> <span style="color:#2979ff;">5x combo OR 75% purity</span></div>
+          <div class="run-summary-criteria">
+            <div style="margin-bottom:4px; font-size: clamp(10px, 2vw, 12px);">
+              <span style="color:var(--glow-green-bright);">Purity:</span>
+              <span id="vic-purity" style="font-weight:bold;">100%</span>
+              <span style="color:#4caf50;"> | Healthy:</span>
+              <span id="vic-healthy" style="font-weight:bold;">0</span>/<span id="vic-total" style="font-weight:bold;">0</span>
+            </div>
+            <div style="margin-bottom:4px; font-size: clamp(10px, 2vw, 12px);">
+              <span style="color:#ffea00;">Max Combo:</span>
+              <span id="vic-combo" style="font-weight:bold;">0</span>
+            </div>
+            <div class="criteria-item">
+              <span id="vic-check1" class="checkmark">✅</span>
+              <span class="criteria-label">Reached Level 5+ or finished</span>
+            </div>
+            <div class="criteria-item">
+              <span id="vic-check2" class="checkmark">✅</span>
+              <span class="criteria-label">All nutrition goals (3F/3V/5W)</span>
+            </div>
+            <div class="criteria-item">
+              <span id="vic-check3" class="checkmark">✅</span>
+              <span class="criteria-label">5x combo OR 75% purity</span>
+            </div>
           </div>
         </div>
       </div>
