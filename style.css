@@ -1,0 +1,3182 @@
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap');
+
+:root {
+  /* === REFERENCE DESIGN COLOR PALETTE === */
+  --bg-dark: #14281D;        /* Deep forest green menu background */
+  --bg-surface: #1b3e31;
+  --panel-bg: #fff0f3;       /* Soft pinkish cream cards */
+  --card-border: #ffa6b9;    /* Soft coral-pink card border */
+  --card-shadow: 0 6px 18px rgba(15, 35, 25, 0.35);
+
+  --text-main: #332227;      /* Dark cocoa brown for text */
+  --text-muted: #75555e;
+  --text-heading: #ff5079;   /* Coral pink heading */
+
+  /* Accent Colors */
+  --pink-main: #ff6088;
+  --pink-bright: #ff85a2;
+  --pink-light: #ffd6e0;
+  --green-main: #48bb78;
+  --green-dark: #224b3c;
+  --yellow-main: #f6c90e;
+
+  --font-display: 'Fredoka One', sans-serif;
+  --font-body: 'Nunito', sans-serif;
+
+  /* Responsive sizing */
+  --title-size: clamp(1.8rem, 6vw, 3.5rem);
+  --subtitle-size: clamp(1rem, 3vw, 1.8rem);
+  --body-size: clamp(0.75rem, 2.2vw, 1.1rem);
+  --btn-size: clamp(0.8rem, 2vw, 1.1rem);
+  --btn-pad-v: clamp(8px, 1.5vh, 14px);
+  --btn-pad-h: clamp(14px, 3vw, 26px);
+  --panel-pad: clamp(12px, 3vw, 24px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+
+  /* Parchment / glass panel palette (referenced by UI but was missing) */
+  --parchment: #fff6e6;
+  --parchment-dark: #f0ddb0;
+  --parchment-border: #e8cf9e;
+  --wood-brown: #a0673a;
+  --border-light: rgba(255, 255, 255, 0.25);
+  --hud-gap: 10px;
+
+  /* Neon glow accents */
+  --glow-red: #ff1744;
+  --glow-red-bright: #ff5c7a;
+  --glow-green: #00e676;
+  --glow-green-bright: #69ffb4;
+  --glow-blue: #2979ff;
+  --glow-blue-bright: #6fa8ff;
+  --glow-purple: #d500f9;
+  --glow-purple-bright: #e040fb;
+  --glow-yellow: #ffea00;
+  --glow-orange: #ff9100;
+  --glow-rainbow: linear-gradient(90deg, #ff1744, #ff9100, #ffea00, #00e676, #2979ff, #d500f9, #ff1744);
+
+  /* Health badge tints */
+  --healthy-badge-bg: rgba(0, 230, 118, 0.12);
+  --healthy-badge-border: rgba(0, 230, 118, 0.45);
+  --unhealthy-badge-bg: rgba(255, 59, 48, 0.12);
+  --unhealthy-badge-border: rgba(255, 59, 48, 0.45);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* ---- CLICK/TAP TARGET HARDENING ----
+   Every interactive element must explicitly accept pointer input so nothing
+   gets swallowed by the WebGL canvas or full-screen UI containers below. */
+button,
+input,
+label.toggle-switch,
+.toggle-slider,
+.color-swatch,
+.skin-card,
+.speed-opt,
+.mobile-btn {
+  pointer-events: auto;
+}
+
+button {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  cursor: pointer;
+}
+
+/* Full-screen background overlays must NEVER block clicks.
+   Interactive children (.audio-icon-btn, .volume-bar, #pause-btn,
+   #mobile-pause-btn, .dock-btn, .screen.active) declare their own
+   pointer-events: auto. */
+#warning-overlay,
+#danger-overlay,
+#flash-word-overlay,
+#ui-overlay {
+  pointer-events: none;
+}
+
+/* The game is an app-style fullscreen canvas: the page itself can NEVER
+   scroll. The fixed body/wrapper act as the 100dvh viewport anchor. */
+html {
+  height: 100%;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  background-color: #14281D;
+  background-image: linear-gradient(rgba(20, 40, 29, 0.82) 0%, rgba(10, 25, 18, 0.92) 100%), url('background.png');
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 400px;
+}
+
+body {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: none;
+  background-color: #14281D;
+  background-image: linear-gradient(rgba(20, 40, 29, 0.82) 0%, rgba(10, 25, 18, 0.92) 100%), url('background.png');
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 400px;
+  font-family: var(--font-body);
+  color: var(--text-main);
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+}
+
+/* Full-Viewport Game Wrapper: anchors every overlay, never scrolls.
+   position: relative so the always-visible #pause-btn (position:absolute)
+   anchors correctly to the top-right corner on narrow mobile screens. */
+#game-wrapper {
+  position: relative;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  touch-action: none;
+  background-color: #14281D;
+  background-image: linear-gradient(rgba(20, 40, 29, 0.82) 0%, rgba(10, 25, 18, 0.92) 100%), url('background.png');
+  background-repeat: no-repeat, repeat;
+  background-size: cover, 400px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+/* 3D Canvas container */
+#canvas-container {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  touch-action: none;
+  transition: filter 0.5s ease;
+}
+
+canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+}
+
+/* UI Overlay Container — a non-interactive backdrop that lets the
+   3D canvas receive all pointer input. Only elements that opt back in
+   via their own `pointer-events: auto` are clickable. */
+#ui-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ============================================ */
+/* HUD LAYOUT (REFERENCE UI)                    */
+/* ============================================ */
+
+/* Desktop HUD grid: [left cards | track viewport | right panel] */
+#hud.hud-desktop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+   padding: clamp(12px, 2vw, 22px);
+   pointer-events: none;
+   display: grid;
+   grid-template-columns: auto 1fr auto;
+   grid-template-rows: auto 1fr;
+   gap: clamp(14px, 2.2vw, 22px);
+  box-sizing: border-box;
+  z-index: 20;
+}
+
+/* HUD is purely informational: NOTHING inside it may swallow pointer
+   input meant for the game canvas. Only interactive widgets opt back in. */
+#hud, #hud * {
+  pointer-events: none;
+}
+
+#hud .audio-icon-btn,
+#hud .volume-bar {
+  pointer-events: auto;
+}
+
+/* NUTRITION brand lives on the Main Menu card only (not during gameplay) */
+.menu-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.nutrition-title-badge {
+  background: linear-gradient(180deg, #ff7597 0%, #ff4d6d 100%);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  padding: 6px 18px;
+  border-radius: 20px;
+  border: 3px solid #ffffff;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+  letter-spacing: 0.05em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.nutrition-sub-ribbon {
+  background: #48bb78;
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  padding: 3px 12px;
+  border-radius: 12px;
+  letter-spacing: 0.1em;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+/* TOP-LEFT CARDS */
+.hud-top-left {
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(10px, 1.4vw, 14px);
+}
+
+/* Generic white HUD card (reference style) */
+.hud-card {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  padding: 10px 14px;
+  box-sizing: border-box;
+  color: #2D3748;
+}
+
+.hud-card-label {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #718096;
+}
+
+.hud-card-value {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #2D3748;
+  line-height: 1;
+}
+
+.hud-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hud-card-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: #fff3e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.score-card,
+.level-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 150px;
+}
+
+.level-card .hud-card-icon {
+  background: #e3f2fd;
+}
+
+/* DAILY GOAL card with mini progress bars */
+.goal-card {
+  width: 210px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.hud-card-header {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #718096;
+}
+
+.goal-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #2D3748;
+}
+
+.goal-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.goal-emoji {
+  width: 22px;
+  text-align: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.goal-bar {
+  flex: 1;
+  height: 8px;
+  background: #EDF2F7;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.goal-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #48bb78, #2ed573);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.goal-count {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #4A5568;
+  min-width: 34px;
+  text-align: right;
+}
+
+/* TOP-CENTER: conditional badges (frenzy / buff / power-ups).
+   Floating directly over the 3D viewport, so white text + dark shadow. */
+.hud-top-center {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: center;
+  align-self: start;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  max-width: 90%;
+}
+
+.frenzy-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  background: rgba(20, 24, 40, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.frenzy-badge.visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.frenzy-timer-box {
+  background: #ffc6ff;
+  color: #224b3c;
+  padding: 1px 8px;
+  border-radius: 8px;
+  border: 2px solid #ffffff;
+  text-shadow: none;
+  font-size: 1.4rem;
+  font-weight: 900;
+  min-width: 26px;
+  text-align: center;
+  line-height: 1.2;
+}
+
+#powerup-display {
+  display: flex;
+  gap: 8px;
+}
+
+.mini-powerup {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #2D3748;
+  padding: 4px 10px;
+}
+
+/* TOP-RIGHT PANEL: audio widget + healthiness
+   margin-top clears the fixed top-right Pause button so the audio &
+   health cards never overlap the tappable corner control. */
+.hud-top-right {
+  grid-column: 3;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: clamp(10px, 1.4vw, 14px);
+  margin-top: clamp(60px, 6vw, 70px);
+}
+
+.audio-widget {
+  width: 200px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.audio-track-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.audio-icon {
+  font-size: 1.05rem;
+}
+
+.audio-track-name {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #2D3748;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.audio-vol-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.audio-icon-btn {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: none;
+  background: #EDF2F7;
+  color: #2D3748;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.15s ease, background 0.2s ease;
+}
+
+.audio-icon-btn:hover {
+  background: #E2E8F0;
+  transform: scale(1.08);
+}
+
+.volume-bar {
+  flex: 1;
+  height: 8px;
+  background: #EDF2F7;
+  border-radius: 99px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.volume-fill {
+  height: 100%;
+  width: 80%;
+  background: linear-gradient(90deg, #48bb78, #2ed573);
+  border-radius: 99px;
+}
+
+.health-card {
+  width: 200px;
+  padding: 10px 12px;
+}
+
+.health-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #718096;
+}
+
+.health-num {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #2D3748;
+}
+
+#health-status-text {
+  font-weight: 900;
+  color: #2D3748;
+  transition: color 0.3s ease;
+}
+
+.health-bar-bg {
+  width: 100%;
+  height: 12px;
+  background: #EDF2F7;
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 6px;
+}
+
+.health-bar-fill {
+  height: 100%;
+  width: 50%;
+  background: linear-gradient(90deg, #ff5e7e, #f7b731, #2ed573);
+  border-radius: 99px;
+  transition: width 0.3s ease;
+}
+
+.health-bar-fill.toxic {
+  background: linear-gradient(90deg, #7a0090, #e040fb);
+}
+
+.health-bar-fill.healthy {
+  background: linear-gradient(90deg, #2ed573, #a3ff00);
+}
+
+.health-bar-fill.super {
+  background: var(--glow-rainbow);
+  background-size: 200% 100%;
+  animation: rainbow-shift 1.5s linear infinite;
+}
+
+/* Nutrition tip shown on Pause and Game Over screens.
+   Sits on the cream/parchment .menu-card, so text MUST be dark cocoa
+   brown — never white. */
+.screen-tip {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  text-align: left;
+  background: rgba(255, 233, 180, 0.55);
+  border: 1px solid rgba(160, 103, 58, 0.4);
+  border-radius: 16px;
+  padding: 10px 16px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  color: #4a3525;
+  margin-top: 4px;
+}
+
+.tip-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #ffeaa7;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  border: 2px solid #e8cf9e;
+  box-shadow: 0 1px 4px rgba(100, 60, 20, 0.25);
+  flex-shrink: 0;
+}
+
+
+/* Active Buff Display (floating over the 3D viewport) */
+#buff-display,
+#buff-display-mobile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+  background: rgba(20, 24, 40, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+#buff-display.visible,
+#buff-display-mobile.visible {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.buff-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  box-shadow: 0 0 8px currentColor;
+}
+
+/* ============================================ */
+/* MOBILE HUD (<= 768px)                        */
+/* ============================================ */
+
+.hud-mobile-goal,
+.hud-mobile-row,
+#mobile-dock {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* Desktop HUD replaced by the mobile layout */
+  #hud.hud-desktop {
+    display: none;
+  }
+
+  /* A single fixed top-right #pause-btn (from the base rule) covers mobile
+     too — hide the legacy inline button that lived inside the mobile HUD row
+     so there is never a duplicate pause control. */
+  #mobile-pause-btn {
+    display: none;
+  }
+
+   /* TOP PANEL: daily-goal overall progress bar
+      Leave 70px on the right so the fixed #pause-btn (48px + 12px inset)
+      never overlaps the progress bar on mobile. */
+   .hud-mobile-goal {
+     display: block;
+     position: absolute;
+     top: 8px;
+     left: 8px;
+     right: 70px;
+     z-index: 25;
+     pointer-events: none;
+     width: calc(100vw - 16px - 70px);
+   }
+
+  .mobile-goal-card {
+    display: flex;
+    align-items: center;
+    gap: clamp(8px, 2vw, 12px);
+    padding: clamp(8px, 2vh, 12px) clamp(12px, 3vw, 18px);
+  }
+
+  .mobile-goal-card .goal-emoji {
+    font-size: clamp(1rem, 3vw, 1.2rem);
+  }
+
+  .mobile-goal-card .goal-bar {
+    height: clamp(8px, 2vw, 10px);
+  }
+
+  .mobile-goal-card .goal-count {
+    min-width: clamp(34px, 6vw, 40px);
+    font-weight: 800;
+  }
+
+   /* SECOND ROW (3 columns: stats | frenzy | pause)
+      right: 70px leaves room for the fixed #pause-btn on mobile. */
+   .hud-mobile-row {
+     display: grid;
+     grid-template-columns: 1fr auto 1fr;
+     align-items: start;
+     position: absolute;
+     top: clamp(56px, 8vh, 72px);
+     left: 8px;
+     right: 70px;
+     z-index: 25;
+     pointer-events: none;
+     width: calc(100vw - 16px - 70px);
+   }
+
+  .mobile-score-card {
+    justify-self: start;
+    display: flex;
+    gap: clamp(12px, 2.5vw, 16px);
+    padding: clamp(8px, 2vh, 12px) clamp(12px, 2.5vw, 16px);
+  }
+
+  .mobile-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .mobile-stat .hud-card-value {
+    font-size: clamp(1rem, 3vw, 1.25rem);
+  }
+
+  .mobile-stat .hud-card-label {
+    font-size: clamp(0.55rem, 1.4vw, 0.65rem);
+  }
+
+  .mobile-center-cell {
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-top: 4px;
+  }
+
+  .mobile-center-cell .frenzy-badge {
+    font-size: 0.8rem;
+    padding: 4px 12px;
+  }
+
+  .mobile-center-cell .frenzy-timer-box {
+    font-size: 1rem;
+    min-width: 22px;
+  }
+
+  .round-btn {
+    justify-self: end;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: #ffffff;
+    color: #2D3748;
+    font-size: 1rem;
+    font-weight: 900;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+  }
+
+  /* BOTTOM NAVIGATION DOCK */
+  #mobile-dock {
+    display: flex;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 60;
+    justify-content: space-around;
+    align-items: center;
+    padding: 6px 4px calc(8px + var(--safe-bottom));
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 -4px 16px rgba(0,0,0,0.12);
+    pointer-events: auto;
+  }
+
+  .dock-btn {
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    border-radius: 12px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease, transform 0.15s ease;
+  }
+
+  .dock-btn:hover,
+  .dock-btn:active {
+    background: #EDF2F7;
+    transform: scale(1.08);
+  }
+}
+
+/* Fullscreen Screens: Start, Game Over, Pause */
+.screen {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  z-index: 100;
+  padding: clamp(12px, 3vw, 20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transform: scale(0.95);
+  /* TRANSPARENT background: the 3D scene stays visible behind the menu.
+     Only the .menu-card / .glass-panel provide a readable surface. */
+  background: transparent;
+}
+
+.screen.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: scale(1);
+  z-index: 9999;
+}
+
+.menu-card {
+  width: 90%;
+  max-width: min(500px, 85vw);
+  /* Never use fixed pixel heights: cap by viewport so the card always
+     auto-fits the screen. Overflow scrolls only as a last resort. */
+  max-height: 92vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: var(--panel-pad);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.2vh, 12px);
+  /* Parchment-style card */
+  background: var(--parchment);
+  border: 3px solid var(--parchment-border);
+  border-radius: 20px;
+  box-shadow:
+    0 20px 60px rgba(40, 25, 5, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 0 rgba(160, 110, 60, 0.2);
+}
+
+.menu-card::-webkit-scrollbar {
+  display: none;
+}
+
+h1.game-title {
+  font-family: var(--font-display);
+  font-size: var(--title-size);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  /* Warm fruit rainbow gradient */
+  background: linear-gradient(135deg, #e8871a 0%, #d4200a 30%, #4a8c3f 65%, #2980b9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 3px 6px rgba(60, 30, 10, 0.3));
+  margin-bottom: 5px;
+}
+
+h1.game-title span {
+  display: block;
+  font-size: clamp(0.9rem, 3vw, 1.5rem);
+  color: var(--text-muted);
+  -webkit-text-fill-color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  margin-top: clamp(4px, 1vw, 8px);
+  text-transform: uppercase;
+}
+
+.game-desc {
+  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  line-height: 1.7;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Control instructions (rendered on the cream parchment card) */
+.instructions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(8px, 1.5vw, 15px);
+  text-align: left;
+  background: rgba(160, 110, 60, 0.08);
+  padding: clamp(10px, 2.5vw, 20px);
+  border-radius: 12px;
+  border: 1px solid rgba(160, 110, 60, 0.15);
+}
+
+.instruction-item {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 0.5vw, 5px);
+}
+
+.instruction-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+.instruction-desc {
+  font-size: clamp(0.75rem, 2vw, 0.95rem);
+  color: var(--text-main);
+}
+
+.badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(46, 204, 113, 0.12);
+  font-family: var(--font-display);
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  font-weight: 700;
+  margin: 0 2px;
+  color: var(--text-main);
+}
+
+.badge.healthy {
+  background: var(--healthy-badge-bg);
+  color: #1f7a3d;
+  border: 1px solid var(--healthy-badge-border);
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.15);
+}
+
+.badge.unhealthy {
+  background: var(--unhealthy-badge-bg);
+  color: #b91c1c;
+  border: 1px solid var(--unhealthy-badge-border);
+  box-shadow: 0 0 12px rgba(255, 59, 48, 0.15);
+}
+
+/* Button stylings - green banner style like the reference */
+.btn {
+  background: linear-gradient(180deg, #7ab648 0%, #5a9130 100%);
+  color: #ffffff;
+  border: none;
+  border-bottom: 3px solid #3d6620;
+  padding: var(--btn-pad-v) var(--btn-pad-h);
+  font-family: var(--font-display);
+  font-size: var(--btn-size);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-radius: clamp(10px, 2vw, 16px);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(6px, 1.2vw, 10px);
+  box-shadow: 0 4px 12px rgba(60, 100, 20, 0.35);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+.btn::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, rgba(255,255,255,0) 70%);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.5s ease-out;
+  pointer-events: none;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(60, 100, 20, 0.45);
+  background: linear-gradient(180deg, #8cc855 0%, #6aa03e 100%);
+}
+
+.btn:active {
+  transform: translateY(2px);
+  border-bottom-width: 1px;
+  box-shadow: 0 2px 8px rgba(60, 100, 20, 0.3);
+}
+
+.btn:active::after {
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0s;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg, #7ab648 0%, #4e8025 100%);
+  color: #ffffff;
+  border-bottom: 3px solid #2e5010;
+  box-shadow: 0 4px 16px rgba(50, 120, 20, 0.45);
+  font-size: clamp(0.85rem, 2.5vw, 1.15rem);
+}
+
+.btn-primary:hover {
+  background: linear-gradient(180deg, #8cc855 0%, #5e9030 100%);
+  box-shadow: 0 6px 24px rgba(50, 120, 20, 0.55);
+  color: #ffffff;
+}
+
+.btn-secondary {
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  color: var(--text-muted);
+  border: 2px solid var(--parchment-border);
+  border-bottom: 3px solid var(--wood-brown);
+  box-shadow: 0 3px 10px rgba(100, 60, 20, 0.25);
+  text-shadow: none;
+}
+
+.btn-secondary:hover {
+  background: linear-gradient(180deg, #fdf0cc 0%, #f0d898 100%);
+  color: var(--text-heading);
+  border-color: var(--wood-brown);
+  box-shadow: 0 5px 16px rgba(100, 60, 20, 0.35);
+}
+
+.btn-row {
+  display: flex;
+  gap: clamp(8px, 2vw, 15px);
+  width: 100%;
+}
+
+.btn-row > .btn {
+  flex: 1;
+}
+
+/* High Score Display */
+.score-badge-container {
+  display: flex;
+  justify-content: center;
+  gap: clamp(10px, 2.5vw, 20px);
+}
+
+.score-badge {
+  background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(235, 210, 150, 0.4) 100%);
+  border: 2px solid var(--parchment-border);
+  border-radius: 14px;
+  padding: clamp(8px, 2vh, 12px) clamp(16px, 3vw, 24px);
+  flex: 1;
+  min-width: 120px;
+  min-height: 50px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.score-badge .val {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 5vw, 28px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: var(--text-heading);
+}
+
+.score-badge .lbl {
+  font-size: clamp(0.6rem, 1.8vw, 0.82rem);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-top: clamp(2px, 0.5vw, 4px);
+}
+
+/* Star Rating Visual Styles */
+.star-rating {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.star-icon {
+  font-size: 3rem;
+  color: #ffd700;
+  opacity: 0.2;
+  filter: grayscale(100%);
+  transition: all 0.3s ease;
+}
+
+.star-icon.earned {
+  opacity: 1;
+  filter: none;
+  text-shadow: 0 0 8px #ffd700, 0 0 16px #ffd700;
+}
+
+.star-icon.star-dim {
+  opacity: 0.2;
+  filter: grayscale(100%);
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+  font-size: 0.8rem;
+}
+
+/* Health status styles in game over */
+.health-verdict {
+  padding: 15px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-top: 5px;
+}
+
+.health-verdict.unhealthy {
+  background: rgba(255, 59, 48, 0.15);
+  border: 1px solid var(--glow-red);
+  color: #b3202e;
+  box-shadow: 0 0 15px rgba(255, 59, 48, 0.15);
+}
+
+.health-verdict.healthy {
+  background: rgba(0, 255, 136, 0.15);
+  border: 1px solid var(--glow-green);
+  color: #1f7a3d;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
+}
+
+/* Pause Button — forced ALWAYS visible during active gameplay.
+   Hoisted to the top level of #game-wrapper (outside the pointer-events-none
+   HUD canvas) and pinned to the top-right corner with a high z-index so it can
+   never be hidden beneath the 3D track viewport or any game overlay.
+   `display: flex !important` + `pointer-events: auto !important` defeat the
+   `#ui-overlay` / `#hud *` rules that would otherwise clip the button or pass
+   pointer events through to the WebGL canvas. A body-state override hides it
+   only outside an active run (main menu / Game Over / Victory); game.js keeps
+   body.playing on while the match is running or paused. Size is a crisp 50px
+   (min 48px) for child & PWD-friendly tapping. Input is handled by a dedicated
+   touchstart listener (plus click/pointerdown/keydown for desktop) that calls
+   stopPropagation() and preventDefault() so the window steering layer never
+   absorbs the pause tap; ESC toggles pause at the window level. */
+#pause-btn {
+  position: absolute !important;
+  top: 12px !important;
+  right: 12px !important;
+  z-index: 999999 !important;
+  width: 48px;
+  height: 48px;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  color: #2D3748;
+  font-size: clamp(1.4rem, 3vw, 1.6rem);
+  font-weight: 900;
+  display: flex !important;
+  pointer-events: auto !important;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* Hide only outside an active run (main menu / Game Over / Victory). */
+body:not(.playing) #pause-btn {
+  display: none !important;
+}
+
+#pause-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+#pause-btn:active {
+  transform: scale(0.9);
+}
+
+/* Low Health/High Junk Warning Screen Flash */
+#warning-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  box-shadow: inset 0 0 0px 0px rgba(255, 59, 48, 0);
+  transition: box-shadow 0.3s ease;
+}
+
+#warning-overlay.flashing {
+  animation: warning-flash 0.5s infinite;
+}
+
+/* Keyframe Animations */
+@keyframes warning-flash {
+  0% {
+    box-shadow: inset 0 0 0px rgba(255, 59, 48, 0);
+  }
+  50% {
+    box-shadow: inset 0 0 60px 10px rgba(255, 59, 48, 0.45);
+  }
+  100% {
+    box-shadow: inset 0 0 0px rgba(255, 59, 48, 0);
+  }
+}
+
+@keyframes rainbow-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes super-pulse {
+  0% {
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  }
+  100% {
+    box-shadow: 0 0 35px rgba(255, 255, 255, 1);
+  }
+}
+
+@media (max-width: 768px) {
+  h1.game-title {
+    font-size: 2.5rem;
+  }
+  h1.game-title span {
+    font-size: 1.3rem;
+  }
+  .menu-card {
+    padding: clamp(10px, 2.5vw, 20px);
+    max-width: 92vw;
+  }
+  .instructions {
+    grid-template-columns: 1fr;
+  }
+   #hud {
+    padding: 10px;
+   }
+    #pause-btn {
+     /* Ensure >=48px touch target on mobile; responsive clamp from base rule */
+     width: clamp(48px, 10vw, 48px);
+     height: clamp(48px, 10vw, 48px);
+     min-width: 48px;
+     min-height: 48px;
+     font-size: clamp(1.2rem, 4vw, 1.5rem);
+   }
+}
+
+/* ============================================ */
+/* SKIN SELECTOR SYSTEM                         */
+/* ============================================ */
+
+.skin-section {
+  margin-top: 5px;
+}
+
+.skin-section-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.skin-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.skin-card {
+  background: rgba(139, 94, 60, 0.08);
+  border: 2px solid var(--parchment-border);
+  border-radius: 12px;
+  padding: 6px 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skin-card:hover {
+  background: rgba(139, 94, 60, 0.15);
+  border-color: var(--wood-brown);
+  transform: translateY(-2px);
+}
+
+.skin-card.active {
+  border-color: var(--glow-green);
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.2), inset 0 0 15px rgba(0, 255, 136, 0.05);
+}
+
+.skin-card.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  filter: grayscale(70%);
+  pointer-events: none;
+}
+
+.skin-card.locked:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.skin-preview {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.lock-icon {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  font-size: 0.65rem;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.skin-name {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+}
+
+.skin-req {
+  font-size: 0.58rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.skin-card.active .skin-req {
+  color: #1f7a3d;
+}
+
+.skin-card .equipped-badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  font-size: 0.55rem;
+  background: var(--glow-green);
+  color: #000;
+  padding: 2px 5px;
+  border-radius: 4px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ============================================ */
+/* MUSIC TRACK SELECTOR (now inside audio widget) */
+/* ============================================ */
+
+/* ============================================ */
+/* CHARACTER SELECT SCREEN                      */
+/* ============================================ */
+
+.char-select-card {
+  max-width: 560px;
+}
+
+.char-preview {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px 0;
+}
+
+.preview-ball {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ffffff, #ff1744);
+  box-shadow:
+    0 0 30px rgba(255, 23, 68, 0.5),
+    0 8px 30px rgba(0, 0, 0, 0.3);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.color-swatch {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.color-swatch:hover {
+  transform: scale(1.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.color-swatch.active {
+  border-color: #fff;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.4), 0 0 8px currentColor;
+  transform: scale(1.1);
+}
+
+/* ============================================ */
+/* SETTINGS SCREEN                              */
+/* ============================================ */
+
+.settings-card {
+  max-width: 480px;
+}
+
+.settings-list {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+
+.setting-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 12px 16px;
+  background: rgba(160, 110, 60, 0.08);
+  border-radius: 12px;
+  border: 1px solid rgba(160, 110, 60, 0.15);
+}
+
+.setting-label {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-main);
+}
+
+.setting-status {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--green-main);
+  min-width: 30px;
+  text-align: right;
+}
+
+/* Toggle Switch */
+.toggle-switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  flex-shrink: 0;
+}
+
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 26px;
+  transition: all 0.3s ease;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background: #ffffff;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-switch input:checked + .toggle-slider {
+  background: var(--glow-green-bright);
+  box-shadow: 0 0 12px rgba(105, 255, 180, 0.3);
+}
+
+.toggle-switch input:checked + .toggle-slider::before {
+  transform: translateX(22px);
+}
+
+/* Speed Select Buttons */
+.speed-select-group {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-sm {
+  padding: 8px 16px;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid rgba(160, 110, 60, 0.3);
+  background: rgba(160, 110, 60, 0.08);
+  color: var(--text-main);
+  transition: all 0.25s ease;
+}
+
+.btn-sm:hover {
+  background: rgba(160, 110, 60, 0.15);
+  border-color: rgba(160, 110, 60, 0.45);
+}
+
+.btn-sm.active {
+  background: var(--glow-green-bright);
+  color: #000;
+  border-color: var(--glow-green-bright);
+  box-shadow: 0 0 15px rgba(105, 255, 180, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .color-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .preview-ball {
+    width: 60px;
+    height: 60px;
+  }
+  .setting-label {
+    font-size: 0.8rem;
+  }
+  .btn-sm {
+    font-size: 0.65rem;
+    padding: 6px 10px;
+  }
+
+  /* Mobile portrait (< 500px): tighten HUD margins so the top progress bar,
+     score/level card, and pause button never overlap on very narrow screens. */
+  .hud-mobile-goal {
+    right: 66px;
+    width: calc(100vw - 16px - 66px);
+    top: 6px;
+    left: 6px;
+  }
+  .hud-mobile-row {
+    right: 66px;
+    width: calc(100vw - 16px - 66px);
+    top: clamp(48px, 8vh, 60px);
+    left: 6px;
+  }
+  #pause-btn {
+    top: 10px;
+    right: 10px;
+    width: 46px;
+    height: 46px;
+    min-width: 46px;
+    min-height: 46px;
+  }
+  .mobile-score-card {
+    padding: clamp(6px, 2vh, 10px) clamp(8px, 2vw, 12px);
+    gap: clamp(8px, 2vw, 12px);
+  }
+}
+
+/* ============================================ */
+/* TRIVIA TOAST POPUP (new fruit unlock)        */
+/* ============================================ */
+
+#trivia-toast {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-30px);
+  margin-top: 20px;
+  z-index: 125;
+  padding: clamp(10px, 2vw, 16px) clamp(14px, 3vw, 24px);
+  display: flex;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 12px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  max-width: min(420px, 85vw);
+  border: 1px solid rgba(0, 255, 136, 0.25);
+  box-shadow: 0 8px 30px rgba(0, 255, 136, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(30, 55, 85, 0.85);
+  border-radius: 16px;
+}
+
+#trivia-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 768px) {
+  #trivia-toast {
+    top: 0;
+    margin-top: 12px;
+    max-width: 90vw;
+    padding: 10px 14px;
+  }
+}
+
+/* ============================================ */
+/* ON-SCREEN MOBILE TOUCH CONTROLS              */
+/* ============================================ */
+/* The circular left/right/jump arrow buttons are REMOVED — steering is
+   now direct-touch (finger position maps straight onto the track). This
+   hard hide guarantees the lower viewport stays clear even if a cached
+   copy of the old markup is ever injected. */
+#mobile-controls {
+  display: none !important;
+}
+
+/* ============================================ */
+/* ACHIEVEMENT TOAST POPUP                      */
+/* ============================================ */
+
+#achievement-toast {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%) translateY(30px);
+  z-index: 120;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  max-width: 400px;
+  border: 1px solid rgba(255, 215, 0, 0.25);
+  box-shadow: 0 8px 30px rgba(255, 215, 0, 0.15);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  background: rgba(30, 55, 85, 0.85);
+  border-radius: 16px;
+}
+
+#achievement-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.toast-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.toast-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.toast-title {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #ffd700;
+}
+
+.toast-desc {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .skin-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .skin-card {
+    padding: 6px 3px;
+  }
+  .skin-preview {
+    width: 32px;
+    height: 32px;
+  }
+   .skin-name {
+    font-size: 0.62rem;
+  }
+    #pause-btn {
+     /* Ensure >=48px touch target on mobile; responsive clamp from base rule */
+     width: clamp(48px, 10vw, 48px);
+     height: clamp(48px, 10vw, 48px);
+     min-width: 48px;
+     min-height: 48px;
+     font-size: clamp(1.2rem, 4vw, 1.5rem);
+   }
+  #achievement-toast {
+    max-width: 85%;
+    bottom: 60px;
+  }
+  #trivia-toast {
+    max-width: 90vw;
+    padding: 10px 14px;
+  }
+  .toast-title {
+    font-size: 0.65rem;
+  }
+  .toast-desc {
+    font-size: 0.7rem;
+  }
+}
+
+/* ============================================ */
+/* FLASH WORD OVERLAY - Food Name Spelling Popup */
+/* ============================================ */
+
+#flash-word-overlay {
+  position: absolute;
+  top: clamp(15%, 20vh, 25%);
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 4vw, 2.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+  padding: clamp(8px, 1.5vw, 20px) clamp(12px, 4vw, 40px);
+  max-width: 50vw;
+  width: max-content;
+  text-align: center;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.82), rgba(10, 25, 45, 0.82));
+  border-radius: clamp(12px, 2vw, 24px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 4px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    0 12px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  text-shadow:
+    0 0 25px rgba(255, 255, 255, 0.85),
+    -4px -4px 0 rgba(0, 0, 0, 0.95),
+    4px -4px 0 rgba(0, 0, 0, 0.95),
+    -4px 4px 0 rgba(0, 0, 0, 0.95),
+    4px 4px 0 rgba(0, 0, 0, 0.95);
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.1s, border-color 0.1s, box-shadow 0.1s;
+  -webkit-text-stroke: 2px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  max-width: min(50vw, 600px);
+  width: auto;
+  box-sizing: border-box;
+}
+
+#flash-word-overlay.flash-active {
+  animation: word-flash-anim 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+/* ============================================ */
+/* FRUIT FRENZY INDICATOR                       */
+/* ============================================ */
+
+/* Styled via .frenzy-badge (dark pill over the viewport). */
+
+@keyframes frenzy-pulse {
+  0% { box-shadow: 0 0 15px rgba(255, 200, 0, 0.15); }
+  100% { box-shadow: 0 0 30px rgba(255, 200, 0, 0.4); }
+}
+
+/* ============================================ */
+/* DANGER RED FLASH OVERLAY                      */
+/* ============================================ */
+
+#danger-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: none;
+  background: rgba(255, 0, 0, 0);
+  transition: background 0.08s ease;
+}
+
+#danger-overlay.active {
+  background: rgba(255, 0, 0, 0.35);
+  box-shadow: inset 0 0 80px 20px rgba(255, 0, 0, 0.5);
+}
+
+/* ============================================ */
+/* FRUIT TRIVIA BOOK SCREEN                      */
+/* ============================================ */
+
+.trivia-card {
+  max-width: min(900px, 95vw);
+  max-height: 95vh;
+  padding: clamp(16px, 4vw, 30px);
+}
+
+.trivia-header {
+  margin-bottom: clamp(4px, 1vw, 10px);
+}
+
+.trivia-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(10px, 2vw, 20px);
+  max-height: 75vh;
+  overflow-y: auto;
+  align-items: stretch;
+  padding: clamp(5px, 1vw, 10px);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.2) transparent;
+}
+
+.trivia-grid::-webkit-scrollbar {
+  width: 4px;
+}
+
+.trivia-grid::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
+
+.trivia-entry {
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  border-radius: clamp(10px, 1.5vw, 14px);
+  padding: clamp(14px, 2.5vw, 24px);
+  text-align: left;
+  color: #2D3748;
+  transition: all 0.3s ease;
+  position: relative;
+  height: 100%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.trivia-entry.locked {
+  opacity: 0.4;
+  filter: grayscale(0.7);
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: clamp(80px, 15vh, 120px);
+}
+
+.trivia-entry.unlocked {
+  cursor: default;
+}
+
+.trivia-entry.unlocked:hover {
+  transform: translateY(-2px);
+  border-color: #cbd5e0;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+
+.trivia-entry-header {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1.2vw, 10px);
+  margin-bottom: clamp(4px, 1vw, 10px);
+}
+
+.trivia-emoji {
+  font-size: clamp(1.3rem, 4vw, 2rem);
+  width: clamp(32px, 6vw, 44px);
+  height: clamp(32px, 6vw, 44px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #EDF2F7;
+  border-radius: clamp(8px, 1.5vw, 12px);
+  flex-shrink: 0;
+}
+
+.trivia-name {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 2.2vw, 1rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #2D3748;
+}
+
+.trivia-tagline {
+  font-size: clamp(0.6rem, 1.5vw, 0.7rem);
+  color: #718096;
+  font-style: italic;
+  margin-top: 1px;
+}
+
+.trivia-spelling {
+  font-size: clamp(0.55rem, 1.3vw, 0.65rem);
+  color: #A0AEC0;
+  font-family: var(--font-display);
+  letter-spacing: 0.08em;
+  margin-top: 1px;
+}
+
+.trivia-benefits {
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  line-height: 1.5;
+  color: #2D3748;
+  font-weight: 600;
+  margin-bottom: clamp(4px, 1vw, 8px);
+}
+
+.trivia-vitamins {
+  font-size: clamp(0.6rem, 1.4vw, 0.7rem);
+  color: #2F855A;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  margin-bottom: clamp(3px, 0.8vw, 6px);
+}
+
+.trivia-fun-fact {
+  font-size: clamp(0.6rem, 1.5vw, 0.72rem);
+  line-height: 1.4;
+  color: #4A5568;
+  font-style: italic;
+  padding: clamp(4px, 0.8vw, 6px) clamp(6px, 1.2vw, 10px);
+  background: #F7FAFC;
+  border-radius: clamp(6px, 1vw, 8px);
+  border-left: 2px solid #A0AEC0;
+}
+.trivia-fun-fact + .trivia-fun-fact {
+  margin-top: clamp(3px, 0.6vw, 6px);
+}
+
+.trivia-locked-text {
+  font-size: clamp(1.5rem, 6vw, 2.5rem);
+  opacity: 0.3;
+}
+
+@media (max-width: 700px) {
+  .trivia-grid {
+    grid-template-columns: 1fr;
+    max-height: clamp(30vh, 45dvh, 50vh);
+  }
+  .trivia-card {
+    max-width: 92vw;
+    padding: clamp(10px, 2.5vw, 15px);
+  }
+}
+
+@media (max-width: 480px) {
+  .trivia-grid {
+    gap: 6px;
+  }
+  .trivia-entry {
+    padding: 8px 10px;
+  }
+  .trivia-entry-header {
+    gap: 6px;
+    margin-bottom: 4px;
+  }
+  .trivia-emoji {
+    width: 28px;
+    height: 28px;
+    font-size: 1.1rem;
+  }
+  .trivia-fun-fact {
+    font-size: 0.6rem;
+    padding: 3px 6px;
+  }
+  .trivia-benefits {
+    font-size: 0.65rem;
+    margin-bottom: 4px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+  #hud {
+    padding: 6px 4px;
+    gap: 6px;
+  }
+  .btn {
+    padding: 8px 12px;
+    font-size: 0.6rem;
+    border-radius: 8px;
+  }
+  h1.game-title {
+    font-size: 1.5rem;
+  }
+  h1.game-title span {
+    font-size: 0.8rem;
+  }
+}
+
+/* ============================================ */
+/* HOW TO PLAY MODAL OVERLAY                     */
+/* ============================================ */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(12px, 3vw, 20px);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-overlay[hidden] {
+  display: none;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(40, 25, 5, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: -1;
+  animation: modal-backdrop-fade 0.3s ease;
+}
+
+@keyframes modal-backdrop-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: min(480px, 92vw);
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  transform: scale(0.9) translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow:
+    0 20px 60px rgba(40, 25, 5, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 0 rgba(160, 110, 60, 0.2);
+  /* Parchment-style card to match Settings */
+  background: var(--parchment);
+  border: 3px solid var(--parchment-border);
+}
+
+.modal-overlay.active .modal-container {
+  transform: scale(1) translateY(0);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(16px, 4vw, 24px);
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  border-bottom: 2px solid var(--parchment-border);
+}
+
+.modal-header .game-title {
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  background: linear-gradient(135deg, var(--glow-orange) 0%, var(--glow-yellow) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(160, 110, 60, 0.3));
+}
+
+.modal-close {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: none;
+  background: var(--parchment-dark);
+  color: var(--text-main);
+  font-size: 1.5rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  border: 2px solid var(--parchment-border);
+  box-shadow: 0 2px 8px rgba(160, 110, 60, 0.15);
+}
+
+.modal-close:hover {
+  background: var(--glow-red);
+  color: #fff;
+  transform: scale(1.1) rotate(90deg);
+  border-color: var(--glow-red);
+  box-shadow: 0 4px 16px rgba(255, 59, 48, 0.4);
+}
+
+.modal-close:active {
+  transform: scale(0.95) rotate(90deg);
+}
+
+.modal-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: clamp(16px, 4vw, 24px);
+  background: var(--parchment);
+  color: var(--text-main);
+  scrollbar-width: thin;
+  scrollbar-color: var(--parchment-border) transparent;
+}
+
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: var(--parchment-border);
+  border-radius: 3px;
+}
+
+.modal-content h3 {
+  font-family: var(--font-display);
+  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-heading);
+}
+
+.modal-content p {
+  font-size: clamp(0.8rem, 2vw, 0.95rem);
+  line-height: 1.6;
+  color: var(--text-main);
+  margin-bottom: 12px;
+}
+
+.modal-content strong {
+  color: var(--text-heading);
+}
+
+.modal-content div[style*="background: rgba(255,255,255,0.1)"] {
+  background: rgba(160, 110, 60, 0.12) !important;
+  border: 1px solid rgba(160, 110, 60, 0.2);
+  border-radius: 8px;
+}
+
+.modal-content div[style*="background: rgba(255,255,255,0.1)"] strong {
+  color: var(--text-heading);
+}
+
+.modal-content span[style*="background: rgba("] {
+  background: rgba(160, 110, 60, 0.12) !important;
+  color: var(--text-main) !important;
+  border: 1px solid rgba(160, 110, 60, 0.25);
+  border-radius: 20px;
+}
+
+@media (max-width: 480px) {
+  .modal-container {
+    max-height: 90vh;
+    border-radius: 16px;
+  }
+  .modal-header {
+    padding: clamp(12px, 3vw, 18px);
+  }
+  .modal-content {
+    padding: clamp(12px, 3vw, 18px);
+  }
+  .modal-content h3 {
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+  }
+  .modal-content p {
+    font-size: clamp(0.75rem, 2vw, 0.9rem);
+  }
+}
+
+/* ============================================ */
+/* MAIN START MENU — FRUIT NINJA FULL-SCREEN    */
+/* ============================================ */
+
+/* Full-viewport menu (NO inner card / modal box). The blurred 3D scene
+   behind acts as the full-screen background canvas, exactly like the
+   gameplay screen. Everything is centered and scales with vh/vw clamps —
+   never scrolls, never clips, on PC, laptop or phone. */
+#start-screen {
+  padding: clamp(6px, 1.8vh, 18px);
+  overflow: hidden;
+  /* Dark forest-green overlay so bright UI elements pop on the menu */
+  background: radial-gradient(ellipse at 50% 32%, rgba(30, 58, 43, 0.55) 0%, rgba(13, 28, 20, 0.9) 100%);
+}
+
+#start-screen .start-menu {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(6px, 1.5vh, 14px);
+  transform: translateY(-12px);
+}
+
+/* ---- TOP: brand + centered title / subtitle + high score ----
+   Every block is strictly centered: margin auto + text-align center. */
+#start-screen .start-menu__header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: clamp(4px, 1.1vh, 10px);
+  flex-shrink: 0;
+  width: 100%;
+  position: relative;
+}
+
+#start-screen .menu-brand {
+  margin: 0 auto;
+  text-align: center;
+}
+
+#start-screen .nutrition-title-badge {
+  font-size: clamp(1.4rem, 3vw, 2.2rem);
+  padding: 8px 24px;
+}
+
+#start-screen .nutrition-sub-ribbon {
+  font-size: clamp(0.6rem, 1.5vw, 0.8rem);
+  padding: 4px 14px;
+}
+
+#start-screen h1.game-title {
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 900;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Subtitle sits on the darkened menu backdrop → bright white with a heavy
+   dark text-shadow for guaranteed contrast. Centered below the main title. */
+#start-screen h1.game-title span {
+  font-size: clamp(0.75rem, 2vw, 1.3rem);
+  text-align: center;
+  margin-top: clamp(3px, 0.8vh, 8px);
+  color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.85), 0 0 14px rgba(0, 0, 0, 0.65);
+}
+
+#start-screen .score-badge-container {
+  justify-content: center;
+  gap: clamp(8px, 1.5vh, 14px);
+}
+
+#start-screen .score-badge {
+  flex: 0 1 auto;
+  text-align: center;
+  padding: clamp(6px, 1.5vh, 12px) clamp(14px, 2.5vw, 24px);
+  border-radius: 10px;
+  background: rgba(13, 26, 19, 0.88);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  min-width: 120px;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+#start-screen .score-badge .val {
+  font-size: clamp(1.3rem, 3vh, 28px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  color: #ffffff;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+#start-screen .score-badge .lbl {
+  font-size: clamp(0.5rem, 1vh, 0.7rem);
+  margin-top: 0;
+  color: #ffffff;
+  text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* ---- MIDDLE: Fruit Ninja arcade target cluster ---- */
+#start-screen .arcade-cluster {
+  position: relative;
+  width: min(50vh, 88vw);
+  height: min(50vh, 88vw);
+  flex-shrink: 0;
+}
+
+/* Circular Fruit Ninja target-ring button (satellite size).
+   Proportional to the cluster (24%) but clamped to a tap-friendly
+   diameter so badges stay readable on any device.
+   Dark bold text on bright pastel fruit colors — child & PWD friendly. */
+.fruit-btn {
+  position: absolute;
+  width: clamp(80px, 24%, 110px);
+  height: clamp(80px, 24%, 110px);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  border: 4px solid #ffffff;
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.4),
+    inset 0 -8px 12px rgba(0, 0, 0, 0.14),
+    inset 0 4px 8px rgba(255, 255, 255, 0.55);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1px, 0.4vh, 4px);
+  cursor: pointer;
+  font-family: var(--font-display);
+  color: #1a202c;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+/* Inner dashed "target ring" */
+.fruit-btn::after {
+  content: '';
+  position: absolute;
+  inset: 7%;
+  border-radius: 50%;
+  border: 2px dashed rgba(26, 32, 44, 0.22);
+  pointer-events: none;
+}
+
+.fruit-btn:hover,
+.fruit-btn:focus-visible {
+  transform: translate(-50%, -50%) scale(1.07);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.45),
+    inset 0 -8px 12px rgba(0, 0, 0, 0.14),
+    inset 0 4px 8px rgba(255, 255, 255, 0.6);
+}
+
+.fruit-btn:active {
+  transform: translate(-50%, -50%) scale(0.94);
+}
+
+.fruit-btn:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+}
+
+.fruit-icon {
+  font-size: clamp(1.1rem, 4vh, 2rem);
+  line-height: 1;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.25));
+}
+
+.fruit-label {
+  font-size: clamp(0.5rem, 1.5vh, 0.85rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 1.15;
+  text-align: center;
+  color: #1a202c;
+}
+
+/* Giant watermelon PLAY button — dead center of the cluster */
+.fruit-btn--play {
+  left: 50%;
+  top: 50%;
+  width: 46%;
+  height: 46%;
+  border-width: 6px;
+  background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%);
+}
+
+.fruit-btn--play .fruit-icon {
+  font-size: clamp(2rem, 8vh, 3.5rem);
+}
+
+.fruit-btn--play .fruit-label {
+  font-size: clamp(0.85rem, 3vh, 1.4rem);
+}
+
+/* Surrounding nodes — 5 buttons evenly distributed at 72° intervals around PLAY
+    button for perfect symmetry. Uniform radius = 35% from center (50%, 50%).
+    Calculated positions: 90° (top), 18° (top-right), 162° (top-left), 306°/-54° (bottom-right), 234°/-126° (bottom-left).
+    All 5 buttons share identical circular offset distance for equal gaps and breathing room. */
+.fruit-btn--red    { left: 50%; top: 15%;  background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }       /* 90° (top) */
+.fruit-btn--yellow { left: 83%; top: 39%; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }    /* 18° (top-right) */
+.fruit-btn--kiwi   { left: 17%; top: 39%; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }    /* 162° (top-left) */
+.fruit-btn--orange { left: 71%; top: 78%; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* 306° / -54° (bottom-right) */
+.fruit-btn--grape  { left: 29%; top: 78%; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* 234° / -126° (bottom-left) */
+
+/* ---- BOTTOM: centered horizontal skin carousel ---- */
+#start-screen .start-menu__footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 12px);
+  flex-shrink: 0;
+  width: 100%;
+  margin-bottom: 25px;
+}
+
+#start-screen .skin-section-title {
+  display: inline-block;
+  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  margin-bottom: 0;
+  color: #2D3748;
+  padding: 4px 16px;
+  background: linear-gradient(180deg, #ffffff 0%, #f2e2bd 100%);
+  border: 2px solid rgba(255, 255, 255, 0.9);
+  border-radius: 999px;
+  box-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 2px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+}
+
+#start-screen .skin-grid {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: clamp(8px, 1.5vw, 16px);
+  max-width: min(600px, 94vw);
+  padding: 0 4px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+#start-screen .skin-grid::-webkit-scrollbar {
+  display: none;
+}
+
+#start-screen .skin-card {
+  flex: 0 0 auto;
+  width: clamp(55px, 8vw, 75px);
+  height: clamp(75px, 10vw, 95px);
+  padding: clamp(4px, 0.8vh, 8px) 3px;
+  gap: 2px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* Equipped skin card gets a bright green ring so its status pops on the
+   dark solid card. */
+#start-screen .skin-card.active {
+  border-color: var(--glow-green);
+  box-shadow: 0 0 18px rgba(0, 255, 136, 0.5), inset 0 0 12px rgba(0, 255, 136, 0.12);
+}
+
+/* Keep a locked look on the ball preview — dimmed grayscale + padlock
+   so the requirement text stays readable but the skin is clearly locked. */
+#start-screen .skin-card.locked {
+  opacity: 0.6;
+  filter: grayscale(70%);
+  pointer-events: none;
+}
+
+#start-screen .skin-card.locked .skin-preview {
+  filter: grayscale(70%);
+  opacity: 0.7;
+}
+
+#start-screen .skin-card.locked:hover {
+  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
+  transform: none;
+}
+
+#start-screen .skin-preview {
+  width: 35px;
+  height: 35px;
+  position: relative;
+}
+
+#start-screen .skin-name {
+  font-size: clamp(0.5rem, 1.2vh, 0.7rem);
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
+}
+
+/* Unlock requirements + status read bright yellow/green on the dark cards */
+#start-screen .skin-req {
+  font-size: clamp(0.42rem, 0.9vh, 0.58rem);
+  color: #ffea00;
+  font-weight: 800;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#start-screen .skin-card.active .skin-req {
+  color: #69ffb4;
+  text-shadow: 0 0 8px rgba(105, 255, 180, 0.5), 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+#start-screen .skin-card .equipped-badge {
+  background: var(--glow-green);
+  color: #06281a;
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
+  font-weight: 900;
+}
+
+/* ============================================ */
+/* MAIN MENU — DESKTOP / WEB (min-width: 769px) */
+/* ============================================ */
+@media (min-width: 769px) {
+  #start-screen h1.game-title {
+    font-size: clamp(2rem, 3.5vw, 3rem);
+  }
+  #start-screen .fruit-btn {
+    width: clamp(80px, 24%, 110px);
+    height: clamp(80px, 24%, 110px);
+  }
+  #start-screen .fruit-btn--play {
+    width: 46%;
+    height: 46%;
+  }
+  #start-screen .skin-grid {
+    justify-content: center;
+    gap: clamp(8px, 1.5vw, 16px);
+    max-width: min(600px, 94vw);
+  }
+}
+
+/* ============================================ */
+/* MAIN MENU — MOBILE / PHONE (max-width: 768px) */
+/* ============================================ */
+@media (max-width: 768px) {
+  #start-screen {
+    padding: clamp(6px, 1.5vh, 12px);
+  }
+  #start-screen .start-menu,
+  #start-screen .start-menu__header,
+  #start-screen .start-menu__footer {
+    gap: clamp(4px, 1.2vh, 10px);
+  }
+  #start-screen h1.game-title {
+    font-size: clamp(1.4rem, 5.5vw, 2.2rem);
+  }
+  #start-screen h1.game-title span {
+    font-size: clamp(0.6rem, 3vw, 0.85rem);
+  }
+  #start-screen .nutrition-title-badge {
+    font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+    padding: 6px 18px;
+  }
+  #start-screen .nutrition-sub-ribbon {
+    font-size: clamp(0.55rem, 2.5vw, 0.75rem);
+    padding: 3px 12px;
+  }
+  #start-screen .arcade-cluster {
+    width: min(48vh, 86vw);
+    height: min(48vh, 86vw);
+  }
+  #start-screen .fruit-btn {
+    width: clamp(60px, 24%, 85px);
+    height: clamp(60px, 24%, 85px);
+  }
+  #start-screen .fruit-btn--play {
+    width: 46%;
+    height: 46%;
+  }
+  #start-screen .skin-section-title {
+    font-size: clamp(0.8rem, 2.2vh, 1rem);
+  }
+  #start-screen .skin-grid {
+    max-width: 100%;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: clamp(6px, 1.4vw, 10px);
+    padding: 0 2px;
+  }
+  #start-screen .skin-card {
+    width: clamp(50px, 12vw, 70px);
+    height: clamp(64px, 14vw, 84px);
+    padding: clamp(3px, 0.7vh, 6px) 3px;
+  }
+  #start-screen .skin-preview {
+    width: clamp(28px, 7vw, 34px);
+    height: clamp(28px, 7vw, 34px);
+  }
+  #start-screen .skin-name {
+    font-size: clamp(0.48rem, 1.2vh, 0.62rem);
+  }
+  #start-screen .skin-req {
+    font-size: clamp(0.4rem, 0.9vh, 0.52rem);
+  }
+}
+
+/* Short screens: compress the cluster + fonts so the whole menu still
+   fits with zero scrolling. */
+@media (max-height: 620px) {
+  #start-screen .arcade-cluster {
+    width: min(44vh, 78vw);
+    height: min(44vh, 78vw);
+  }
+  #start-screen .start-menu__header {
+    gap: clamp(2px, 0.6vh, 6px);
+  }
+  #start-screen .nutrition-title-badge {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    padding: 6px 18px;
+  }
+  #start-screen .nutrition-sub-ribbon {
+    font-size: clamp(0.55rem, 1.2vw, 0.7rem);
+    padding: 3px 12px;
+  }
+  #start-screen h1.game-title {
+    font-size: clamp(1.4rem, 3vw, 2rem);
+  }
+  #start-screen h1.game-title span {
+    font-size: clamp(0.6rem, 1.4vw, 0.9rem);
+  }
+  #start-screen .start-menu__footer {
+    gap: clamp(3px, 0.6vh, 6px);
+  }
+  #start-screen .skin-section-title {
+    font-size: clamp(0.7rem, 1.6vh, 0.9rem);
+  }
+  #start-screen .skin-card {
+    width: clamp(55px, 9vw, 70px);
+    height: clamp(60px, 9vw, 75px);
+    padding: clamp(3px, 0.6vh, 6px) 3px;
+  }
+  #start-screen .skin-preview {
+    width: clamp(28px, 4.5vh, 34px);
+    height: clamp(28px, 4.5vh, 34px);
+  }
+  #start-screen .skin-name {
+    font-size: clamp(0.5rem, 1.1vh, 0.62rem);
+  }
+  #start-screen .skin-req {
+    font-size: clamp(0.4rem, 0.8vh, 0.52rem);
+  }
+  #start-screen .fruit-btn {
+    width: clamp(44px, 24%, 60px);
+    height: clamp(44px, 24%, 60px);
+  }
+  #start-screen .fruit-btn--play {
+    width: 46%;
+    height: 46%;
+  }
+  .fruit-icon {
+    font-size: clamp(1rem, 3.5vh, 1.6rem);
+  }
+  .fruit-label {
+    font-size: clamp(0.45rem, 1.3vh, 0.7rem);
+  }
+  .fruit-btn--play .fruit-icon {
+    font-size: clamp(1.6rem, 7vh, 2.8rem);
+  }
+  .fruit-btn--play .fruit-label {
+    font-size: clamp(0.7rem, 2.6vh, 1.1rem);
+  }
+}
+
+/* ============================================ */
+/* MENU STATE: gameplay HUD hidden in the back  */
+/* ============================================ */
+
+/* While the main menu (or any pre-game screen) is open, all gameplay
+   HUD elements (Score, Level, Daily Goal, dock, touch controls) are
+   hidden. The 3D backdrop stays rendered but softly blurred. */
+body.in-menu #hud,
+body.in-menu .hud-mobile-goal,
+body.in-menu .hud-mobile-row,
+body.in-menu #mobile-dock,
+body.in-menu #mobile-controls,
+body.in-menu #swipe-area {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.4s ease, visibility 0.4s ease;
+}
+
+body.in-menu #canvas-container {
+  filter: blur(6px) brightness(0.65);
+  transform: scale(1.02);
+}
+
+/* ============================================ */
+/* STRICT GAME-STATE SCREEN PROTECTION          */
+/* ============================================ */
+
+/* While the game is actively PLAYING (or PAUSED), every pre-game menu
+   screen is COMPLETELY removed from the document (display:none) and made
+   inert (pointer-events:none). This makes it impossible for a stray
+   touch, swipe, or ghost click to re-open the Main Menu. Only the Pause
+   modal (#pause-screen), Game Over and Victory overlays may ever appear
+   during this state, and they declare their own pointer-events:auto. */
+body.playing #start-screen,
+body.playing #char-select-screen,
+body.playing #settings-screen,
+body.playing #trivia-screen,
+body.playing #leaderboard-screen,
+body.playing #grading-screen {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  z-index: -1 !important;
+}
+
+/* ============================================ */
+/* SCREEN SHAKE CSS ANIMATION                   */
+/* ============================================ */
+
+@keyframes screen-shake {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-4px, 3px); }
+  20% { transform: translate(3px, -2px); }
+  30% { transform: translate(-3px, 4px); }
+  40% { transform: translate(4px, -3px); }
+  50% { transform: translate(-2px, 2px); }
+  60% { transform: translate(2px, -4px); }
+  70% { transform: translate(-4px, 3px); }
+  80% { transform: translate(3px, 2px); }
+  90% { transform: translate(-2px, -3px); }
+}
+
+#canvas-container.shake {
+  animation: screen-shake 0.25s ease-out;
+}
+
+@keyframes word-flash-anim {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+  28% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(1.35);
+  }
+}
+
+/* ============================================ */
+/* PAUSE SCREEN — Fruit Ninja MISSIONS & RULES  */
+/* ============================================ */
+
+/* The pause overlay keeps the blurred 3D track visible behind the card */
+#pause-screen {
+  background: transparent;
+}
+#pause-screen.active {
+  display: flex !important;
+  z-index: 10000000 !important;
+}
+
+/* Wider card so the mission cards breathe; keep the parchment surface */
+.pause-card {
+  max-width: min(560px, 94vw);
+  width: 100%;
+  padding: clamp(22px, 5vw, 32px);
+  gap: clamp(12px, 2.4vh, 18px);
+}
+
+/* ---- Large, glowing GAME PAUSED title ---- */
+.pause-title {
+  margin: 0 auto;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 3.2rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  text-align: center;
+  background: linear-gradient(135deg, var(--glow-yellow) 0%, var(--glow-orange) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 0 12px rgba(255, 234, 0, 0.65),
+    0 0 26px rgba(255, 145, 0, 0.55),
+    0 2px 8px rgba(0, 0, 0, 0.45);
+  filter: drop-shadow(0 0 8px rgba(255, 234, 0, 0.35));
+  animation: pause-glow-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes pause-glow-pulse {
+  0%, 100% {
+    text-shadow:
+      0 0 12px rgba(255, 234, 0, 0.65),
+      0 0 26px rgba(255, 145, 0, 0.55),
+      0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+  50% {
+    text-shadow:
+      0 0 22px rgba(255, 234, 0, 0.95),
+      0 0 40px rgba(255, 145, 0, 0.75),
+      0 2px 8px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* ---- CURRENT LEVEL MISSIONS / GOALS banner ---- */
+.missions-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(6px, 1.5vw, 10px);
+  margin: 0 auto;
+  padding: clamp(6px, 1.5vh, 10px) clamp(16px, 3vw, 26px);
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--glow-pink-bright) 0%, var(--pink-main) 100%);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(0.75rem, 1.9vw, 0.95rem);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 14px rgba(255, 96, 136, 0.4), 0 0 0 2px rgba(255,255,255,0.25);
+  text-shadow: 0 1px 3px rgba(0,0,0,0.35);
+}
+
+.missions-banner-icon {
+  font-size: clamp(1rem, 2.6vw, 1.25rem);
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+/* ---- Mission card list ---- */
+.missions-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.8vh, 14px);
+  width: 100%;
+}
+
+.mission-card {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 2vw, 16px);
+  padding: clamp(12px, 2.4vw, 18px);
+  border-radius: 18px;
+  background: #ffffff;
+  border: 2px solid #e2e8f0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  color: var(--text-main);
+}
+
+/* DO'S — healthy missions (green tint) */
+.mission-card.mission-do {
+  background: linear-gradient(135deg, #eafaf1 0%, #ffffff 100%);
+  border-color: #4caf50;
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.18);
+}
+
+/* DON'TS — obstacle warning (amber/red tint) */
+.mission-card.mission-dont {
+  background: linear-gradient(135deg, #fff3e0 0%, #ffffff 100%);
+  border-color: #ff9800;
+  box-shadow: 0 4px 16px rgba(255, 152, 0, 0.22);
+}
+
+.mission-icon {
+  width: clamp(44px, 9vw, 56px);
+  height: clamp(44px, 9vw, 56px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: clamp(1.3rem, 3.6vw, 1.8rem);
+  background: #ffffff;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.mission-body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mission-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.78rem, 1.9vw, 0.95rem);
+  font-weight: 800;
+  color: var(--text-main);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.mission-row {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 1.2vw, 10px);
+}
+
+.progress-track {
+  flex: 1;
+  height: 10px;
+  min-width: 60px;
+  background: #e2e8f0;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  transition: width 0.32s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.progress-fill--green {
+  background: linear-gradient(90deg, var(--glow-green-bright) 0%, var(--glow-green) 100%);
+  box-shadow: 0 0 8px rgba(0, 230, 118, 0.45);
+}
+
+.progress-fill--blue {
+  background: linear-gradient(90deg, var(--glow-blue-bright) 0%, var(--glow-blue) 100%);
+  box-shadow: 0 0 8px rgba(41, 121, 255, 0.45);
+}
+
+.progress-count {
+  font-family: var(--font-display);
+  font-size: clamp(0.6rem, 1.5vw, 0.75rem);
+  font-weight: 800;
+  color: var(--text-main);
+  min-width: 36px;
+  text-align: center;
+}
+
+.mission-complete {
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
+  color: var(--glow-green);
+  font-weight: 800;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(0.7);
+  transition: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+  flex-shrink: 0;
+}
+
+.mission-complete.show {
+  opacity: 1;
+  visibility: visible;
+  transform: scale(1);
+  filter: drop-shadow(0 0 8px var(--glow-green));
+}
+
+.mission-warning-banner {
+  margin-top: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: clamp(4px, 1vw, 8px);
+  padding: clamp(4px, 1vh, 6px) clamp(10px, 2vw, 14px);
+  border-radius: 12px;
+  background: rgba(255, 59, 48, 0.08);
+  border: 1px solid rgba(255, 59, 48, 0.35);
+}
+
+.warning-text {
+  font-family: var(--font-display);
+  font-size: clamp(0.62rem, 1.5vw, 0.72rem);
+  font-weight: 800;
+  color: #b3202e;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.warning-stats {
+  font-family: var(--font-display);
+  font-size: clamp(0.58rem, 1.4vw, 0.7rem);
+  font-weight: 800;
+  color: #ce3a8a;
+}
+
+/* ---- Pause control button row ---- */
+.pause-btn-row {
+  gap: clamp(8px, 2vw, 14px);
+}
+
+/* Override the generic .btn base so the pause buttons stay bold & distinct */
+#pause-screen .btn {
+  flex: 1;
+  min-width: 0;
+  font-size: clamp(0.8rem, 2.4vw, 1rem);
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* RESUME — large green primary button */
+#resume-btn.btn {
+  background: linear-gradient(180deg, #4ade80 0%, var(--glow-green) 100%);
+  color: #032d1a;
+  border: none;
+  border-bottom: 4px solid #1f7a3d;
+  box-shadow: 0 4px 16px rgba(46, 204, 113, 0.45);
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+}
+
+#resume-btn.btn:hover {
+  background: linear-gradient(180deg, #67e09b 0%, #4ade80 100%);
+  box-shadow: 0 6px 22px rgba(46, 204, 113, 0.55);
+}
+
+/* RESTART — cream / yellow accent button */
+#restart-btn-pause.btn {
+  background: linear-gradient(180deg, #ffecb3 0%, var(--glow-yellow) 100%);
+  color: var(--text-main);
+  border: 2px solid #e8cf9e;
+  border-bottom: 4px solid var(--wood-brown);
+  box-shadow: 0 3px 12px rgba(160, 110, 60, 0.38);
+  text-shadow: none;
+}
+
+#restart-btn-pause.btn:hover {
+  background: linear-gradient(180deg, #fff59d 0%, #ffeb3b 100%);
+  border-color: var(--wood-brown);
+}
+
+/* QUIT TO MENU — cream / red accent button */
+#quit-btn.btn {
+  background: linear-gradient(180deg, #ffcdd2 0%, var(--glow-red-bright) 100%);
+  color: #7f1515;
+  border: 2px solid rgba(255, 59, 48, 0.55);
+  border-bottom: 4px solid var(--glow-red);
+  box-shadow: 0 3px 12px rgba(255, 59, 48, 0.38);
+  text-shadow: none;
+}
+
+#quit-btn.btn:hover {
+  background: linear-gradient(180deg, #f8bbd0 0%, #ff8a80 100%);
+  color: #fff;
+}
+
+/* Mobile: keep pause buttons stacked & tappable */
+@media (max-width: 560px) {
+  .pause-card {
+    padding: clamp(16px, 4vw, 24px);
+  }
+  .pause-title {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+  .missions-banner {
+    font-size: clamp(0.65rem, 2.2vw, 0.8rem);
+    padding: clamp(4px, 1.3vh, 8px) clamp(14px, 3vw, 22px);
+  }
+  .mission-card {
+    padding: clamp(10px, 2vw, 14px);
+  }
+  .mission-title {
+    font-size: clamp(0.72rem, 2.2vw, 0.85rem);
+  }
+  .pause-btn-row {
+    gap: clamp(6px, 1.8vw, 10px);
+  }
+  #pause-screen .btn {
+    font-size: clamp(0.72rem, 2.4vw, 0.9rem);
+  }
+}
+

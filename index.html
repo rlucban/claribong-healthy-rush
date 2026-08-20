@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C'laribong: Healthy Rush 3D</title>
+  <meta name="description" content="A vibrant 3D rolling ball web game. Run on fruit-themed tracks, collect healthy fruits to change colors and boost speed, and avoid junk foods.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Full-Viewport Fixed Game Wrapper: anchors every overlay, never scrolls -->
+  <div id="game-wrapper">
+
+  <!-- 3D Render Viewport -->
+  <div id="canvas-container"></div>
+
+  <!-- Red Border Screen Flash for Low Health warning -->
+  <div id="warning-overlay"></div>
+
+  <!-- Danger Red Flash Overlay for Junk Food Hits -->
+  <div id="danger-overlay"></div>
+
+   <!-- Flash Word Overlay -->
+   <div id="flash-word-overlay"></div>
+
+   <!-- Always-visible Pause Button — fixed top corner on every device.
+        Hoisted to the top level (outside the pointer-events-none HUD canvas)
+        so it stays tappable/clickable and is never hidden behind the 3D
+        viewport or game overlays. Visibility is toggled by game.js. -->
+   <button id="pause-btn" title="Pause Game" aria-label="Pause Game" tabindex="0">⏸️</button>
+
+   <!-- Interactive Overlays -->
+   <div id="ui-overlay">
+
+    <!-- ============================================ -->
+    <!-- DESKTOP HUD (>= 768px)                        -->
+    <!-- ============================================ -->
+    <header id="hud" class="hud-desktop">
+
+      <!-- TOP-LEFT CARDS -->
+      <div class="hud-top-left">
+        <!-- SCORE Card -->
+        <div class="hud-card score-card">
+          <div class="hud-card-icon">🏆</div>
+          <div class="hud-card-body">
+            <span class="hud-card-label">SCORE</span>
+            <span class="hud-card-value" id="score-val">0</span>
+          </div>
+        </div>
+
+        <!-- LEVEL Card -->
+        <div class="hud-card level-card">
+          <div class="hud-card-icon">📈</div>
+          <div class="hud-card-body">
+            <span class="hud-card-label">LEVEL</span>
+            <span class="hud-card-value" id="level-val">1</span>
+          </div>
+        </div>
+
+        <!-- DAILY GOAL Card -->
+        <div class="hud-card goal-card">
+          <div class="hud-card-label goal-title">DAILY GOAL</div>
+          <div class="goal-row">
+            <span class="goal-emoji">🍎</span>
+            <div class="goal-bar"><div class="goal-fill" id="goal-fruits-fill"></div></div>
+            <span class="goal-count" id="goal-fruits">0/3</span>
+          </div>
+          <div class="goal-row">
+            <span class="goal-emoji">🥦</span>
+            <div class="goal-bar"><div class="goal-fill" id="goal-veggies-fill"></div></div>
+            <span class="goal-count" id="goal-veggies">0/3</span>
+          </div>
+          <div class="goal-row">
+            <span class="goal-emoji">💧</span>
+            <div class="goal-bar"><div class="goal-fill" id="goal-water-fill"></div></div>
+            <span class="goal-count" id="goal-water">0/5</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP-CENTER: Conditional Badges -->
+      <div class="hud-top-center">
+        <div id="frenzy-display" class="hud-card frenzy-badge">
+          <span>🍓 FRUIT FRENZY</span>
+          <span id="frenzy-timer" class="frenzy-timer-box">5</span>
+        </div>
+
+        <div id="buff-display" class="hud-card buff-card">
+          <span class="buff-dot">●</span>
+          <span id="buff-text">STRAWBERRY BOOST!</span>
+        </div>
+
+        <div id="powerup-display">
+          <div id="magnet-icon" class="hud-card mini-powerup" style="display:none;">
+            <span>🧲</span><span id="magnet-timer">10</span>
+          </div>
+          <div id="shield-icon" class="hud-card mini-powerup" style="display:none;">
+            <span>🛡️</span><span>ON</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TOP-RIGHT PANEL: Audio widget + Healthiness -->
+      <div class="hud-top-right">
+        <div class="hud-card audio-widget">
+          <div class="audio-track-row">
+            <span class="audio-icon">🎵</span>
+            <span class="audio-track-name" id="music-track-name">Neon Heavy</span>
+            <button class="audio-icon-btn" id="music-btn" title="Cycle Music Track" aria-label="Cycle Music Track">⏭</button>
+          </div>
+          <div class="audio-vol-row">
+            <button class="audio-icon-btn" id="mute-btn" title="Toggle Sound" aria-label="Toggle Sound">🔊</button>
+            <div class="volume-bar" id="volume-bar" title="Volume">
+              <div class="volume-fill" id="volume-fill"></div>
+            </div>
+            <button class="audio-icon-btn" id="music-play-btn" title="Toggle Music" aria-label="Toggle Music">⏸</button>
+          </div>
+        </div>
+
+        <div class="hud-card health-card">
+          <div class="health-header">
+            <span class="hud-card-label">HEALTHINESS</span>
+            <span id="health-status-text" class="health-num">50/100</span>
+          </div>
+          <div class="health-bar-bg">
+            <div id="health-fill" class="health-bar-fill" style="width: 50%;"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ============================================ -->
+    <!-- MOBILE HUD (< 768px)                          -->
+    <!-- ============================================ -->
+
+    <!-- TOP PANEL: DAILY GOAL overall progress -->
+    <div class="hud-mobile-goal">
+      <div class="hud-card mobile-goal-card">
+        <span class="goal-emoji">📋</span>
+        <div class="goal-bar"><div class="goal-fill" id="mobile-goal-fill"></div></div>
+        <span class="goal-count" id="mobile-goal-count">0/11</span>
+      </div>
+    </div>
+
+    <!-- SECOND ROW (3 columns) -->
+    <div class="hud-mobile-row">
+      <div class="hud-card mobile-score-card">
+        <div class="mobile-stat">
+          <span class="hud-card-label">SCORE</span>
+          <span class="hud-card-value" id="mobile-score-val">0</span>
+        </div>
+        <div class="mobile-stat">
+          <span class="hud-card-label">LVL</span>
+          <span class="hud-card-value" id="mobile-level-val">1</span>
+        </div>
+      </div>
+
+      <div class="mobile-center-cell">
+        <div id="frenzy-display-mobile" class="hud-card frenzy-badge">
+          <span>🍓</span>
+          <span id="frenzy-timer-mobile" class="frenzy-timer-box">5</span>
+        </div>
+        <div id="buff-display-mobile" class="hud-card buff-card">
+          <span class="buff-dot">●</span>
+          <span id="buff-text-mobile">STRAWBERRY BOOST!</span>
+        </div>
+        <div id="powerup-display-mobile">
+          <div id="magnet-icon-mobile" class="hud-card mini-powerup" style="display:none;">
+            <span>🧲</span><span id="magnet-timer-mobile">10</span>
+          </div>
+          <div id="shield-icon-mobile" class="hud-card mini-powerup" style="display:none;">
+            <span>🛡️</span><span>ON</span>
+          </div>
+        </div>
+      </div>
+
+      <button id="mobile-pause-btn" class="round-btn" title="Pause Game" aria-label="Pause Game">❚❚</button>
+    </div>
+
+    <!-- BOTTOM NAVIGATION DOCK -->
+    <nav id="mobile-dock">
+      <button class="dock-btn" id="dock-trivia" title="Fruit Trivia" aria-label="Fruit Trivia">💡</button>
+      <button class="dock-btn" id="dock-fruits" title="Eat Fruits" aria-label="Eat Fruits">🍎</button>
+      <button class="dock-btn" id="dock-veggies" title="Eat Vegetables" aria-label="Eat Vegetables">🥦</button>
+      <button class="dock-btn" id="dock-water" title="Drink Water" aria-label="Drink Water">💧</button>
+      <button class="dock-btn" id="dock-stats" title="Leaderboard" aria-label="Leaderboard">📊</button>
+      <button class="dock-btn" id="dock-music" title="Next Track" aria-label="Next Track">🎵</button>
+      <button class="dock-btn" id="dock-mute" title="Toggle Sound" aria-label="Toggle Sound">🔊</button>
+    </nav>
+  </div>
+
+  <!-- 2. Main Start Menu Screen — Fruit Ninja full-screen layout -->
+  <section class="screen active" id="start-screen">
+    <div class="start-menu">
+
+      <!-- TOP: brand + centered title / subtitle + high score -->
+      <header class="start-menu__header">
+        <div class="menu-brand">
+          <div class="nutrition-title-badge">NUTRITION</div>
+          <div class="nutrition-sub-ribbon">EAT WELL, PLAY WELL!</div>
+        </div>
+        <h1 class="game-title">C'laribong<span>Healthy Rush 3D</span></h1>
+        <div class="score-badge-container">
+          <div class="score-badge">
+            <div class="val" id="menu-highscore">0</div>
+            <div class="lbl">High Score</div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MIDDLE: Fruit Ninja arcade target cluster.
+           Giant watermelon PLAY at the center, fruit target rings around it. -->
+      <main class="arcade-cluster">
+        <button class="fruit-btn fruit-btn--play" id="start-btn" title="Start Game">
+          <span class="fruit-icon" aria-hidden="true">🍉</span>
+          <span class="fruit-label">Play<br>Game</span>
+        </button>
+
+        <button class="fruit-btn fruit-btn--red" id="char-btn" title="Character Select">
+          <span class="fruit-icon" aria-hidden="true">🍎</span>
+          <span class="fruit-label">Character<br>Select</span>
+        </button>
+        <button class="fruit-btn fruit-btn--yellow" id="trivia-btn" title="Fruit Trivia">
+          <span class="fruit-icon" aria-hidden="true">🍋</span>
+          <span class="fruit-label">Fruit<br>Trivia</span>
+        </button>
+        <button class="fruit-btn fruit-btn--kiwi" id="leaderboard-btn" title="Leaderboard">
+          <span class="fruit-icon" aria-hidden="true">🥝</span>
+          <span class="fruit-label">Leaderboard</span>
+        </button>
+        <button class="fruit-btn fruit-btn--orange" id="grading-btn" title="Grading System">
+          <span class="fruit-icon" aria-hidden="true">🍊</span>
+          <span class="fruit-label">Grading<br>System</span>
+        </button>
+        <button class="fruit-btn fruit-btn--grape" id="settings-btn" title="Settings">
+          <span class="fruit-icon" aria-hidden="true">🍇</span>
+          <span class="fruit-label">Settings</span>
+        </button>
+      </main>
+
+      <!-- BOTTOM: centered horizontal skin carousel -->
+      <footer class="start-menu__footer">
+        <h3 class="skin-section-title">Choose Your Roller</h3>
+        <div id="skin-grid" class="skin-grid">
+          <!-- Populated dynamically by game.js -->
+        </div>
+      </footer>
+
+    </div>
+  </section>
+
+  <!-- How To Play Modal Overlay -->
+  <div class="modal-overlay" id="howtoplay-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
+    <div class="modal-backdrop"></div>
+    <div class="modal-container glass-panel">
+      <header class="modal-header">
+        <h2 id="modal-title" class="game-title" style="font-size:1.8rem; margin:0;">📖 How to Play</h2>
+        <button class="modal-close" id="modal-close-btn" aria-label="Close How to Play">&times;</button>
+      </header>
+      <div class="modal-content">
+        <h3 style="color: var(--glow-yellow); margin-bottom: 10px; font-family: var(--font-display);">🎮 Objective</h3>
+        <p style="margin-bottom: 15px;">Roll your ball through vibrant fruit-themed tracks! Collect healthy foods to boost your health and score, avoid junk food that damages you, and reach the finish line.</p>
+        
+        <h3 style="color: var(--glow-green); margin: 15px 0 10px 0; font-family: var(--font-display);">🕹️ Controls</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+          <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;">
+            <strong>Desktop:</strong><br>
+            <span style="color: var(--glow-blue);">← / →</span> or <span style="color: var(--glow-blue);">A / D</span> - Move Left/Right<br>
+            <span style="color: var(--glow-blue);">Space / ↑</span> - Jump
+          </div>
+          <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;">
+            <strong>Mobile:</strong><br>
+            Drag finger on screen - Steer<br>
+            Tap screen - Jump
+          </div>
+        </div>
+        
+        <h3 style="color: var(--glow-orange); margin: 15px 0 10px 0; font-family: var(--font-display);">🍎 Healthy Items (Collect These!)</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; font-size: 0.85rem;">
+          <span style="background: rgba(255,107,129,0.2); padding: 5px 10px; border-radius: 20px;">🍓 Strawberry - Speed Boost</span>
+          <span style="background: rgba(255,145,0,0.2); padding: 5px 10px; border-radius: 20px;">🍊 Orange - Health Restore</span>
+          <span style="background: rgba(255,234,0,0.2); padding: 5px 10px; border-radius: 20px;">🍌 Banana - Combo Builder</span>
+          <span style="background: rgba(255,101,149,0.2); padding: 5px 10px; border-radius: 20px;">🍉 Watermelon - Big Points</span>
+          <span style="background: rgba(255,140,66,0.2); padding: 5px 10px; border-radius: 20px;">🍈 Papaya - Vitamin Bonus</span>
+          <span style="background: rgba(139,195,74,0.2); padding: 5px 10px; border-radius: 20px;">🍋 Calamansi - Immunity Boost</span>
+          <span style="background: rgba(255,127,39,0.2); padding: 5px 10px; border-radius: 20px;">🥕 Carrot - Eye Health</span>
+          <span style="background: rgba(46,158,68,0.2); padding: 5px 10px; border-radius: 20px;">🥦 Broccoli - Super Food</span>
+          <span style="background: rgba(230,126,34,0.2); padding: 5px 10px; border-radius: 20px;">🎃 Squash - Fiber Power</span>
+          <span style="background: rgba(108,44,145,0.2); padding: 5px 10px; border-radius: 20px;">🍆 Eggplant - Brain Food</span>
+          <span style="background: rgba(66,165,245,0.2); padding: 5px 10px; border-radius: 20px;">💧 Water - Hydration</span>
+        </div>
+        
+        <h3 style="color: var(--glow-red); margin: 15px 0 10px 0; font-family: var(--font-display);">🚫 Junk Food (AVOID!)</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; font-size: 0.85rem;">
+          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍔 Burger - Heavy Damage</span>
+          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍟 Fries - Grease Slow</span>
+          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🌭 Hotdog - Mystery Meat</span>
+          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍩 Donut - Sugar Crash</span>
+          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🥤 Soda - Acid Burn</span>
+          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍿 Chips - Empty Calories</span>
+          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">💚 Slime - Toxic!</span>
+        </div>
+        
+        <h3 style="color: var(--glow-purple); margin: 15px 0 10px 0; font-family: var(--font-display);">✨ Power-Ups</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; font-size: 0.85rem;">
+          <span style="background: rgba(213,0,249,0.2); padding: 5px 10px; border-radius: 20px;">🧲 Magnet - Auto-collect</span>
+          <span style="background: rgba(213,0,249,0.2); padding: 5px 10px; border-radius: 20px;">🛡️ Shield - Block 1 Hit</span>
+        </div>
+        
+        <h3 style="color: var(--glow-yellow); margin: 15px 0 10px 0; font-family: var(--font-display);">🌈 Super Mode</h3>
+        <p style="margin-bottom: 15px;">Collect <strong>5 healthy items in a row</strong> without hitting junk to activate <span style="color: var(--glow-rainbow); font-weight: bold; text-shadow: 0 0 5px currentColor;">RAINBOW SUPER MODE!</span> — Invincibility + max speed + bonus points!</p>
+        
+        <h3 style="color: var(--glow-blue); margin: 15px 0 10px 0; font-family: var(--font-display);">🎯 Daily Goals</h3>
+        <p style="margin-bottom: 15px;">Complete each run's nutrition targets: <strong>3 Fruits, 3 Veggies, 5 Waters</strong>. Track progress in the HUD!</p>
+        
+        <h3 style="color: var(--glow-green); margin: 15px 0 10px 0; font-family: var(--font-display);">🏆 Grading System</h3>
+        <p style="margin-bottom: 15px;">Earn up to 3 stars per run: <strong>★</strong> Survival (Level 5+), <strong>★</strong> Nutrition Goals met, <strong>★</strong> Mastery (5x combo or 75% purity). Check the <strong>Grading System</strong> screen for details!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Game Over Screen -->
+  <section class="screen" id="game-over-screen">
+    <div class="menu-card glass-panel">
+      <div>
+        <h1 class="game-title" style="background: linear-gradient(135deg, var(--glow-red) 0%, var(--glow-purple) 100%); -webkit-background-clip: text;">
+          Habit Crash
+        </h1>
+        <p class="game-desc">Your energy collapsed due to poor eating habits or falling off the grid!</p>
+      </div>
+
+      <div class="score-badge-container">
+        <div class="score-badge">
+          <div class="val" id="end-score">0</div>
+          <div class="lbl">Score</div>
+        </div>
+        <div class="score-badge">
+          <div class="val" id="end-highscore">0</div>
+          <div class="lbl">High Score</div>
+        </div>
+      </div>
+
+      <div id="verdict-text" class="health-verdict">
+        VERDICT MESSAGE GOES HERE
+      </div>
+
+      <div class="screen-tip">
+        <span class="tip-icon">💡</span>
+        <span class="tip-text" id="gameover-tip-text"></span>
+      </div>
+
+      <!-- Nutrition Report Card -->
+      <div class="nutrition-report glass-panel" style="margin-top: 15px; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);">
+        <h3 style="margin:0 0 10px 0; font-family:var(--font-display); text-transform:uppercase; font-size:1rem; color:var(--glow-orange); text-align:center;">Run Summary</h3>
+        <div style="display:flex; justify-content:space-around; align-items:center;">
+          <div style="text-align:center;">
+            <div class="star-rating">
+              <span id="go-star1" class="star-icon">⭐</span>
+              <span id="go-star2" class="star-icon">⭐</span>
+              <span id="go-star3" class="star-icon">⭐</span>
+            </div>
+            <div id="go-star-title" style="font-size:0.85rem; font-weight:600; text-transform:uppercase; margin:5px 0; color:#ff1744;">TRY AGAIN!</div>
+            <div id="go-star-count" style="font-size:0.7rem; color:rgba(255,255,255,0.5);">0/3 Stars</div>
+          </div>
+          <div style="text-align:left; font-size:0.85rem; line-height:1.6;">
+            <div style="margin-bottom:6px;"><span style="color:var(--glow-green-bright);">Purity:</span> <span id="go-purity" style="font-weight:bold;">0%</span> | <span style="color:#4caf50;">Healthy:</span> <span id="go-healthy" style="font-weight:bold;">0</span>/<span id="go-total" style="font-weight:bold;">0</span></div>
+            <div style="margin-bottom:6px;"><span style="color:#ffea00;">Max Combo:</span> <span id="go-combo" style="font-weight:bold;">0</span></div>
+            <div class="checklist-item"><span id="go-check1">❌</span> <span style="color:#2979ff;">Reached Level 5+ or finished</span></div>
+            <div class="checklist-item"><span id="go-check2">❌</span> <span style="color:#2979ff;">All nutrition goals (3F/3V/5W)</span></div>
+            <div class="checklist-item"><span id="go-check3">❌</span> <span style="color:#2979ff;">5x combo OR 75% purity</span></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="restart-btn">Try Again</button>
+    </div>
+  </section>
+
+  <!-- 4. Victory Screen -->
+  <section class="screen" id="victory-screen">
+    <div class="menu-card glass-panel">
+      <div>
+        <h1 class="game-title" style="background: linear-gradient(135deg, var(--glow-green) 0%, var(--glow-blue) 100%); -webkit-background-clip: text;">
+          🏆 VICTORY!
+        </h1>
+        <p class="game-desc">You successfully crossed the finish line with vibrant healthy habits!</p>
+      </div>
+
+      <div class="score-badge-container">
+        <div class="score-badge">
+          <div class="val" id="vic-score">0</div>
+          <div class="lbl">Final Score</div>
+        </div>
+        <div class="score-badge">
+          <div class="val" id="vic-highscore">0</div>
+          <div class="lbl">High Score</div>
+        </div>
+      </div>
+
+      <div id="vic-verdict-text" class="health-verdict healthy">
+        YOU DID IT!
+      </div>
+
+      <!-- Nutrition Report Card -->
+      <div class="nutrition-report glass-panel" style="margin-top: 15px; padding: 15px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.4);">
+        <h3 style="margin:0 0 10px 0; font-family:var(--font-display); text-transform:uppercase; font-size:1rem; color:var(--glow-green); text-align:center;">Run Summary</h3>
+        <div style="display:flex; justify-content:space-around; align-items:center;">
+          <div style="text-align:center;">
+            <div class="star-rating">
+              <span id="vic-star1" class="star-icon">⭐</span>
+              <span id="vic-star2" class="star-icon">⭐</span>
+              <span id="vic-star3" class="star-icon">⭐</span>
+            </div>
+            <div id="vic-star-title" style="font-size:0.85rem; font-weight:600; text-transform:uppercase; margin:5px 0; color:#00e676;">PERFECT RUN!</div>
+            <div id="vic-star-count" style="font-size:0.7rem; color:rgba(255,255,255,0.5);">3/3 Stars</div>
+          </div>
+          <div style="text-align:left; font-size:0.85rem; line-height:1.6;">
+            <div style="margin-bottom:6px;"><span style="color:var(--glow-green-bright);">Purity:</span> <span id="vic-purity" style="font-weight:bold;">100%</span> | <span style="color:#4caf50;">Healthy:</span> <span id="vic-healthy" style="font-weight:bold;">0</span>/<span id="vic-total" style="font-weight:bold;">0</span></div>
+            <div style="margin-bottom:6px;"><span style="color:#ffea00;">Max Combo:</span> <span id="vic-combo" style="font-weight:bold;">0</span></div>
+            <div class="checklist-item"><span id="vic-check1">✅</span> <span style="color:#2979ff;">Reached Level 5+ or finished</span></div>
+            <div class="checklist-item"><span id="vic-check2">✅</span> <span style="color:#2979ff;">All nutrition goals (3F/3V/5W)</span></div>
+            <div class="checklist-item"><span id="vic-check3">✅</span> <span style="color:#2979ff;">5x combo OR 75% purity</span></div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" id="vic-restart-btn">Play Again</button>
+    </div>
+  </section>
+
+  <!-- 5. Pause Screen — Fruit Ninja-style "MISSIONS & RULES" modal -->
+  <section class="screen" id="pause-screen">
+    <div class="menu-card glass-panel pause-card">
+
+      <!-- Glowing GAME PAUSED title -->
+      <h1 class="pause-title">GAME PAUSED</h1>
+
+      <!-- Missions & Rules banner -->
+      <div class="missions-banner" role="region" aria-label="Current level missions">
+        <span class="missions-banner-icon" aria-hidden="true">🎯</span>
+        <span class="missions-banner-text">CURRENT LEVEL MISSIONS / GOALS</span>
+      </div>
+
+      <!-- Dynamic Mission / Rule cards -->
+      <div class="missions-list">
+
+        <!-- Mission 1 — DO'S (HEALTHY): Fruits & Vegetables -->
+        <div class="mission-card mission-do" id="pause-mission1">
+          <div class="mission-icon" aria-hidden="true">🍎🥦</div>
+          <div class="mission-body">
+            <div class="mission-title">Collect 5 Fresh Fruits &amp; Vegetables</div>
+            <div class="mission-row">
+              <div class="progress-track">
+                <div class="progress-fill progress-fill--green" id="pause-m1-fill"></div>
+              </div>
+              <span class="progress-count" id="pause-m1-count">0/5</span>
+              <span class="mission-complete" id="pause-m1-check" aria-label="Mission complete">✓</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission 2 — DO'S (HYDRATION): Water Bottles -->
+        <div class="mission-card mission-do" id="pause-mission2">
+          <div class="mission-icon" aria-hidden="true">💧</div>
+          <div class="mission-body">
+            <div class="mission-title">Drink 3 Water Bottles</div>
+            <div class="mission-row">
+              <div class="progress-track">
+                <div class="progress-fill progress-fill--blue" id="pause-m2-fill"></div>
+              </div>
+              <span class="progress-count" id="pause-m2-count">0/3</span>
+              <span class="mission-complete" id="pause-m2-check" aria-label="Mission complete">✓</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rule 3 — DON'TS (OBSTACLE WARNING) -->
+        <div class="mission-card mission-dont" id="pause-mission3">
+          <div class="mission-icon" aria-hidden="true">🚫🍔</div>
+          <div class="mission-body">
+            <div class="mission-title">AVOID Processed Junk Food &amp; Slime!</div>
+            <div class="mission-warning-banner">
+              <span class="warning-text">⚠ Drains your Health Bar!</span>
+              <span class="warning-stats" id="pause-m3-count">0 JUNK HITS</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Control buttons — bold Fruit Ninja styling -->
+      <div class="btn-row pause-btn-row">
+        <button class="btn btn-resume" id="resume-btn" aria-label="Resume game">RESUME</button>
+        <button class="btn btn-restart" id="restart-btn-pause" aria-label="Restart level">RESTART</button>
+        <button class="btn btn-quit" id="quit-btn" aria-label="Quit to main menu">QUIT TO MENU</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Character Select Screen -->
+  <section class="screen" id="char-select-screen">
+    <div class="menu-card glass-panel char-select-card">
+      <h1 class="game-title" style="font-size:2.2rem; background: linear-gradient(135deg, var(--glow-purple-bright) 0%, var(--glow-blue-bright) 100%); -webkit-background-clip: text;">
+        Choose Your Color
+      </h1>
+
+      <!-- Live Ball Preview -->
+      <div class="char-preview" id="char-preview">
+        <div class="preview-ball" id="preview-ball"></div>
+      </div>
+
+      <p class="game-desc" style="font-size:0.95rem;">Pick a color for your ball roller:</p>
+
+      <!-- Color Presets -->
+      <div class="color-grid" id="color-grid">
+        <div class="color-swatch" data-color="#ff1744" style="background:#ff1744;"></div>
+        <div class="color-swatch" data-color="#ff9100" style="background:#ff9100;"></div>
+        <div class="color-swatch" data-color="#ffea00" style="background:#ffea00;"></div>
+        <div class="color-swatch" data-color="#00e676" style="background:#00e676;"></div>
+        <div class="color-swatch" data-color="#2979ff" style="background:#2979ff;"></div>
+        <div class="color-swatch" data-color="#d500f9" style="background:#d500f9;"></div>
+        <div class="color-swatch" data-color="#ffffff" style="background:#ffffff;"></div>
+        <div class="color-swatch" data-color="#ff6d00" style="background:#ff6d00;"></div>
+        <div class="color-swatch" data-color="#00bcd4" style="background:#00bcd4;"></div>
+        <div class="color-swatch" data-color="#e91e63" style="background:#e91e63;"></div>
+        <div class="color-swatch" data-color="#76ff03" style="background:#76ff03;"></div>
+        <div class="color-swatch" data-color="#aa00ff" style="background:#aa00ff;"></div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="char-back-btn">Back</button>
+        <button class="btn btn-primary" id="char-save-btn">Save</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Settings Screen -->
+  <section class="screen" id="settings-screen">
+    <div class="menu-card glass-panel settings-card">
+      <h1 class="game-title" style="font-size:2.2rem; background: linear-gradient(135deg, var(--glow-orange) 0%, var(--glow-yellow) 100%); -webkit-background-clip: text;">
+        Settings
+      </h1>
+
+      <div class="settings-list">
+        <div class="setting-row">
+          <span class="setting-label">Music</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="music-toggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="setting-status" id="music-status">ON</span>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label">Sound Effects</span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="sfx-toggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+          <span class="setting-status" id="sfx-status">ON</span>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label">Game Speed</span>
+          <div class="speed-select-group">
+            <button class="btn btn-sm speed-opt" data-speed="easy">Easy / Slow</button>
+            <button class="btn btn-sm speed-opt active" data-speed="normal">Normal</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <span class="setting-label">How to Play</span>
+          <button class="btn btn-sm" id="settings-howtoplay-btn" style="background: linear-gradient(180deg, var(--glow-blue) 0%, var(--glow-purple) 100%); color: #fff; border-bottom-color: var(--glow-purple);">📖 View Guide</button>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="settings-back-btn">Back</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8. Fruit Trivia Book Screen -->
+  <section class="screen" id="trivia-screen">
+    <div class="menu-card glass-panel trivia-card">
+      <div class="trivia-header">
+        <h1 class="game-title" style="font-size:2rem; margin:0;">🍓 Fruit Trivia Book 📖</h1>
+        <p class="game-desc" style="font-size:0.9rem;">Collect fruits during the race to unlock their trivia entries!</p>
+      </div>
+      <div id="trivia-grid" class="trivia-grid">
+        <!-- Populated dynamically by game.js -->
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-secondary" id="trivia-back-btn">Back to Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9. Leaderboard Screen -->
+  <section class="screen" id="leaderboard-screen">
+    <div class="menu-card glass-panel" style="max-width: 500px; max-height: 92vh; display: flex; flex-direction: column;">
+      <h1 class="game-title" style="font-size:2.2rem; background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); -webkit-background-clip: text;">
+        Top Diet Records
+      </h1>
+      <p class="game-desc" style="font-size:0.9rem; margin-bottom: 15px;">Local High Scores and Nutrition Grades</p>
+      
+      <div id="leaderboard-list" style="flex-grow: 1; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 20px;">
+        <!-- Populated by JS -->
+      </div>
+      
+      <div class="btn-row" style="margin-top:auto;">
+        <button class="btn btn-secondary" id="leaderboard-back-btn">Back to Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trivia Toast Popup (new fruit unlock notification) -->
+  <div id="trivia-toast" class="glass-panel">
+    <div class="toast-info">
+      <span class="toast-title" id="trivia-toast-title">🍓 Strawberry Unlocked!</span>
+      <span id="trivia-toast-desc" class="toast-desc">Fun facts about this fruit!</span>
+    </div>
+  </div>
+
+  <!-- Achievement Toast Popup -->
+  <div id="achievement-toast" class="glass-panel">
+    <span class="toast-icon">🏆</span>
+    <div class="toast-info">
+      <span class="toast-title">Achievement Unlocked!</span>
+      <span id="toast-desc" class="toast-desc">"Liquid Gold" skin unlocked!</span>
+    </div>
+  </div>
+
+  <!-- 10. Grading System Screen -->
+  <section class="screen" id="grading-screen">
+    <div class="menu-card glass-panel grading-card" style="max-width: 500px; max-height: 92vh; display: flex; flex-direction: column;">
+      <div class="grading-header" style="margin-bottom: 15px;">
+        <h1 class="game-title" style="font-size:2rem; margin:0; background: linear-gradient(135deg, #00e676 0%, #2979ff 100%); -webkit-background-clip: text;">📊 Grading System</h1>
+        <p class="game-desc" style="font-size:0.9rem;">How your Nutrition Report Card is calculated at the end of the run.</p>
+      </div>
+      <div class="grading-content" style="text-align: left; font-size: 0.9rem; line-height: 1.5; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 15px; overflow-y: auto; flex-grow: 1;">
+        <p>Your run is rated by <strong>3 Star Objectives</strong> — earn stars for each goal you achieve!</p>
+        <ul style="list-style-type: none; padding: 0; margin-top: 10px;">
+          <li style="margin-bottom: 12px;"><span style="color:#2979ff; font-size:1.3rem;">⭐</span> <strong>Star 1 - Completion/Survival</strong><br>Reached at least Level 5 (halfway) or crossed the finish line. <em style="color:#8a0a3c;">No half-measures!</em></li>
+          <li style="margin-bottom: 12px;"><span style="color:#4caf50; font-size:1.3rem;">⭐</span> <strong>Star 2 - Nutrition Goals</strong><br>Collected 3+ Fruits, 3+ Vegetables, and 5+ Water bottles in a single run.</li>
+          <li style="margin-bottom: 12px;"><span style="color:#ffd700; font-size:1.3rem; text-shadow:0 0 8px #ffd700;">⭐</span> <strong>Star 3 - Mastery &amp; Skill</strong><br>Achieved a 5x healthy combo streak <em>or</em> maintained 75%+ purity (healthy items vs total items).</li>
+        </ul>
+        <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+          <div style="font-weight:bold; margin-bottom: 5px; color:var(--glow-green-bright);">Rating Results:</div>
+          <div><span style="color:#00e676; font-weight:bold;">3 Stars</span> — PERFECT RUN!</div>
+          <div><span style="color:#ffea00; font-weight:bold;">2 Stars</span> — GREAT JOB!</div>
+          <div><span style="color:#ff9100; font-weight:bold;">1 Star</span> — GOOD EFFORT!</div>
+          <div><span style="color:#ff1744; font-weight:bold;">0 Stars</span> — TRY AGAIN!</div>
+        </div>
+        <p style="margin-top: 15px; color: var(--glow-green-bright); text-align: center; font-weight: bold;"><em>Pro Tip: Build healthy combos, meet daily goals, and push through the full track for all 3 stars! 🏆</em></p>
+      </div>
+      <div class="btn-row" style="margin-top: auto;">
+        <button class="btn btn-secondary" id="grading-back-btn">Back to Menu</button>
+      </div>
+    </div>
+  </section>
+
+  
+</div><!-- /#game-wrapper -->
+
+  <!-- Main Game Loop Entry -->
+  <script type="module" src="game.js"></script>
+</body>
+</html>
