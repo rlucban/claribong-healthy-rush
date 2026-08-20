@@ -1020,6 +1020,75 @@ canvas {
   border-radius: 3px;
 }
 
+/* Victory screen - cream theme override */
+#victory-screen .menu-card.cream-panel {
+  background: #FFFDF0 !important;
+  border: 4px solid #88C999 !important;
+  border-radius: 24px !important;
+  box-shadow:
+    0 20px 60px rgba(40, 25, 5, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 0 rgba(160, 110, 60, 0.2) !important;
+  color: #3D2E1E !important;
+}
+
+/* Victory screen text colors */
+#victory-screen .game-title {
+  color: #3D2E1E !important;
+  -webkit-text-fill-color: #3D2E1E !important;
+  background: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+#victory-screen .game-desc {
+  color: #3D2E1E !important;
+}
+
+#victory-screen .health-verdict.healthy {
+  background: #E8F3E8 !important;
+  border: 2px solid #88C999 !important;
+  color: #3D2E1E !important;
+}
+
+/* Victory score badges */
+#victory-screen .score-badge {
+  background: #F4EEDD !important;
+  border: 2px solid #88C999 !important;
+  border-radius: 14px;
+}
+
+#victory-screen .score-badge .val {
+  color: #3D2E1E !important;
+}
+
+#victory-screen .score-badge .lbl {
+  color: #3D2E1E !important;
+}
+
+/* Victory run summary box */
+#victory-screen .run-summary-box {
+  background: #7D7A75 !important;
+  border-radius: 16px;
+  color: #3D2E1E !important;
+}
+
+#victory-screen .run-summary-title {
+  color: #3D2E1E !important;
+}
+
+#victory-screen .run-summary-star-title {
+  color: #3D2E1E !important;
+}
+
+#victory-screen .run-summary-star-count {
+  color: #3D2E1E !important;
+}
+
+#victory-screen .criteria-label {
+  color: #3D2E1E !important;
+}
+
 /* Ensure title stays visible */
 #game-over-screen .game-title,
 #victory-screen .game-title {
@@ -1037,6 +1106,7 @@ h1.game-title {
   /* Warm fruit rainbow gradient */
   background: linear-gradient(135deg, #e8871a 0%, #d4200a 30%, #4a8c3f 65%, #2980b9 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 3px 6px rgba(60, 30, 10, 0.3));
   margin-bottom: 5px;
@@ -2435,6 +2505,7 @@ body:not(.playing) #pause-btn {
   font-weight: 900;
   background: linear-gradient(135deg, var(--glow-orange) 0%, var(--glow-yellow) 100%);
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 4px rgba(160, 110, 60, 0.3));
   margin: 0;
@@ -2844,7 +2915,10 @@ body:not(.playing) #pause-btn {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.02em;
-  line-height: 1.15;
+  line-height: 1.0 !important;
+  margin: 0 !important;
+  padding: 0 4px !important;
+  word-break: break-word;
   text-align: center;
   color: #1a202c;
 }
@@ -3077,7 +3151,11 @@ body:not(.playing) #pause-btn {
   /* Label styling - compact, no overlap */
   #start-screen .fruit-btn .fruit-label {
     font-size: 0.65rem !important;
-    line-height: 1.1;
+    line-height: 1.0 !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    word-break: break-word;
+    text-align: center;
     word-wrap: break-word;
     white-space: normal;
     max-width: 100%;
@@ -3092,7 +3170,11 @@ body:not(.playing) #pause-btn {
 
   #start-screen .fruit-btn--play .fruit-label {
     font-size: clamp(0.85rem, 3vh, 1.4rem);
-    line-height: 1.1;
+    line-height: 1.0 !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    word-break: break-word;
+    text-align: center;
     word-wrap: break-word;
     white-space: normal;
     max-width: 100%;
@@ -3247,7 +3329,11 @@ body:not(.playing) #pause-btn {
   }
   #start-screen .fruit-btn .fruit-label {
     font-size: 0.65rem !important;
-    line-height: 1.1;
+    line-height: 1.0 !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    word-break: break-word;
+    text-align: center;
     word-wrap: break-word;
     white-space: normal;
     max-width: 100%;
@@ -3260,7 +3346,11 @@ body:not(.playing) #pause-btn {
   }
   #start-screen .fruit-btn--play .fruit-label {
     font-size: clamp(0.85rem, 3vh, 1.4rem);
-    line-height: 1.1;
+    line-height: 1.0 !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    word-break: break-word;
+    text-align: center;
     word-wrap: break-word;
     white-space: normal;
     max-width: 100%;
