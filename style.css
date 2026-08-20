@@ -3115,25 +3115,23 @@ body:not(.playing) #pause-btn {
     padding: 3px 12px;
   }
 
-  /* Radial menu container - increased size for proper satellite orbit */
+  /* Radial menu container - match desktop proportional sizing */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: 320px !important;
-    height: 320px !important;
+    width: min(50vh, 85vw) !important;
+    height: min(50vh, 85vw) !important;
     margin: 15px auto !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
+    flex-shrink: 0;
   }
 
-  /* Base button - prevent flex collapse, use absolute positioning */
+  /* Base button - match desktop proportional sizing (24% of container) */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: 72px !important;
-    height: 72px !important;
+    width: clamp(72px, 24%, 90px) !important;
+    height: clamp(72px, 24%, 90px) !important;
     flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
-    font-size: 0.62rem !important;
+    font-size: clamp(0.55rem, 1.5vh, 0.7rem) !important;
     font-weight: 800 !important;
     line-height: 1.1 !important;
     overflow: visible !important;
@@ -3143,22 +3141,22 @@ body:not(.playing) #pause-btn {
     padding: 2px !important;
   }
 
-  /* Center PLAY button - proportional sizing */
+  /* Center PLAY button - match desktop proportional sizing (46% of container) */
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
-    width: 95px !important;
-    height: 95px !important;
+    width: 46% !important;
+    height: 46% !important;
     border-width: 6px;
     background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%);
   }
 
   .fruit-btn--play .fruit-icon {
-    font-size: clamp(2rem, 8vh, 3.5rem);
+    font-size: clamp(1.8rem, 6vh, 2.8rem) !important;
   }
 
   .fruit-btn--play .fruit-label {
-    font-size: 0.85rem !important;
+    font-size: clamp(0.75rem, 2.5vh, 1.1rem) !important;
     hyphens: manual !important;
     word-break: normal !important;
     white-space: normal !important;
@@ -3168,20 +3166,20 @@ body:not(.playing) #pause-btn {
     padding: 2px !important;
   }
 
-  /* Satellite buttons - radial positioning with increased orbit radius (~125px from center) */
-  .fruit-btn--red    { top: 0% !important; left: 50% !important; transform: translate(-50%, 0) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }       /* Top (Character Select) */
-  .fruit-btn--yellow { top: 22% !important; right: 0% !important; transform: translate(0, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }    /* Right (Fruit Trivia) */
-  .fruit-btn--kiwi   { top: 22% !important; left: 0% !important; transform: translate(0, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }    /* Left (Leaderboard) */
-  .fruit-btn--orange { bottom: 10% !important; right: 8% !important; transform: translate(0, 0) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* Bottom-Right (Grading System) */
-  .fruit-btn--grape  { bottom: 10% !important; left: 8% !important; transform: translate(0, 0) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* Bottom-Left (Settings) */
+  /* Satellite buttons - match desktop percentage-based radial positions (35% radius from center) */
+  .fruit-btn--red    { left: 50% !important; top: 15% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }       /* 90° (top) */
+  .fruit-btn--yellow { left: 83% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }    /* 18° (top-right) */
+  .fruit-btn--kiwi   { left: 17% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }    /* 162° (top-left) */
+  .fruit-btn--orange { left: 71% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* 306° (bottom-right) */
+  .fruit-btn--grape  { left: 29% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* 234° (bottom-left) */
 
-  /* Label text wrapping fix for all buttons - prevent clipping */
+  /* Label text wrapping fix for all buttons - prevent clipping, match desktop */
   #start-screen .fruit-label {
     hyphens: manual !important;
     word-break: normal !important;
     white-space: normal !important;
     line-height: 1.1 !important;
-    font-size: 0.62rem !important;
+    font-size: clamp(0.55rem, 1.5vh, 0.7rem) !important;
     font-weight: 800 !important;
     overflow: visible !important;
     text-align: center !important;
