@@ -253,69 +253,70 @@
   <!-- How To Play Modal Overlay -->
   <div class="modal-overlay" id="howtoplay-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
     <div class="modal-backdrop"></div>
-    <div class="modal-container glass-panel">
+    <div class="modal-container">
       <header class="modal-header">
-        <h2 id="modal-title" class="game-title" style="font-size:1.8rem; margin:0;">📖 How to Play</h2>
+        <h2 id="modal-title" class="game-title">📖 How to Play</h2>
         <button class="modal-close" id="modal-close-btn" aria-label="Close How to Play">&times;</button>
       </header>
       <div class="modal-content">
-        <h3 style="color: var(--glow-yellow); margin-bottom: 10px; font-family: var(--font-display);">🎮 Objective</h3>
-        <p style="margin-bottom: 15px;">Roll your ball through vibrant fruit-themed tracks! Collect healthy foods to boost your health and score, avoid junk food that damages you, and reach the finish line.</p>
+        <h3>🎮 Objective</h3>
+        <p>Roll your ball through vibrant fruit-themed tracks! Collect healthy foods to boost your health and score, avoid junk food that damages you, and reach the finish line.</p>
         
-        <h3 style="color: var(--glow-green); margin: 15px 0 10px 0; font-family: var(--font-display);">🕹️ Controls</h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
-          <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;">
-            <strong>Desktop:</strong><br>
-            <span style="color: var(--glow-blue);">← / →</span> or <span style="color: var(--glow-blue);">A / D</span> - Move Left/Right<br>
-            <span style="color: var(--glow-blue);">Space / ↑</span> - Jump
+        <h3>🕹️ Controls</h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 18px;">
+          <div class="control-card">
+            <strong>🖥️ Desktop</strong>
+            <span style="color: var(--glow-blue);">← / →</span> or <span style="color: var(--glow-blue);">A / D</span> — Move Left/Right<br>
+            <span style="color: var(--glow-blue);">Space / ↑</span> — Jump
           </div>
-          <div style="background: rgba(255,255,255,0.1); padding: 10px; border-radius: 8px;">
-            <strong>Mobile:</strong><br>
-            Drag finger on screen - Steer<br>
-            Tap screen - Jump
+          <div class="control-card">
+            <strong>📱 Mobile</strong>
+            Drag finger on screen — Steer<br>
+            Tap screen — Jump
           </div>
         </div>
         
-        <h3 style="color: var(--glow-orange); margin: 15px 0 10px 0; font-family: var(--font-display);">🍎 Healthy Items (Collect These!)</h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; font-size: 0.85rem;">
-          <span style="background: rgba(255,107,129,0.2); padding: 5px 10px; border-radius: 20px;">🍓 Strawberry - Speed Boost</span>
-          <span style="background: rgba(255,145,0,0.2); padding: 5px 10px; border-radius: 20px;">🍊 Orange - Health Restore</span>
-          <span style="background: rgba(255,234,0,0.2); padding: 5px 10px; border-radius: 20px;">🍌 Banana - Combo Builder</span>
-          <span style="background: rgba(255,101,149,0.2); padding: 5px 10px; border-radius: 20px;">🍉 Watermelon - Big Points</span>
-          <span style="background: rgba(255,140,66,0.2); padding: 5px 10px; border-radius: 20px;">🍈 Papaya - Vitamin Bonus</span>
-          <span style="background: rgba(139,195,74,0.2); padding: 5px 10px; border-radius: 20px;">🍋 Calamansi - Immunity Boost</span>
-          <span style="background: rgba(255,127,39,0.2); padding: 5px 10px; border-radius: 20px;">🥕 Carrot - Eye Health</span>
-          <span style="background: rgba(46,158,68,0.2); padding: 5px 10px; border-radius: 20px;">🥦 Broccoli - Super Food</span>
-          <span style="background: rgba(230,126,34,0.2); padding: 5px 10px; border-radius: 20px;">🎃 Squash - Fiber Power</span>
-          <span style="background: rgba(108,44,145,0.2); padding: 5px 10px; border-radius: 20px;">🍆 Eggplant - Brain Food</span>
-          <span style="background: rgba(66,165,245,0.2); padding: 5px 10px; border-radius: 20px;">💧 Water - Hydration</span>
+        <h3>🍎 Healthy Items (Collect These!)</h3>
+        <div class="item-group">
+          <span class="item-badge badge-fruit">🍓 Strawberry — Speed Boost</span>
+          <span class="item-badge badge-fruit">🍊 Orange — Health Restore</span>
+          <span class="item-badge badge-fruit">🍌 Banana — Combo Builder</span>
+          <span class="item-badge badge-fruit">🍉 Watermelon — Big Points</span>
+          <span class="item-badge badge-fruit">🍈 Papaya — Vitamin Bonus</span>
+          <span class="item-badge badge-fruit">🍋 Calamansi — Immunity Boost</span>
+          <span class="item-badge badge-veggie">🥕 Carrot — Eye Health</span>
+          <span class="item-badge badge-veggie">🥦 Broccoli — Super Food</span>
+          <span class="item-badge badge-veggie">🎃 Squash — Fiber Power</span>
+          <span class="item-badge badge-veggie">🍆 Eggplant — Brain Food</span>
+          <span class="item-badge badge-water">💧 Water — Hydration</span>
         </div>
         
-        <h3 style="color: var(--glow-red); margin: 15px 0 10px 0; font-family: var(--font-display);">🚫 Junk Food (AVOID!)</h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; font-size: 0.85rem;">
-          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍔 Burger - Heavy Damage</span>
-          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍟 Fries - Grease Slow</span>
-          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🌭 Hotdog - Mystery Meat</span>
-          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍩 Donut - Sugar Crash</span>
-          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🥤 Soda - Acid Burn</span>
-          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">🍿 Chips - Empty Calories</span>
-          <span style="background: rgba(255,59,48,0.2); padding: 5px 10px; border-radius: 20px;">💚 Slime - Toxic!</span>
+        <h3>🚫 Junk Food (AVOID!)</h3>
+        <div class="item-group">
+          <span class="item-badge badge-junk">🍔 Burger — Heavy Damage</span>
+          <span class="item-badge badge-junk">🍟 Fries — Grease Slow</span>
+          <span class="item-badge badge-junk">🌭 Hotdog — Mystery Meat</span>
+          <span class="item-badge badge-junk">🍩 Donut — Sugar Crash</span>
+          <span class="item-badge badge-junk">🥤 Soda — Acid Burn</span>
+          <span class="item-badge badge-junk">🍿 Chips — Empty Calories</span>
+          <span class="item-badge badge-junk">💚 Slime — Toxic!</span>
         </div>
         
-        <h3 style="color: var(--glow-purple); margin: 15px 0 10px 0; font-family: var(--font-display);">✨ Power-Ups</h3>
-        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; font-size: 0.85rem;">
-          <span style="background: rgba(213,0,249,0.2); padding: 5px 10px; border-radius: 20px;">🧲 Magnet - Auto-collect</span>
-          <span style="background: rgba(213,0,249,0.2); padding: 5px 10px; border-radius: 20px;">🛡️ Shield - Block 1 Hit</span>
+        <h3>✨ Power-Ups</h3>
+        <div class="item-group">
+          <span class="item-badge badge-powerup">🧲 Magnet — Auto-collect</span>
+          <span class="item-badge badge-powerup">🛡️ Shield — Block 1 Hit</span>
         </div>
         
-        <h3 style="color: var(--glow-yellow); margin: 15px 0 10px 0; font-family: var(--font-display);">🌈 Super Mode</h3>
-        <p style="margin-bottom: 15px;">Collect <strong>5 healthy items in a row</strong> without hitting junk to activate <span style="color: var(--glow-rainbow); font-weight: bold; text-shadow: 0 0 5px currentColor;">RAINBOW SUPER MODE!</span> — Invincibility + max speed + bonus points!</p>
+        <div class="highlight-box">
+          <strong>🌈 Super Mode:</strong> Collect <strong>5 healthy items in a row</strong> without hitting junk to activate <span style="color: var(--glow-rainbow); font-weight: bold; text-shadow: 0 0 5px currentColor;">RAINBOW SUPER MODE!</span> — Invincibility + max speed + bonus points!
+        </div>
         
-        <h3 style="color: var(--glow-blue); margin: 15px 0 10px 0; font-family: var(--font-display);">🎯 Daily Goals</h3>
-        <p style="margin-bottom: 15px;">Complete each run's nutrition targets: <strong>3 Fruits, 3 Veggies, 5 Waters</strong>. Track progress in the HUD!</p>
+        <h3>🎯 Daily Goals</h3>
+        <p>Complete each run's nutrition targets: <strong>3 Fruits, 3 Veggies, 5 Waters</strong>. Track progress in the HUD!</p>
         
-        <h3 style="color: var(--glow-green); margin: 15px 0 10px 0; font-family: var(--font-display);">🏆 Grading System</h3>
-        <p style="margin-bottom: 15px;">Earn up to 3 stars per run: <strong>★</strong> Survival (Level 5+), <strong>★</strong> Nutrition Goals met, <strong>★</strong> Mastery (5x combo or 75% purity). Check the <strong>Grading System</strong> screen for details!</p>
+        <h3>🏆 Grading System</h3>
+        <p>Earn up to 3 stars per run: <strong>★</strong> Survival (Level 5+), <strong>★</strong> Nutrition Goals met, <strong>★</strong> Mastery (5x combo or 75% purity). Check the <strong>Grading System</strong> screen for details!</p>
       </div>
     </div>
   </div>

@@ -444,6 +444,35 @@ class Game {
       window.addEventListener(evt, forceStartOpeningAudio, { once: true, passive: true });
     });
     
+    // MOBILE AUDIO UNLOCKER — dedicated aggressive unlock for mobile WebAudio
+    // Runs on touchstart/touchend/click to ensure audio context is resumed
+    // and menu BGM plays immediately on first mobile gesture.
+    const unlockMobileAudio = () => {
+      if (window.menuAudio && window.menuAudio.ctx) {
+        if (window.menuAudio.ctx.state === 'suspended') {
+          window.menuAudio.ctx.resume().then(() => {
+            window.menuAudio.playMenuBGM();
+          });
+        } else {
+          window.menuAudio.playMenuBGM();
+        }
+      }
+      // Also resume main audio engine if needed
+      if (window.audio && window.audio.ctx && window.audio.ctx.state === 'suspended') {
+        window.audio.ctx.resume();
+      }
+      ['touchstart', 'touchend', 'click'].forEach(evt => {
+        document.removeEventListener(evt, unlockMobileAudio);
+        window.removeEventListener(evt, unlockMobileAudio);
+      });
+    };
+    
+    // Attach mobile audio unlocker to both document and window
+    ['touchstart', 'touchend', 'click'].forEach(evt => {
+      document.addEventListener(evt, unlockMobileAudio, { passive: true });
+      window.addEventListener(evt, unlockMobileAudio, { passive: true });
+    });
+    
     // Check persistent unlocks against stored stats (high score / level)
     // before rendering the skin grid so already-earned skins display unlocked.
     this.checkAchievements();

@@ -36,6 +36,7 @@
 
   /* Parchment / glass panel palette (referenced by UI but was missing) */
   --parchment: #fff6e6;
+  --parchment-light: #fffdf5;
   --parchment-dark: #f0ddb0;
   --parchment-border: #e8cf9e;
   --wood-brown: #a0673a;
@@ -2102,7 +2103,18 @@ body:not(.playing) #pause-btn {
 }
 
 /* ============================================ */
-/* HOW TO PLAY MODAL OVERLAY                     */
+/* ---- SETTINGS SCREEN - HOW TO PLAY BUTTON ----
+   Ensure immediate touch response on mobile with high z-index and touch-action. */
+#settings-screen #settings-howtoplay-btn {
+  touch-action: manipulation;
+  pointer-events: auto !important;
+  z-index: 9999;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ============================================ */
+/* HOW TO PLAY MODAL — BEAUTIFUL COMPACT DESIGN */
 /* ============================================ */
 
 .modal-overlay {
@@ -2112,15 +2124,14 @@ body:not(.playing) #pause-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: clamp(12px, 3vw, 20px);
+  padding: 20px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  background: rgba(10, 20, 15, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   transition: opacity 0.3s ease, visibility 0.3s ease;
-}
-
-.modal-overlay[hidden] {
-  display: none;
 }
 
 .modal-overlay.active {
@@ -2129,71 +2140,71 @@ body:not(.playing) #pause-btn {
   pointer-events: auto;
 }
 
-.modal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(40, 25, 5, 0.55);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  z-index: -1;
-  animation: modal-backdrop-fade 0.3s ease;
+.modal-overlay[hidden] {
+  display: none;
 }
 
-@keyframes modal-backdrop-fade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
+/* Compact centered modal card - cream parchment style */
 .modal-container {
   position: relative;
-  z-index: 1;
   width: 100%;
-  max-width: min(480px, 92vw);
-  max-height: 85vh;
-  display: flex;
-  flex-direction: column;
-  border-radius: 20px;
+  max-width: 600px;
+  max-height: 80vh;
+  border-radius: 24px;
   overflow: hidden;
   transform: scale(0.9) translateY(20px);
-  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.3s ease;
   box-shadow:
-    0 20px 60px rgba(40, 25, 5, 0.6),
+    0 20px 60px rgba(10, 15, 10, 0.5),
     inset 0 1px 0 rgba(255, 255, 255, 0.6),
     inset 0 -2px 0 rgba(160, 110, 60, 0.2);
-  /* Parchment-style card to match Settings */
   background: var(--parchment);
   border: 3px solid var(--parchment-border);
+  display: flex;
+  flex-direction: column;
 }
 
 .modal-overlay.active .modal-container {
   transform: scale(1) translateY(0);
+  opacity: 1;
 }
 
+/* Remove default backdrop since we use overlay background */
+.modal-backdrop {
+  display: none;
+}
+
+/* Header INSIDE the cream card */
 .modal-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: clamp(16px, 4vw, 24px);
-  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-dark) 100%);
+  padding: 20px 24px;
+  background: linear-gradient(180deg, var(--parchment) 0%, var(--parchment-light) 100%);
   border-bottom: 2px solid var(--parchment-border);
+  flex-shrink: 0;
 }
 
 .modal-header .game-title {
-  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  font-family: var(--font-display);
+  font-size: clamp(1.3rem, 3.5vw, 1.6rem);
+  font-weight: 900;
   background: linear-gradient(135deg, var(--glow-orange) 0%, var(--glow-yellow) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   filter: drop-shadow(0 2px 4px rgba(160, 110, 60, 0.3));
+  margin: 0;
 }
 
+/* Close button INSIDE top-right of cream card */
 .modal-close {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
   border: none;
   background: var(--parchment-dark);
   color: var(--text-main);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -2202,12 +2213,16 @@ body:not(.playing) #pause-btn {
   transition: all 0.2s ease;
   border: 2px solid var(--parchment-border);
   box-shadow: 0 2px 8px rgba(160, 110, 60, 0.15);
+  touch-action: manipulation;
+  pointer-events: auto !important;
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
 }
 
 .modal-close:hover {
   background: var(--glow-red);
   color: #fff;
-  transform: scale(1.1) rotate(90deg);
+  transform: scale(1.05) rotate(90deg);
   border-color: var(--glow-red);
   box-shadow: 0 4px 16px rgba(255, 59, 48, 0.4);
 }
@@ -2216,14 +2231,16 @@ body:not(.playing) #pause-btn {
   transform: scale(0.95) rotate(90deg);
 }
 
+/* Scrollable content area with proper constraints */
 .modal-content {
   flex: 1;
   overflow-y: auto;
-  padding: clamp(16px, 4vw, 24px);
+  padding: 24px;
   background: var(--parchment);
   color: var(--text-main);
   scrollbar-width: thin;
   scrollbar-color: var(--parchment-border) transparent;
+  max-height: 65vh;
 }
 
 .modal-content::-webkit-scrollbar {
@@ -2239,59 +2256,159 @@ body:not(.playing) #pause-btn {
   border-radius: 3px;
 }
 
+/* Typography */
 .modal-content h3 {
   font-family: var(--font-display);
-  font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-  margin-bottom: 8px;
+  font-size: clamp(0.85rem, 2.2vw, 1rem);
+  margin: 0 0 10px 0;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.04em;
   color: var(--text-heading);
 }
 
 .modal-content p {
   font-size: clamp(0.8rem, 2vw, 0.95rem);
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--text-main);
-  margin-bottom: 12px;
+  margin: 0 0 16px 0;
 }
 
 .modal-content strong {
   color: var(--text-heading);
 }
 
-.modal-content div[style*="background: rgba(255,255,255,0.1)"] {
-  background: rgba(160, 110, 60, 0.12) !important;
-  border: 1px solid rgba(160, 110, 60, 0.2);
-  border-radius: 8px;
+/* Control cards - neat pastel badges */
+.control-card {
+  background: rgba(160, 110, 60, 0.1);
+  border: 1px solid rgba(160, 110, 60, 0.18);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-size: clamp(0.75rem, 2vw, 0.9rem);
+  line-height: 1.7;
 }
 
-.modal-content div[style*="background: rgba(255,255,255,0.1)"] strong {
+.control-card strong {
   color: var(--text-heading);
+  display: block;
+  margin-bottom: 6px;
+  font-size: clamp(0.7rem, 1.8vw, 0.85rem);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
-.modal-content span[style*="background: rgba("] {
-  background: rgba(160, 110, 60, 0.12) !important;
-  color: var(--text-main) !important;
-  border: 1px solid rgba(160, 110, 60, 0.25);
-  border-radius: 20px;
+/* Item badge groups */
+.item-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.item-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 24px;
+  font-size: clamp(0.7rem, 1.8vw, 0.8rem);
+  font-weight: 700;
+  font-family: var(--font-body);
+  border: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.item-badge:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Healthy item badges - pastel greens/yellows/oranges */
+.badge-healthy {
+  background: linear-gradient(135deg, rgba(72, 187, 120, 0.15) 0%, rgba(72, 187, 120, 0.08) 100%);
+  color: #1f7a3d;
+  border-color: rgba(72, 187, 120, 0.3);
+}
+
+.badge-fruit {
+  background: linear-gradient(135deg, rgba(255, 107, 129, 0.15) 0%, rgba(255, 107, 129, 0.08) 100%);
+  color: #b91c1c;
+  border-color: rgba(255, 107, 129, 0.3);
+}
+
+.badge-veggie {
+  background: linear-gradient(135deg, rgba(46, 158, 68, 0.15) 0%, rgba(46, 158, 68, 0.08) 100%);
+  color: #166534;
+  border-color: rgba(46, 158, 68, 0.3);
+}
+
+.badge-water {
+  background: linear-gradient(135deg, rgba(66, 165, 245, 0.15) 0%, rgba(66, 165, 245, 0.08) 100%);
+  color: #1e40af;
+  border-color: rgba(66, 165, 245, 0.3);
+}
+
+/* Junk food badges - pastel reds */
+.badge-junk {
+  background: linear-gradient(135deg, rgba(255, 59, 48, 0.12) 0%, rgba(255, 59, 48, 0.06) 100%);
+  color: #b91c1c;
+  border-color: rgba(255, 59, 48, 0.25);
+}
+
+/* Power-up badges - pastel purples */
+.badge-powerup {
+  background: linear-gradient(135deg, rgba(213, 0, 249, 0.15) 0%, rgba(213, 0, 249, 0.08) 100%);
+  color: #86198f;
+  border-color: rgba(213, 0, 249, 0.3);
+}
+
+/* Special highlight sections */
+.highlight-box {
+  background: linear-gradient(135deg, rgba(255, 234, 0, 0.15) 0%, rgba(255, 215, 0, 0.08) 100%);
+  border: 2px solid rgba(255, 215, 0, 0.3);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  text-align: center;
+}
+
+.highlight-box strong {
+  color: #b8860b;
+  font-size: clamp(0.85rem, 2vw, 1rem);
 }
 
 @media (max-width: 480px) {
   .modal-container {
-    max-height: 90vh;
-    border-radius: 16px;
+    max-height: 85vh;
+    border-radius: 18px;
   }
   .modal-header {
-    padding: clamp(12px, 3vw, 18px);
+    padding: 16px 20px;
+  }
+  .modal-header .game-title {
+    font-size: clamp(1.1rem, 4vw, 1.4rem);
+  }
+  .modal-close {
+    width: 40px;
+    height: 40px;
+    font-size: 1.4rem;
   }
   .modal-content {
-    padding: clamp(12px, 3vw, 18px);
+    padding: 20px;
+    max-height: 60vh;
   }
   .modal-content h3 {
-    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    font-size: clamp(0.75rem, 2.2vw, 0.9rem);
   }
   .modal-content p {
-    font-size: clamp(0.75rem, 2vw, 0.9rem);
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+  }
+  .item-badge {
+    padding: 6px 12px;
+    font-size: clamp(0.65rem, 1.8vw, 0.75rem);
+  }
+  .control-card {
+    padding: 12px 14px;
+    font-size: clamp(0.7rem, 1.8vw, 0.85rem);
   }
 }
 
