@@ -3037,40 +3037,18 @@ body:not(.playing) #pause-btn {
     padding: 3px 12px;
   }
   #start-screen .arcade-cluster {
-    width: min(52vh, 90vw);
-    height: min(52vh, 90vw);
+    width: min(50vh, 88vw);
+    height: min(50vh, 88vw);
   }
   #start-screen .fruit-btn {
-    width: clamp(80px, 26%, 95px);
-    height: clamp(80px, 26%, 95px);
-    padding: 8px;
+    width: clamp(70px, 24%, 90px);
+    height: clamp(70px, 24%, 90px);
+    padding: 6px;
     box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-  #start-screen .fruit-btn .fruit-icon {
-    font-size: clamp(1.4rem, 5vh, 2.2rem);
-    margin-bottom: 4px;
-  }
-  #start-screen .fruit-btn .fruit-label {
-    font-size: 0.65rem !important;
-    line-height: 1.1;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    padding: 0 4px;
   }
   #start-screen .fruit-btn--play {
-    width: 110px !important;
-    height: 110px !important;
-    max-width: 42%;
-    max-height: 42%;
-  }
-  #start-screen .fruit-btn--play .fruit-icon {
-    font-size: clamp(2.2rem, 9vh, 3.8rem);
+    width: 42%;
+    height: 42%;
   }
   #start-screen .fruit-btn--play .fruit-label {
     font-size: 0.75rem !important;
@@ -3106,11 +3084,12 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.4rem, 0.9vh, 0.52rem);
   }
 
-  .fruit-btn--red    { left: 50%; top: calc(12% - 12px); }
-  .fruit-btn--yellow { left: calc(85% + 8px); top: calc(37% - 6px); }
-  .fruit-btn--kiwi   { left: calc(15% - 8px); top: calc(37% - 6px); }
-  .fruit-btn--orange { left: calc(73% + 7px); top: calc(80% + 6px); }
-  .fruit-btn--grape  { left: calc(27% - 7px); top: calc(80% + 6px); }
+/* Radial positions matching web version - 35% radius from center */
+  .fruit-btn--red    { left: 50%; top: 15%; }
+  .fruit-btn--yellow { left: 83%; top: 39%; }
+  .fruit-btn--kiwi   { left: 17%; top: 39%; }
+  .fruit-btn--orange { left: 71%; top: 78%; }
+  .fruit-btn--grape  { left: 29%; top: 78%; }
 
   /* Extra small mobile (≤ 600px): larger buttons, more radial spread */
   @media (max-width: 600px) {
@@ -3279,11 +3258,11 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.7rem, 2.6vh, 1.1rem);
   }
 
-  .fruit-btn--red    { left: 50%; top: calc(15% - 7px); }
-  .fruit-btn--yellow { left: calc(83% + 5px); top: calc(39% - 3px); }
-  .fruit-btn--kiwi   { left: calc(17% - 5px); top: calc(39% - 3px); }
-  .fruit-btn--orange { left: calc(71% + 4px); top: calc(78% + 3px); }
-  .fruit-btn--grape  { left: calc(29% - 4px); top: calc(78% + 3px); }
+  .fruit-btn--red    { left: 50%; top: 15%; }
+  .fruit-btn--yellow { left: 83%; top: 39%; }
+  .fruit-btn--kiwi   { left: 17%; top: 39%; }
+  .fruit-btn--orange { left: 71%; top: 78%; }
+  .fruit-btn--grape  { left: 29%; top: 78%; }
 }
 
 /* Extra-small phones (≤ 480px): further increase radial offset,
@@ -3306,11 +3285,11 @@ body:not(.playing) #pause-btn {
     padding-right: clamp(6px, 1.5vw, 10px);
   }
 
-  .fruit-btn--red    { left: 50%; top: calc(12% - 10px); }
-  .fruit-btn--yellow { left: calc(85% + 8px); top: calc(37% - 6px); }
-  .fruit-btn--kiwi   { left: calc(15% - 8px); top: calc(37% - 6px); }
-  .fruit-btn--orange { left: calc(73% + 7px); top: calc(80% + 6px); }
-  .fruit-btn--grape  { left: calc(27% - 7px); top: calc(80% + 6px); }
+  .fruit-btn--red    { left: 50%; top: 15%; }
+  .fruit-btn--yellow { left: 83%; top: 39%; }
+  .fruit-btn--kiwi   { left: 17%; top: 39%; }
+  .fruit-btn--orange { left: 71%; top: 78%; }
+  .fruit-btn--grape  { left: 29%; top: 78%; }
 
   /* Run Summary Box - Extra small phones */
   .run-summary-box {
@@ -3348,12 +3327,9 @@ body.in-menu #swipe-area {
   transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
-/* During active gameplay, hide the bottom navigation dock and HUD
-   so the canvas is the only touch target. The pause button is hoisted
-   separately and remains visible via its own z-index. */
-body.playing #mobile-dock,
-body.playing .hud-mobile-goal,
-body.playing .hud-mobile-row {
+/* During active gameplay, hide the bottom navigation dock.
+   The pause button is hoisted separately and remains visible via its own z-index. */
+body.playing #mobile-dock {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
