@@ -3037,19 +3037,49 @@ body:not(.playing) #pause-btn {
     padding: 3px 12px;
   }
   #start-screen .arcade-cluster {
-    width: min(48vh, 86vw);
-    height: min(48vh, 86vw);
+    width: min(52vh, 90vw);
+    height: min(52vh, 90vw);
   }
   #start-screen .fruit-btn {
-    width: clamp(60px, 24%, 85px);
-    height: clamp(60px, 24%, 85px);
+    width: clamp(80px, 26%, 95px);
+    height: clamp(80px, 26%, 95px);
+    padding: 8px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  #start-screen .fruit-btn .fruit-icon {
+    font-size: clamp(1.4rem, 5vh, 2.2rem);
+    margin-bottom: 4px;
+  }
+  #start-screen .fruit-btn .fruit-label {
+    font-size: 0.65rem !important;
+    line-height: 1.1;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    padding: 0 4px;
   }
   #start-screen .fruit-btn--play {
-    width: 46%;
-    height: 46%;
+    width: 110px !important;
+    height: 110px !important;
+    max-width: 42%;
+    max-height: 42%;
+  }
+  #start-screen .fruit-btn--play .fruit-icon {
+    font-size: clamp(2.2rem, 9vh, 3.8rem);
+  }
+  #start-screen .fruit-btn--play .fruit-label {
+    font-size: 0.75rem !important;
+    line-height: 1.1;
   }
   #start-screen .skin-section-title {
     font-size: clamp(0.8rem, 2.2vh, 1rem);
+    transform: scale(0.9);
+    transform-origin: center bottom;
   }
   #start-screen .skin-grid {
     max-width: 100%;
@@ -3057,6 +3087,8 @@ body:not(.playing) #pause-btn {
     justify-content: flex-start;
     gap: clamp(6px, 1.4vw, 10px);
     padding: 0 2px;
+    transform: scale(0.9);
+    transform-origin: center bottom;
   }
   #start-screen .skin-card {
     width: clamp(50px, 12vw, 70px);
@@ -3074,11 +3106,56 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.4rem, 0.9vh, 0.52rem);
   }
 
-  .fruit-btn--red    { left: 50%; top: calc(15% - 8px); }
-  .fruit-btn--yellow { left: calc(83% + 6px); top: calc(39% - 4px); }
-  .fruit-btn--kiwi   { left: calc(17% - 6px); top: calc(39% - 4px); }
-  .fruit-btn--orange { left: calc(71% + 5px); top: calc(78% + 4px); }
-  .fruit-btn--grape  { left: calc(29% - 5px); top: calc(78% + 4px); }
+  .fruit-btn--red    { left: 50%; top: calc(12% - 12px); }
+  .fruit-btn--yellow { left: calc(85% + 8px); top: calc(37% - 6px); }
+  .fruit-btn--kiwi   { left: calc(15% - 8px); top: calc(37% - 6px); }
+  .fruit-btn--orange { left: calc(73% + 7px); top: calc(80% + 6px); }
+  .fruit-btn--grape  { left: calc(27% - 7px); top: calc(80% + 6px); }
+
+  /* Extra small mobile (≤ 600px): larger buttons, more radial spread */
+  @media (max-width: 600px) {
+    #start-screen .arcade-cluster {
+      width: min(54vh, 92vw);
+      height: min(54vh, 92vw);
+    }
+    #start-screen .fruit-btn {
+      width: clamp(80px, 26%, 95px);
+      height: clamp(80px, 26%, 95px);
+      padding: 8px;
+      box-sizing: border-box;
+    }
+    #start-screen .fruit-btn .fruit-icon {
+      font-size: clamp(1.4rem, 5vh, 2.2rem);
+      margin-bottom: 4px;
+    }
+    #start-screen .fruit-btn .fruit-label {
+      font-size: 0.65rem !important;
+      line-height: 1.1;
+      word-wrap: break-word;
+      white-space: normal;
+      max-width: 100%;
+      padding: 0 4px;
+    }
+    #start-screen .fruit-btn--play {
+      width: 110px !important;
+      height: 110px !important;
+      max-width: 42%;
+      max-height: 42%;
+    }
+    #start-screen .fruit-btn--play .fruit-icon {
+      font-size: clamp(2.2rem, 9vh, 3.8rem);
+    }
+    #start-screen .fruit-btn--play .fruit-label {
+      font-size: 0.75rem !important;
+      line-height: 1.1;
+    }
+
+    .fruit-btn--red    { left: 50%; top: calc(11% - 14px); }
+    .fruit-btn--yellow { left: calc(86% + 10px); top: calc(36% - 8px); }
+    .fruit-btn--kiwi   { left: calc(14% - 10px); top: calc(36% - 8px); }
+    .fruit-btn--orange { left: calc(74% + 9px); top: calc(81% + 8px); }
+    .fruit-btn--grape  { left: calc(26% - 9px); top: calc(81% + 8px); }
+  }
 
   /* Run Summary Box - Mobile */
   .run-summary-box {
@@ -3136,6 +3213,12 @@ body:not(.playing) #pause-btn {
   }
   #start-screen .skin-section-title {
     font-size: clamp(0.7rem, 1.6vh, 0.9rem);
+    transform: scale(0.9);
+    transform-origin: center bottom;
+  }
+  #start-screen .skin-grid {
+    transform: scale(0.9);
+    transform-origin: center bottom;
   }
   #start-screen .skin-card {
     width: clamp(55px, 9vw, 70px);
@@ -3153,12 +3236,35 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.4rem, 0.8vh, 0.52rem);
   }
   #start-screen .fruit-btn {
-    width: clamp(44px, 24%, 60px);
-    height: clamp(44px, 24%, 60px);
+    width: clamp(70px, 24%, 85px);
+    height: clamp(70px, 24%, 85px);
+    padding: 6px;
+    box-sizing: border-box;
+  }
+  #start-screen .fruit-btn .fruit-icon {
+    font-size: clamp(1.2rem, 4vh, 1.8rem);
+    margin-bottom: 4px;
+  }
+  #start-screen .fruit-btn .fruit-label {
+    font-size: 0.6rem !important;
+    line-height: 1.05;
+    word-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
+    padding: 0 4px;
   }
   #start-screen .fruit-btn--play {
-    width: 46%;
-    height: 46%;
+    width: 100px !important;
+    height: 100px !important;
+    max-width: 42%;
+    max-height: 42%;
+  }
+  #start-screen .fruit-btn--play .fruit-icon {
+    font-size: clamp(1.8rem, 8vh, 3.2rem);
+  }
+  #start-screen .fruit-btn--play .fruit-label {
+    font-size: 0.7rem !important;
+    line-height: 1.05;
   }
   .fruit-icon {
     font-size: clamp(1rem, 3.5vh, 1.6rem);
