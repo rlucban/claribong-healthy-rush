@@ -431,6 +431,13 @@ class Game {
       menuAudio.playMenuBGM();
       audio.setGameState('menu');
       
+      // Unlock Speech Synthesis (TTS) for item collection voice readout
+      if ('speechSynthesis' in window) {
+        const silentUtterance = new SpeechSynthesisUtterance('');
+        window.speechSynthesis.speak(silentUtterance);
+        window.speechSynthesis.getVoices();
+      }
+      
       // Remove listeners once audio has successfully unlocked and started
       ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
         document.removeEventListener(evt, forceStartOpeningAudio);
@@ -460,6 +467,13 @@ class Game {
       // Also resume main audio engine if needed
       if (window.audio && window.audio.ctx && window.audio.ctx.state === 'suspended') {
         window.audio.ctx.resume();
+      }
+      // Unlock Speech Synthesis (TTS) for item collection voice readout
+      if ('speechSynthesis' in window) {
+        const silentUtterance = new SpeechSynthesisUtterance('');
+        window.speechSynthesis.speak(silentUtterance);
+        // Preload voices for female voice selection
+        window.speechSynthesis.getVoices();
       }
       ['touchstart', 'touchend', 'click'].forEach(evt => {
         document.removeEventListener(evt, unlockMobileAudio);
@@ -2040,14 +2054,32 @@ class Game {
     if (!('speechSynthesis' in window)) return;
     window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    const voices = window.speechSynthesis.getVoices() || [];
-    const femaleVoice = voices.find(v =>
-      /female|samantha|zira|google us english|natural female/i.test(v.name)
-    );
-    if (femaleVoice) utterance.voice = femaleVoice;
-    utterance.pitch = 1.2;
-    utterance.rate = 1.0;
-    window.speechSynthesis.speak(utterance);
+    
+    // Helper to select and apply female voice
+    const applyVoice = () => {
+      const voices = window.speechSynthesis.getVoices() || [];
+      const femaleVoice = voices.find(v =>
+        /female|samantha|zira|google us english|natural female/i.test(v.name)
+      );
+      if (femaleVoice) utterance.voice = femaleVoice;
+      utterance.pitch = 1.2;
+      utterance.rate = 1.0;
+      window.speechSynthesis.speak(utterance);
+    };
+    
+    // If voices are already loaded, apply immediately
+    if (window.speechSynthesis.getVoices().length > 0) {
+      applyVoice();
+    } else {
+      // Wait for voices to load (Chrome loads them asynchronously)
+      const onVoicesLoaded = () => {
+        applyVoice();
+        window.speechSynthesis.removeEventListener('voiceschanged', onVoicesLoaded);
+      };
+      window.speechSynthesis.addEventListener('voiceschanged', onVoicesLoaded);
+      // Fallback timeout in case event doesn't fire
+      setTimeout(applyVoice, 200);
+    }
   }
 
   handleItemCollision(item) {
@@ -2812,22 +2844,22 @@ class Game {
     if (!list) return;
 
     if (board.length === 0) {
-      list.innerHTML = '<div style="text-align:center; padding: 20px; color:rgba(255,255,255,0.5);">No records yet. Play a game!</div>';
+      list.innerHTML = '<div style="text-align:center; padding: 20px; color:var(--text-muted);">No records yet. Play a game!</div>';
     } else {
       list.innerHTML = board.map((entry, idx) => {
         const entryColor = this.getStarColor(entry.stars);
         return `
-        <div style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:10px 15px; margin-bottom:8px; border-radius:8px; border-left:4px solid ${entryColor};">
+        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--parchment-dark); padding:10px 15px; margin-bottom:8px; border-radius:8px; border-left:4px solid ${entryColor}; border: 1px solid var(--parchment-border);">
           <div style="display:flex; gap:15px; align-items:center;">
-            <span style="font-size:1.2rem; font-weight:bold; color:rgba(255,255,255,0.5);">#${idx + 1}</span>
+            <span style="font-size:1.2rem; font-weight:bold; color:var(--text-muted);">#${idx + 1}</span>
             <div>
-              <div style="font-weight:bold; font-size:1.1rem;">Score: <span style="color:#00e5ff">${entry.score}</span></div>
-              <div style="font-size:0.75rem; color:rgba(255,255,255,0.6);">${entry.date}</div>
+              <div style="font-weight:bold; font-size:1.1rem; color:var(--text-main);">Score: <span style="color:var(--text-heading)">${entry.score}</span></div>
+              <div style="font-size:0.75rem; color:var(--text-muted);">${entry.date}</div>
             </div>
           </div>
           <div style="text-align:right; font-size:0.8rem;">
             <div>Rating <strong style="font-size:1.1rem; color:${entryColor};">${entry.stars} Stars ${entry.starIcons}</strong></div>
-            <div style="color:rgba(255,255,255,0.7);">Purity: ${entry.purity}% | Healthy: ${entry.healthyItems}/${entry.totalItems} | Combo: ${entry.maxHealthyCombo}</div>
+            <div style="color:var(--text-muted);">Purity: ${entry.purity}% | Healthy: ${entry.healthyItems}/${entry.totalItems} | Combo: ${entry.maxHealthyCombo}</div>
           </div>
         </div>
         `;

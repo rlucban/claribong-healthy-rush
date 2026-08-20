@@ -919,6 +919,86 @@ canvas {
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
+/* Cream/Parchment panel variant for Leaderboard / Grading / Modal screens
+   Light cream background with parchment styling for readability. */
+.cream-panel {
+  background: var(--parchment) !important;
+  border: 3px solid var(--parchment-border);
+  box-shadow:
+    0 20px 60px rgba(40, 25, 5, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -2px 0 rgba(160, 110, 60, 0.2);
+  color: var(--text-main);
+  scrollbar-width: thin;
+  scrollbar-color: #88C999 #F2EBD9;
+}
+
+.cream-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.cream-panel::-webkit-scrollbar-track {
+  background: #F2EBD9;
+  border-radius: 3px;
+}
+
+.cream-panel::-webkit-scrollbar-thumb {
+  background: #88C999;
+  border-radius: 3px;
+}
+
+.cream-panel::-webkit-scrollbar-thumb:hover {
+  background: #6eb87c;
+}
+
+/* Leaderboard list inner scrollable area */
+#leaderboard-list {
+  scrollbar-width: thin;
+  scrollbar-color: #88C999 #F2EBD9;
+}
+
+#leaderboard-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+#leaderboard-list::-webkit-scrollbar-track {
+  background: #F2EBD9;
+  border-radius: 3px;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb {
+  background: #88C999;
+  border-radius: 3px;
+}
+
+#leaderboard-list::-webkit-scrollbar-thumb:hover {
+  background: #6eb87c;
+}
+
+/* Grading content inner scrollable area */
+.grading-content {
+  scrollbar-width: thin;
+  scrollbar-color: #88C999 #F2EBD9;
+}
+
+.grading-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.grading-content::-webkit-scrollbar-track {
+  background: #F2EBD9;
+  border-radius: 3px;
+}
+
+.grading-content::-webkit-scrollbar-thumb {
+  background: #88C999;
+  border-radius: 3px;
+}
+
+.grading-content::-webkit-scrollbar-thumb:hover {
+  background: #6eb87c;
+}
+
 /* Game Over / Victory specific card constraints */
 #game-over-screen .menu-card,
 #victory-screen .menu-card {
@@ -2401,7 +2481,7 @@ body:not(.playing) #pause-btn {
   background: var(--parchment);
   color: var(--text-main);
   scrollbar-width: thin;
-  scrollbar-color: var(--parchment-border) transparent;
+  scrollbar-color: #88C999 #F2EBD9;
   max-height: 65vh;
 }
 
@@ -2410,12 +2490,17 @@ body:not(.playing) #pause-btn {
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: transparent;
+  background: #F2EBD9;
+  border-radius: 3px;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: var(--parchment-border);
+  background: #88C999;
   border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb:hover {
+  background: #6eb87c;
 }
 
 /* Typography */
@@ -2711,8 +2796,6 @@ body:not(.playing) #pause-btn {
   align-items: center;
   justify-content: center;
   gap: clamp(1px, 0.4vh, 4px);
-  padding: clamp(4px, 1vh, 8px);
-  box-sizing: border-box;
   cursor: pointer;
   font-family: var(--font-display);
   color: #1a202c;
@@ -2762,10 +2845,6 @@ body:not(.playing) #pause-btn {
   line-height: 1.15;
   text-align: center;
   color: #1a202c;
-  word-wrap: break-word;
-  white-space: normal;
-  max-width: 100%;
-  padding: 0 clamp(2px, 0.5vw, 4px);
 }
 
 /* Giant watermelon PLAY button — dead center of the cluster */
@@ -2960,25 +3039,12 @@ body:not(.playing) #pause-btn {
     height: min(48vh, 86vw);
   }
   #start-screen .fruit-btn {
-    width: clamp(55px, 22%, 77px);
-    height: clamp(55px, 22%, 77px);
-    padding: clamp(4px, 1vh, 8px);
-    box-sizing: border-box;
+    width: clamp(60px, 24%, 85px);
+    height: clamp(60px, 24%, 85px);
   }
   #start-screen .fruit-btn--play {
     width: 46%;
     height: 46%;
-  }
-  #start-screen .fruit-btn .fruit-label {
-    word-wrap: break-word;
-    white-space: normal;
-    line-height: 1.1;
-    padding: 0 clamp(2px, 0.5vw, 4px);
-    max-width: 100%;
-  }
-  #start-screen .fruit-btn--kiwi .fruit-label {
-    padding-left: clamp(4px, 1vw, 8px);
-    padding-right: clamp(4px, 1vw, 8px);
   }
   #start-screen .skin-section-title {
     font-size: clamp(0.8rem, 2.2vh, 1rem);
@@ -3085,21 +3151,8 @@ body:not(.playing) #pause-btn {
     font-size: clamp(0.4rem, 0.8vh, 0.52rem);
   }
   #start-screen .fruit-btn {
-    width: clamp(40px, 22%, 55px);
-    height: clamp(40px, 22%, 55px);
-    padding: clamp(3px, 0.8vh, 6px);
-    box-sizing: border-box;
-  }
-  #start-screen .fruit-btn .fruit-label {
-    word-wrap: break-word;
-    white-space: normal;
-    line-height: 1.05;
-    padding: 0 clamp(2px, 0.5vw, 4px);
-    max-width: 100%;
-  }
-  #start-screen .fruit-btn--kiwi .fruit-label {
-    padding-left: clamp(4px, 1vw, 8px);
-    padding-right: clamp(4px, 1vw, 8px);
+    width: clamp(44px, 24%, 60px);
+    height: clamp(44px, 24%, 60px);
   }
   #start-screen .fruit-btn--play {
     width: 46%;
@@ -3135,7 +3188,6 @@ body:not(.playing) #pause-btn {
   #start-screen .fruit-btn {
     width: clamp(48px, 20%, 68px);
     height: clamp(48px, 20%, 68px);
-    padding: clamp(3px, 0.8vh, 6px);
   }
   #start-screen .fruit-btn .fruit-label {
     font-size: clamp(0.45rem, 1.2vh, 0.65rem);

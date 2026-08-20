@@ -634,13 +634,13 @@
 
   <!-- 9. Leaderboard Screen -->
   <section class="screen" id="leaderboard-screen">
-    <div class="menu-card glass-panel" style="max-width: 500px; max-height: 92vh; display: flex; flex-direction: column;">
+    <div class="menu-card cream-panel" style="max-width: 500px; max-height: 92vh; display: flex; flex-direction: column;">
       <h1 class="game-title" style="font-size:2.2rem; background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%); -webkit-background-clip: text;">
         Top Diet Records
       </h1>
       <p class="game-desc" style="font-size:0.9rem; margin-bottom: 15px;">Local High Scores and Nutrition Grades</p>
       
-      <div id="leaderboard-list" style="flex-grow: 1; overflow-y: auto; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 20px;">
+      <div id="leaderboard-list" style="flex-grow: 1; overflow-y: auto; padding: 10px; background: var(--parchment-light); border-radius: 12px; margin-bottom: 20px; border: 2px solid var(--parchment-border); scrollbar-width: thin; scrollbar-color: #88C999 #F2EBD9;">
         <!-- Populated by JS -->
       </div>
       
@@ -667,21 +667,21 @@
     </div>
   </div>
 
-  <!-- 10. Grading System Screen -->
+<!-- 10. Grading System Screen -->
   <section class="screen" id="grading-screen">
-    <div class="menu-card glass-panel grading-card" style="max-width: 500px; max-height: 92vh; display: flex; flex-direction: column;">
+    <div class="menu-card cream-panel grading-card" style="max-width: 500px; max-height: 92vh; display: flex; flex-direction: column;">
       <div class="grading-header" style="margin-bottom: 15px;">
         <h1 class="game-title" style="font-size:2rem; margin:0; background: linear-gradient(135deg, #00e676 0%, #2979ff 100%); -webkit-background-clip: text;">📊 Grading System</h1>
         <p class="game-desc" style="font-size:0.9rem;">How your Nutrition Report Card is calculated at the end of the run.</p>
       </div>
-      <div class="grading-content" style="text-align: left; font-size: 0.9rem; line-height: 1.5; padding: 15px; background: rgba(0,0,0,0.3); border-radius: 12px; margin-bottom: 15px; overflow-y: auto; flex-grow: 1;">
+      <div class="grading-content" style="text-align: left; font-size: 0.9rem; line-height: 1.5; padding: 15px; background: var(--parchment-light); border-radius: 12px; margin-bottom: 15px; overflow-y: auto; flex-grow: 1; border: 2px solid var(--parchment-border); color: var(--text-main);">
         <p>Your run is rated by <strong>3 Star Objectives</strong> — earn stars for each goal you achieve!</p>
         <ul style="list-style-type: none; padding: 0; margin-top: 10px;">
           <li style="margin-bottom: 12px;"><span style="color:#2979ff; font-size:1.3rem;">⭐</span> <strong>Star 1 - Completion/Survival</strong><br>Reached at least Level 5 (halfway) or crossed the finish line. <em style="color:#8a0a3c;">No half-measures!</em></li>
           <li style="margin-bottom: 12px;"><span style="color:#4caf50; font-size:1.3rem;">⭐</span> <strong>Star 2 - Nutrition Goals</strong><br>Collected 3+ Fruits, 3+ Vegetables, and 5+ Water bottles in a single run.</li>
-          <li style="margin-bottom: 12px;"><span style="color:#ffd700; font-size:1.3rem; text-shadow:0 0 8px #ffd700;">⭐</span> <strong>Star 3 - Mastery &amp; Skill</strong><br>Achieved a 5x healthy combo streak <em>or</em> maintained 75%+ purity (healthy items vs total items).</li>
+          <li style="margin-bottom: 12px;"><span style="color:#ffd700; font-size:1.3rem; text-shadow:0 0 8px #ffd700;">⭐</span> <strong>Star 3 - Mastery & Skill</strong><br>Achieved a 5x healthy combo streak <em>or</em> maintained 75%+ purity (healthy items vs total items).</li>
         </ul>
-        <div style="margin-top: 15px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px;">
+        <div style="margin-top: 15px; padding: 10px; background: var(--parchment-dark); border-radius: 8px; border: 1px solid var(--parchment-border);">
           <div style="font-weight:bold; margin-bottom: 5px; color:var(--glow-green-bright);">Rating Results:</div>
           <div><span style="color:#00e676; font-weight:bold;">3 Stars</span> — PERFECT RUN!</div>
           <div><span style="color:#ffea00; font-weight:bold;">2 Stars</span> — GREAT JOB!</div>
