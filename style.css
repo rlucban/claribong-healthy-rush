@@ -3277,6 +3277,12 @@ body:not(.playing) #pause-btn {
     font-size: clamp(1.5rem, 6.5vw, 2.2rem) !important;
     margin: 0 !important;
     line-height: 1.15 !important;
+    /* Warm fruit rainbow gradient (matches desktop) */
+    background: linear-gradient(135deg, #e8871a 0%, #d4200a 30%, #4a8c3f 65%, #2980b9 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 3px 6px rgba(60, 30, 10, 0.3)) !important;
   }
   #start-screen h1.game-title span {
     font-size: clamp(0.75rem, 3.2vw, 1.1rem) !important;
