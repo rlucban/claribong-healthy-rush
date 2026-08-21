@@ -626,9 +626,12 @@ this.updateHighScoreDisplay();
       if (!isUnlocked) {
         reqText = skin.requirementLabel
           .replace(' to Unlock', '')
-          .replace('Score 10,000 or Level 10', 'Score 10k');
+          .replace('Score 10,000 or Level 10', '10k / Lv10')
+          .replace('Score 4,000', '4k pts')
+          .replace('Score 6,000', '6k pts')
+          .replace('Score 8,000', '8k pts');
       } else {
-        reqText = isEquipped ? 'EQUIPPED' : 'EQUIP';
+        reqText = isEquipped ? '✓ Equipped' : 'Tap to Equip';
       }
 
       card.innerHTML = `

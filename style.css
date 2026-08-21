@@ -3232,38 +3232,38 @@ body:not(.playing) #pause-btn {
     margin-top: 0 !important;
   }
   #start-screen .score-badge-container {
-    margin: 2px 0 !important;
+    margin: 1px 0 !important;
     gap: 4px !important;
   }
   #start-screen .score-badge {
-    padding: 3px 16px !important;
-    min-width: 90px !important;
-    min-height: 36px !important;
+    padding: 2px 14px !important;
+    min-width: 80px !important;
+    min-height: 30px !important;
     border-radius: 8px !important;
   }
   #start-screen .score-badge .val {
-    font-size: 1.25rem !important;
+    font-size: 1.1rem !important;
     line-height: 1 !important;
   }
   #start-screen .score-badge .lbl {
-    font-size: 0.48rem !important;
+    font-size: 0.44rem !important;
     margin-top: 0 !important;
   }
 
-  /* Radial menu container - centered, perfectly proportioned */
+  /* ---- Radial menu: smaller so footer cards are always visible ---- */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: min(38vh, 72vw) !important;
-    height: min(38vh, 72vw) !important;
-    margin: 4px auto !important;
+    width: min(30vh, 60vw) !important;
+    height: min(30vh, 60vw) !important;
+    margin: 2px auto !important;
     flex-shrink: 0 !important;
   }
 
-  /* Base button */
+  /* Base satellite button */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: clamp(62px, 24%, 78px) !important;
-    height: clamp(62px, 24%, 78px) !important;
+    width: clamp(54px, 22%, 68px) !important;
+    height: clamp(54px, 22%, 68px) !important;
     flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
     padding: 2px !important;
@@ -3274,27 +3274,27 @@ body:not(.playing) #pause-btn {
     justify-content: center !important;
     text-align: center !important;
     border-radius: 50% !important;
-    border-width: 3px !important;
+    border-width: 2px !important;
   }
 
   /* Center PLAY button */
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
-    width: 46% !important;
-    height: 46% !important;
-    border-width: 4px !important;
+    width: 44% !important;
+    height: 44% !important;
+    border-width: 3px !important;
     background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%) !important;
   }
 
   .fruit-btn--play .fruit-icon {
-    font-size: clamp(1.6rem, 4.8vh, 2.3rem) !important;
+    font-size: clamp(1.3rem, 4vh, 1.9rem) !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
 
   .fruit-btn--play .fruit-label {
-    font-size: clamp(0.72rem, 2vh, 0.95rem) !important;
+    font-size: clamp(0.62rem, 1.7vh, 0.82rem) !important;
     font-weight: 900 !important;
     line-height: 1.05 !important;
     text-transform: uppercase !important;
@@ -3308,7 +3308,7 @@ body:not(.playing) #pause-btn {
     padding: 0 2px !important;
   }
 
-  /* Satellite buttons - 35% radius */
+  /* Satellite positions */
   .fruit-btn--red    { left: 50% !important; top: 13% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }
   .fruit-btn--yellow { left: 83% !important; top: 38% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }
   .fruit-btn--kiwi   { left: 17% !important; top: 38% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }
@@ -3316,15 +3316,15 @@ body:not(.playing) #pause-btn {
   .fruit-btn--grape  { left: 28% !important; top: 79% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }
 
   #start-screen .fruit-btn .fruit-icon {
-    font-size: clamp(1.05rem, 2.8vh, 1.45rem) !important;
+    font-size: clamp(0.9rem, 2.4vh, 1.25rem) !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
 
-  /* Label text wrapping - clean & readable without hyphen splitting */
+  /* Label text */
   #start-screen .fruit-btn .fruit-label {
     font-family: var(--font-display) !important;
-    font-size: clamp(0.46rem, 1.15vh, 0.56rem) !important;
+    font-size: clamp(0.42rem, 1vh, 0.52rem) !important;
     font-weight: 800 !important;
     line-height: 1.05 !important;
     text-transform: uppercase !important;
@@ -3339,43 +3339,46 @@ body:not(.playing) #pause-btn {
     pointer-events: none !important;
   }
 
-  /* Footer / Roller Selector */
+  /* ---- Footer / Roller Selector ---- */
   #start-screen .start-menu__footer {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 3px !important;
+    gap: 2px !important;
     flex-shrink: 0 !important;
     width: 100% !important;
     margin-bottom: 2px !important;
   }
 
   #start-screen .skin-section-title {
-    font-size: clamp(0.85rem, 2.2vw, 1.15rem) !important;
-    margin: 0 0 2px 0 !important;
+    font-size: clamp(0.78rem, 2vw, 1rem) !important;
+    margin: 0 0 1px 0 !important;
   }
 
+  /* Horizontal scrollable row so all 5 cards are reachable */
   #start-screen .skin-grid {
     display: flex !important;
     flex-direction: row !important;
     justify-content: center !important;
     align-items: stretch !important;
+    flex-wrap: nowrap !important;
     gap: 5px !important;
-    padding: 2px 2px !important;
+    padding: 2px 6px !important;
     width: 100% !important;
-    max-width: 100vw !important;
+    box-sizing: border-box !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch !important;
   }
 
+  /* Fixed 58px cards so all 5 can fit at once on a 375px wide phone */
   #start-screen .skin-card {
-    flex: 0 0 clamp(58px, 16vw, 68px) !important;
-    width: clamp(58px, 16vw, 68px) !important;
-    min-height: clamp(74px, 10vh, 84px) !important;
-    height: clamp(74px, 10vh, 84px) !important;
-    padding: 6px 3px 5px 3px !important;
-    border-radius: 12px !important;
+    flex: 0 0 58px !important;
+    width: 58px !important;
+    min-height: 68px !important;
+    height: 68px !important;
+    padding: 5px 2px 4px 2px !important;
+    border-radius: 10px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -3384,28 +3387,28 @@ body:not(.playing) #pause-btn {
   }
 
   #start-screen .skin-preview-wrap {
-    width: 28px !important;
-    height: 28px !important;
+    width: 26px !important;
+    height: 26px !important;
   }
 
   #start-screen .skin-preview {
-    width: 28px !important;
-    height: 28px !important;
+    width: 26px !important;
+    height: 26px !important;
     border-width: 1.5px !important;
   }
 
   #start-screen .lock-icon {
-    font-size: 0.85rem !important;
+    font-size: 0.8rem !important;
   }
 
   #start-screen .skin-name {
-    font-size: clamp(0.46rem, 1.2vw, 0.52rem) !important;
+    font-size: 0.44rem !important;
     line-height: 1.05 !important;
-    margin: 1px 0 !important;
+    margin: 0 !important;
   }
 
   #start-screen .skin-req {
-    font-size: clamp(0.38rem, 1vw, 0.44rem) !important;
+    font-size: 0.38rem !important;
     line-height: 1 !important;
     margin: 0 !important;
   }
