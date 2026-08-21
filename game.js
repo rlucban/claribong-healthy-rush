@@ -1081,18 +1081,23 @@ this.updateHighScoreDisplay();
     }
 
     // Window resize + orientation change for responsive canvas
+    // Uses visualViewport API where available (handles iOS Safari dynamic toolbar)
     const handleResize = () => {
-      const w = window.innerWidth;
-      const h = window.innerHeight;
+      const w = window.visualViewport ? window.visualViewport.width  : window.innerWidth;
+      const h = window.visualViewport ? window.visualViewport.height : window.innerHeight;
       if (this.camera) {
         this.camera.aspect = w / h;
         this.camera.updateProjectionMatrix();
       }
       if (this.renderer) {
         this.renderer.setSize(w, h);
+        this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       }
     };
     window.addEventListener('resize', handleResize);
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+    }
     window.addEventListener('orientationchange', () => {
       setTimeout(handleResize, 300);
     });

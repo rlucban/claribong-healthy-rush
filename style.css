@@ -104,15 +104,24 @@ button {
 
 /* The game is an app-style fullscreen canvas: the page itself can NEVER
    scroll. The fixed body/wrapper act as the 100dvh viewport anchor. */
-html {
-  height: 100%;
-  overflow: hidden;
+html, body {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden !important;
   overscroll-behavior: none;
   touch-action: none;
   background-color: #14281D;
   background-image: linear-gradient(rgba(20, 40, 29, 0.82) 0%, rgba(10, 25, 18, 0.92) 100%), url('background.png');
   background-repeat: no-repeat, repeat;
   background-size: cover, 400px;
+  font-family: var(--font-body);
+  color: var(--text-main);
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
 }
 
 body {
@@ -159,21 +168,27 @@ body {
 
 /* 3D Canvas container */
 #canvas-container {
-  width: 100%;
-  height: 100%;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
   position: absolute;
   top: 0;
   left: 0;
   z-index: 1;
   touch-action: none;
+  overflow: hidden;
   transition: filter 0.5s ease;
 }
 
 canvas {
-  width: 100%;
-  height: 100%;
+  width: 100vw !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  max-height: 100dvh !important;
   display: block;
   touch-action: none;
+  object-fit: cover;
 }
 
 /* UI Overlay Container — a non-interactive backdrop that lets the
@@ -885,7 +900,7 @@ canvas {
   max-width: min(500px, 85vw);
   /* Never use fixed pixel heights: cap by viewport so the card always
      auto-fits the screen. Overflow scrolls only as a last resort. */
-  max-height: 92vh;
+  max-height: calc(100dvh - 30px) !important;
   overflow-y: auto;
   scrollbar-width: none;
   padding: var(--panel-pad);
@@ -893,6 +908,7 @@ canvas {
   display: flex;
   flex-direction: column;
   gap: clamp(6px, 1.2vh, 12px);
+  box-sizing: border-box;
   /* Parchment-style card */
   background: var(--parchment);
   border: 3px solid var(--parchment-border);
@@ -3179,7 +3195,7 @@ body:not(.playing) #pause-btn {
     height: 100dvh !important;
     max-height: 100dvh !important;
     overflow: hidden !important;
-    padding: 10px 8px 8px 8px !important;
+    padding: clamp(8px, 2vh, 16px) 12px !important;
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
@@ -3253,17 +3269,17 @@ body:not(.playing) #pause-btn {
   /* ---- Radial menu: smaller so footer cards are always visible ---- */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: min(30vh, 60vw) !important;
-    height: min(30vh, 60vw) !important;
-    margin: 2px auto !important;
+    width: min(28vh, 55vw) !important;
+    height: min(28vh, 55vw) !important;
+    margin: 5px auto !important;
     flex-shrink: 0 !important;
   }
 
   /* Base satellite button */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: clamp(54px, 22%, 68px) !important;
-    height: clamp(54px, 22%, 68px) !important;
+    width: clamp(48px, 20%, 60px) !important;
+    height: clamp(48px, 20%, 60px) !important;
     flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
     padding: 2px !important;
@@ -3281,8 +3297,8 @@ body:not(.playing) #pause-btn {
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
-    width: 44% !important;
-    height: 44% !important;
+    width: 42% !important;
+    height: 42% !important;
     border-width: 3px !important;
     background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%) !important;
   }
@@ -3339,7 +3355,7 @@ body:not(.playing) #pause-btn {
     pointer-events: none !important;
   }
 
-  /* ---- Footer / Roller Selector ---- */
+/* ---- Footer / Roller Selector ---- */
   #start-screen .start-menu__footer {
     display: flex !important;
     flex-direction: column !important;
@@ -3359,24 +3375,24 @@ body:not(.playing) #pause-btn {
   #start-screen .skin-grid {
     display: flex !important;
     flex-direction: row !important;
-    justify-content: center !important;
+    justify-content: flex-start !important;
     align-items: stretch !important;
     flex-wrap: nowrap !important;
-    gap: 5px !important;
-    padding: 2px 6px !important;
+    gap: 8px !important;
+    padding: 4px 12px !important;
     width: 100% !important;
+    max-width: 100vw !important;
     box-sizing: border-box !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
     -webkit-overflow-scrolling: touch !important;
   }
 
-  /* Fixed 58px cards so all 5 can fit at once on a 375px wide phone */
+  /* 64px cards - flexible enough for small screens */
   #start-screen .skin-card {
-    flex: 0 0 58px !important;
-    width: 58px !important;
-    min-height: 68px !important;
-    height: 68px !important;
+    flex: 0 0 64px !important;
+    width: 64px !important;
+    height: 72px !important;
     padding: 5px 2px 4px 2px !important;
     border-radius: 10px !important;
     display: flex !important;
@@ -3384,6 +3400,7 @@ body:not(.playing) #pause-btn {
     align-items: center !important;
     justify-content: space-between !important;
     gap: 1px !important;
+    box-sizing: border-box !important;
   }
 
   #start-screen .skin-preview-wrap {
