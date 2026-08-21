@@ -2955,32 +2955,32 @@ body:not(.playing) #pause-btn {
 .fruit-btn--orange { left: 71%; top: 78%; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* 306° / -54° (bottom-right) */
 .fruit-btn--grape  { left: 29%; top: 78%; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* 234° / -126° (bottom-left) */
 
-/* ---- BOTTOM: centered horizontal skin carousel ---- */
+/* ---- BOTTOM: CHOOSE YOUR ROLLER ---- */
 #start-screen .start-menu__footer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: clamp(6px, 1.2vh, 12px);
+  gap: 4px;
   flex-shrink: 0;
   width: 100%;
-  margin-bottom: 20px;
+  margin-bottom: 2px;
 }
 
 #start-screen .skin-section-title {
-  display: inline-block;
-  font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+  display: block;
   font-family: var(--font-display);
-  font-weight: 800;
+  font-size: clamp(0.85rem, 2.2vw, 1.15rem);
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
-  margin-bottom: 0;
-  color: #2D3748;
-  padding: 4px 18px;
-  background: linear-gradient(180deg, #ffffff 0%, #f2e2bd 100%);
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  border-radius: 999px;
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 2px 8px rgba(0, 0, 0, 0.4);
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.06em;
+  color: #FFF6E5;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.85), 0 1px 2px rgba(0, 0, 0, 0.9);
+  padding: 0;
+  margin: 0 0 2px 0;
+  text-align: center;
 }
 
 #start-screen .skin-grid {
@@ -2988,10 +2988,10 @@ body:not(.playing) #pause-btn {
   flex-direction: row;
   justify-content: center;
   align-items: stretch;
-  gap: clamp(8px, 1.5vw, 14px);
+  gap: clamp(5px, 1.2vw, 8px);
   width: 100%;
-  max-width: min(600px, 96vw);
-  padding: 6px 4px;
+  max-width: min(560px, 98vw);
+  padding: 2px 4px;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
@@ -3004,20 +3004,20 @@ body:not(.playing) #pause-btn {
 }
 
 #start-screen .skin-card {
-  flex: 0 0 100px;
-  width: 100px;
-  min-height: 116px;
-  padding: 8px 6px;
+  flex: 0 0 clamp(58px, 16vw, 68px);
+  width: clamp(58px, 16vw, 68px);
+  min-height: clamp(74px, 10vh, 84px);
+  height: clamp(74px, 10vh, 84px);
+  padding: 6px 3px 5px 3px;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  gap: 4px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #2a3d36 0%, #1a2824 100%);
-  border: 2px solid rgba(255, 255, 255, 0.22);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  background: rgba(30, 48, 38, 0.72);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
   cursor: pointer;
   transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
   position: relative;
@@ -3026,21 +3026,21 @@ body:not(.playing) #pause-btn {
 
 #start-screen .skin-card:hover {
   transform: translateY(-2px);
-  border-color: rgba(255, 255, 255, 0.45);
+  border-color: rgba(255, 255, 255, 0.55);
 }
 
-/* Equipped skin card gets a bright green ring so its status pops */
+/* Equipped skin card */
 #start-screen .skin-card.active {
-  border-color: #2ed573 !important;
-  background: linear-gradient(180deg, #1f4233 0%, #132e23 100%) !important;
-  box-shadow: 0 0 16px rgba(46, 213, 115, 0.5), inset 0 0 10px rgba(46, 213, 115, 0.15) !important;
+  border: 2px solid #00f0ff !important;
+  background: rgba(20, 52, 40, 0.88) !important;
+  box-shadow: 0 0 14px rgba(0, 240, 255, 0.5), inset 0 0 8px rgba(0, 240, 255, 0.15) !important;
 }
 
 /* Locked skin styling */
 #start-screen .skin-card.locked {
-  opacity: 0.75;
-  background: linear-gradient(180deg, #1b2622 0%, #121a17 100%) !important;
-  border: 2px dashed rgba(255, 255, 255, 0.25) !important;
+  opacity: 0.6;
+  background: rgba(18, 28, 22, 0.7) !important;
+  border: 1.5px dashed rgba(255, 255, 255, 0.22) !important;
   cursor: not-allowed;
 }
 
@@ -3048,89 +3048,106 @@ body:not(.playing) #pause-btn {
   transform: none;
 }
 
+#start-screen .skin-preview-wrap {
+  position: relative;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+/* Ball preview is a perfect circle */
 #start-screen .skin-preview {
-  width: 38px;
-  height: 38px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   position: relative;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 2px solid rgba(255, 255, 255, 0.4);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
 }
 
 #start-screen .skin-card.active .skin-preview {
-  border-color: #2ed573;
+  border-color: #ffffff;
+  box-shadow: 0 0 12px #39ff14, 0 0 6px #00f0ff;
+}
+
+/* Cyan/Green ON badge in top right corner of active ball */
+#start-screen .skin-card .equipped-badge {
+  position: absolute;
+  top: -4px;
+  right: -8px;
+  font-size: 0.44rem;
+  font-family: var(--font-display);
+  font-weight: 900;
+  background: #00f0ff;
+  color: #000000;
+  padding: 1px 4px;
+  border-radius: 3px;
+  line-height: 1.1;
+  box-shadow: 0 0 8px rgba(0, 240, 255, 0.8);
+  letter-spacing: 0.02em;
 }
 
 #start-screen .lock-icon {
-  position: absolute;
-  inset: 0;
+  font-size: 0.85rem;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.15rem;
-  line-height: 1;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.45);
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.9));
   pointer-events: none;
 }
 
 #start-screen .skin-name {
   font-family: var(--font-display);
-  font-size: 0.65rem;
-  font-weight: 800;
+  font-size: clamp(0.46rem, 1.2vw, 0.52rem);
+  font-weight: 900;
   text-transform: uppercase;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   color: #ffffff;
-  line-height: 1.15;
-  margin: 0;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  line-height: 1.05;
+  margin: 1px 0;
+  text-align: center;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
   word-break: normal;
   overflow-wrap: normal;
 }
 
-/* Unlock requirements / Status Pill */
+/* Subtitles: "Tap to Equip", "✓ Equipped", or locked requirements */
 #start-screen .skin-req {
   font-family: var(--font-display);
-  font-size: 0.54rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
+  font-size: clamp(0.38rem, 1vw, 0.44rem);
+  font-weight: 700;
+  letter-spacing: 0.01em;
   text-align: center;
-  line-height: 1.1;
-  padding: 3px 6px;
-  border-radius: 6px;
-  width: 100%;
-  box-sizing: border-box;
-  color: #ffda6a;
-  background: rgba(0, 0, 0, 0.45);
+  line-height: 1;
+  margin: 0;
   word-break: normal;
   overflow-wrap: normal;
 }
 
-#start-screen .skin-req.equipped,
-#start-screen .skin-card.active .skin-req {
-  color: #042614 !important;
-  background: #2ed573 !important;
-  font-weight: 900 !important;
-  box-shadow: 0 0 8px rgba(46, 213, 115, 0.4);
+#start-screen .skin-req.equipped {
+  color: #a7f3d0 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 0 6px rgba(167, 243, 208, 0.6);
 }
 
 #start-screen .skin-req.unlocked {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.22) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-weight: 600 !important;
 }
 
 #start-screen .skin-req.locked {
-  color: #ffda6a !important;
-  background: rgba(0, 0, 0, 0.5) !important;
-}
-
-#start-screen .skin-card .equipped-badge {
-  display: none !important;
+  color: #ffd700 !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
 }
 
 /* ============================================ */
@@ -3157,13 +3174,12 @@ body:not(.playing) #pause-btn {
 /* MAIN MENU - MOBILE / PHONE (max-width: 768px) */
 /* ============================================ */
 @media (max-width: 768px) {
-  /* ---- 1. LOCK MAIN MENU TO VIEWPORT (100dvh) ---- */
   #start-screen {
     height: 100vh !important;
     height: 100dvh !important;
     max-height: 100dvh !important;
     overflow: hidden !important;
-    padding: 10px 12px 16px 12px !important;
+    padding: 10px 8px 8px 8px !important;
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
@@ -3183,69 +3199,62 @@ body:not(.playing) #pause-btn {
     box-sizing: border-box !important;
     width: 100% !important;
   }
-
-  /* ---- 2. SCALE DOWN TOP LOGO & HEADER ---- */
   #start-screen .start-menu__header {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 2px !important;
+    gap: clamp(2px, 0.6vh, 4px) !important;
     flex-shrink: 0 !important;
     margin: 0 !important;
     width: 100% !important;
-    margin-bottom: 2px !important;
-    transform: scale(0.85) !important;
-    transform-origin: top center !important;
   }
   #start-screen .menu-brand {
     margin: 0 auto !important;
-    margin-bottom: 2px !important;
   }
   #start-screen .nutrition-title-badge {
-    font-size: clamp(0.75rem, 3vw, 1rem) !important;
-    padding: 2px 12px !important;
+    font-size: clamp(0.95rem, 3.8vw, 1.25rem) !important;
+    padding: 3px 18px !important;
     border-radius: 999px !important;
   }
   #start-screen .nutrition-sub-ribbon {
-    font-size: clamp(0.4rem, 1.6vw, 0.5rem) !important;
-    padding: 1px 6px !important;
+    font-size: clamp(0.48rem, 2vw, 0.6rem) !important;
+    padding: 2px 10px !important;
     border-radius: 999px !important;
     margin-top: 1px !important;
   }
   #start-screen h1.game-title {
-    font-size: clamp(0.95rem, 3.8vw, 1.3rem) !important;
-    margin: 0 !important;
+    font-size: clamp(1.1rem, 4.4vw, 1.5rem) !important;
+    margin: 1px 0 !important;
     line-height: 1.1 !important;
   }
   #start-screen h1.game-title span {
-    font-size: clamp(0.45rem, 1.8vw, 0.6rem) !important;
+    font-size: clamp(0.52rem, 2.1vw, 0.7rem) !important;
     margin-top: 0 !important;
   }
   #start-screen .score-badge-container {
-    margin: 2px auto !important;
-    padding: 4px 12px !important;
-    gap: 6px !important;
+    margin: 2px 0 !important;
+    gap: 4px !important;
   }
   #start-screen .score-badge {
-    padding: 2px 10px !important;
-    min-width: 70px !important;
-    min-height: 28px !important;
-    border-radius: 6px !important;
+    padding: 3px 16px !important;
+    min-width: 90px !important;
+    min-height: 36px !important;
+    border-radius: 8px !important;
   }
   #start-screen .score-badge .val {
-    font-size: 0.95rem !important;
+    font-size: 1.25rem !important;
     line-height: 1 !important;
   }
   #start-screen .score-badge .lbl {
-    font-size: 0.42rem !important;
+    font-size: 0.48rem !important;
     margin-top: 0 !important;
   }
 
-  /* ---- 3. REDUCE RADIAL MENU SIZE ---- */
+  /* Radial menu container - centered, perfectly proportioned */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: 230px !important;
-    height: 230px !important;
+    width: min(38vh, 72vw) !important;
+    height: min(38vh, 72vw) !important;
     margin: 4px auto !important;
     flex-shrink: 0 !important;
   }
@@ -3253,8 +3262,8 @@ body:not(.playing) #pause-btn {
   /* Base button */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: 56px !important;
-    height: 56px !important;
+    width: clamp(62px, 24%, 78px) !important;
+    height: clamp(62px, 24%, 78px) !important;
     flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
     padding: 2px !important;
@@ -3265,27 +3274,27 @@ body:not(.playing) #pause-btn {
     justify-content: center !important;
     text-align: center !important;
     border-radius: 50% !important;
-    border-width: 2px !important;
+    border-width: 3px !important;
   }
 
   /* Center PLAY button */
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
-    width: 75px !important;
-    height: 75px !important;
-    border-width: 3px !important;
+    width: 46% !important;
+    height: 46% !important;
+    border-width: 4px !important;
     background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%) !important;
   }
 
   .fruit-btn--play .fruit-icon {
-    font-size: 1.2rem !important;
+    font-size: clamp(1.6rem, 4.8vh, 2.3rem) !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
 
   .fruit-btn--play .fruit-label {
-    font-size: 0.75rem !important;
+    font-size: clamp(0.72rem, 2vh, 0.95rem) !important;
     font-weight: 900 !important;
     line-height: 1.05 !important;
     text-transform: uppercase !important;
@@ -3300,14 +3309,14 @@ body:not(.playing) #pause-btn {
   }
 
   /* Satellite buttons - 35% radius */
-  .fruit-btn--red    { left: 50% !important; top: 15% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%) !important; }
-  .fruit-btn--yellow { left: 83% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%) !important; }
-  .fruit-btn--kiwi   { left: 17% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%) !important; }
-  .fruit-btn--orange { left: 71% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%) !important; }
-  .fruit-btn--grape  { left: 29% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%) !important; }
+  .fruit-btn--red    { left: 50% !important; top: 13% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }
+  .fruit-btn--yellow { left: 83% !important; top: 38% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }
+  .fruit-btn--kiwi   { left: 17% !important; top: 38% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }
+  .fruit-btn--orange { left: 72% !important; top: 79% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }
+  .fruit-btn--grape  { left: 28% !important; top: 79% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }
 
   #start-screen .fruit-btn .fruit-icon {
-    font-size: 0.9rem !important;
+    font-size: clamp(1.05rem, 2.8vh, 1.45rem) !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
@@ -3315,7 +3324,7 @@ body:not(.playing) #pause-btn {
   /* Label text wrapping - clean & readable without hyphen splitting */
   #start-screen .fruit-btn .fruit-label {
     font-family: var(--font-display) !important;
-    font-size: 0.55rem !important;
+    font-size: clamp(0.46rem, 1.15vh, 0.56rem) !important;
     font-weight: 800 !important;
     line-height: 1.05 !important;
     text-transform: uppercase !important;
@@ -3330,45 +3339,43 @@ body:not(.playing) #pause-btn {
     pointer-events: none !important;
   }
 
-  /* ---- 4. COMPACT ROLLER CARDS (SLIM HEIGHT & VISIBLE LOCKS) ---- */
+  /* Footer / Roller Selector */
   #start-screen .start-menu__footer {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 2px !important;
+    gap: 3px !important;
     flex-shrink: 0 !important;
     width: 100% !important;
-    margin-bottom: 4px !important;
+    margin-bottom: 2px !important;
   }
 
   #start-screen .skin-section-title {
-    font-size: 0.65rem !important;
-    padding: 1px 10px !important;
-    margin: 0 !important;
+    font-size: clamp(0.85rem, 2.2vw, 1.15rem) !important;
+    margin: 0 0 2px 0 !important;
   }
 
-  /* Roller selector container - horizontal scroll */
   #start-screen .skin-grid {
     display: flex !important;
-    flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: stretch !important;
+    gap: 5px !important;
+    padding: 2px 2px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
-    gap: 8px !important;
-    padding: 4px 2px !important;
-    max-width: 100% !important;
-    margin-bottom: 4px !important;
     -webkit-overflow-scrolling: touch !important;
   }
 
-  /* Roller cards - compact size */
   #start-screen .skin-card {
-    min-width: 78px !important;
-    height: 82px !important;
-    padding: 4px !important;
-    flex-shrink: 0 !important;
-    font-size: 0.6rem !important;
-    border-radius: 10px !important;
+    flex: 0 0 clamp(58px, 16vw, 68px) !important;
+    width: clamp(58px, 16vw, 68px) !important;
+    min-height: clamp(74px, 10vh, 84px) !important;
+    height: clamp(74px, 10vh, 84px) !important;
+    padding: 6px 3px 5px 3px !important;
+    border-radius: 12px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
@@ -3376,40 +3383,31 @@ body:not(.playing) #pause-btn {
     gap: 1px !important;
   }
 
+  #start-screen .skin-preview-wrap {
+    width: 28px !important;
+    height: 28px !important;
+  }
+
   #start-screen .skin-preview {
-    width: 24px !important;
-    height: 24px !important;
-    border-width: 2px !important;
-    margin-bottom: 0 !important;
+    width: 28px !important;
+    height: 28px !important;
+    border-width: 1.5px !important;
   }
 
-  /* Prominent padlock visual for locked cards */
-  #start-screen .skin-card.locked::after {
-    content: '🔒' !important;
-    font-size: 1.1rem !important;
-    display: block !important;
-    margin: 2px 0 !important;
-  }
-
-  #start-screen .skin-card.locked .lock-icon {
-    display: none !important; /* Hide old lock icon */
+  #start-screen .lock-icon {
+    font-size: 0.85rem !important;
   }
 
   #start-screen .skin-name {
-    font-size: 0.5rem !important;
-    line-height: 1 !important;
-    margin: 0 !important;
+    font-size: clamp(0.46rem, 1.2vw, 0.52rem) !important;
+    line-height: 1.05 !important;
+    margin: 1px 0 !important;
   }
 
-  #start-screen .skin-req,
-  #start-screen .skin-card .score-req {
-    font-size: 0.55rem !important;
+  #start-screen .skin-req {
+    font-size: clamp(0.38rem, 1vw, 0.44rem) !important;
     line-height: 1 !important;
-    color: #FFD700 !important;
-    font-weight: 800 !important;
-    text-shadow: 0 1px 2px #000 !important;
-    padding: 0 !important;
-    background: none !important;
+    margin: 0 !important;
   }
 
   /* Run Summary Box - Mobile */
@@ -3442,13 +3440,6 @@ body:not(.playing) #pause-btn {
 /* ============================================ */
 /* MENU STATE: CANVAS & HUD VISIBILITY CONTROL   */
 /* ============================================ */
-
-/* 1. CANVAS VISIBILITY MANAGEMENT:
-   - When in MAIN MENU state (gameState === 'MENU' / body.in-menu / page load):
-     * Hide the 3D rendering canvas completely: #game-canvas, #threejs-canvas, canvas { display: none !important; }
-   - When player clicks "PLAY GAME" (gameState === 'PLAYING' / body.playing):
-     * Show the canvas: #game-canvas, canvas { display: block !important; }
-     * Hide the Main Menu UI overlay completely (#main-menu { display: none !important; }). */
 
 body.in-menu #canvas-container,
 body.in-menu #game-canvas,

@@ -622,19 +622,21 @@ this.updateHighScoreDisplay();
       card.className = `skin-card${isEquipped ? ' active' : ''}${!isUnlocked ? ' locked' : ''}`;
       card.dataset.skinId = skin.id;
 
-      // Clean, concise unlock requirement text for mobile cards
       let reqText = 'Default';
       if (!isUnlocked) {
         reqText = skin.requirementLabel
           .replace(' to Unlock', '')
-          .replace('Score 10,000 or Level 10', 'Score 10k / Lvl 10');
+          .replace('Score 10,000 or Level 10', 'Score 10k');
       } else {
         reqText = isEquipped ? 'EQUIPPED' : 'EQUIP';
       }
 
       card.innerHTML = `
-        <div class="skin-preview" style="background: ${skin.color}; ${isEquipped ? `box-shadow: 0 0 12px ${skin.color};` : ''}">
-          ${!isUnlocked ? '<span class="lock-icon" aria-hidden="true">🔒</span>' : ''}
+        <div class="skin-preview-wrap">
+          <div class="skin-preview" style="background: ${skin.color};">
+            ${!isUnlocked ? '<span class="lock-icon" aria-hidden="true">🔒</span>' : ''}
+          </div>
+          ${isEquipped ? '<span class="equipped-badge">ON</span>' : ''}
         </div>
         <span class="skin-name">${skin.name}</span>
         <span class="skin-req ${isEquipped ? 'equipped' : (!isUnlocked ? 'locked' : 'unlocked')}">
