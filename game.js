@@ -409,62 +409,37 @@ this.updateHighScoreDisplay();
      audio.setGameState('menu');
      menuAudio.init();
      
-     // Audio unlocker — only resumes context on first interaction, does NOT start BGM on menu
-     const unlockAudioOnInteraction = () => {
-       // Resume audio contexts if suspended
-       if (menuAudio.ctx && menuAudio.ctx.state === 'suspended') {
-         menuAudio.ctx.resume();
-       }
-       if (audio.ctx && audio.ctx.state === 'suspended') {
-         audio.ctx.resume();
-       }
-       // Unlock Speech Synthesis (TTS) for item collection voice readout
-       if ('speechSynthesis' in window) {
-         const silentUtterance = new SpeechSynthesisUtterance('');
-         window.speechSynthesis.speak(silentUtterance);
-         window.speechSynthesis.getVoices();
-       }
-       
-       // Remove listeners once audio context is unlocked
-       ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
-         document.removeEventListener(evt, unlockAudioOnInteraction);
-         window.removeEventListener(evt, unlockAudioOnInteraction);
-       });
-     };
-     
-     // Attach to both document and window for maximum coverage
-     ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
-       document.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
-       window.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
-     });
-     
-     // MOBILE AUDIO UNLOCKER — dedicated aggressive unlock for mobile WebAudio
-     // Runs on touchstart/touchend/click to ensure audio context is resumed
-     // Does NOT start BGM on menu — only unlocks context.
-     const unlockMobileAudio = () => {
-       if (window.menuAudio && window.menuAudio.ctx && window.menuAudio.ctx.state === 'suspended') {
-         window.menuAudio.ctx.resume();
-       }
-       if (window.audio && window.audio.ctx && window.audio.ctx.state === 'suspended') {
-         window.audio.ctx.resume();
-       }
-       // Unlock Speech Synthesis (TTS) for item collection voice readout
-       if ('speechSynthesis' in window) {
-         const silentUtterance = new SpeechSynthesisUtterance('');
-         window.speechSynthesis.speak(silentUtterance);
-         window.speechSynthesis.getVoices();
-       }
-       ['touchstart', 'touchend', 'click'].forEach(evt => {
-         document.removeEventListener(evt, unlockMobileAudio);
-         window.removeEventListener(evt, unlockMobileAudio);
-       });
-     };
-     
-     // Attach mobile audio unlocker to both document and window
-     ['touchstart', 'touchend', 'click'].forEach(evt => {
-       document.addEventListener(evt, unlockMobileAudio, { passive: true });
-       window.addEventListener(evt, unlockMobileAudio, { passive: true });
-     });
+// Audio unlocker — resumes context AND starts menu BGM on first user interaction
+      const unlockAudioOnInteraction = () => {
+        // Resume audio contexts if suspended
+        if (menuAudio.ctx && menuAudio.ctx.state === 'suspended') {
+          menuAudio.ctx.resume();
+        }
+        if (audio.ctx && audio.ctx.state === 'suspended') {
+          audio.ctx.resume();
+        }
+        // Unlock Speech Synthesis (TTS) for item collection voice readout
+        if ('speechSynthesis' in window) {
+          const silentUtterance = new SpeechSynthesisUtterance('');
+          window.speechSynthesis.speak(silentUtterance);
+          window.speechSynthesis.getVoices();
+        }
+        
+        // Start menu background music (loops automatically via menuAudio.playMenuBGM)
+        menuAudio.playMenuBGM();
+        
+        // Remove listeners once audio context is unlocked and music started
+        ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+          document.removeEventListener(evt, unlockAudioOnInteraction);
+          window.removeEventListener(evt, unlockAudioOnInteraction);
+        });
+      };
+      
+      // Attach to both document and window for maximum coverage
+      ['click', 'touchstart', 'pointerdown', 'keydown'].forEach(evt => {
+        document.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
+        window.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
+      });
     
     // Check persistent unlocks against stored stats (high score / level)
     // before rendering the skin grid so already-earned skins display unlocked.
