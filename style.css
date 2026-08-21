@@ -3255,6 +3255,11 @@ body:not(.playing) #pause-btn {
     border-radius: 999px !important;
     font-weight: 900 !important;
     letter-spacing: 0.05em !important;
+    background: linear-gradient(180deg, #ff7597 0%, #ff4d6d 100%) !important;
+    color: #ffffff !important;
+    border: 3px solid #ffffff !important;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25) !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.2) !important;
   }
   #start-screen .nutrition-sub-ribbon {
     font-size: clamp(0.7rem, 3vw, 1rem) !important;
@@ -3263,17 +3268,15 @@ body:not(.playing) #pause-btn {
     margin-top: 0 !important;
     font-weight: 700 !important;
     letter-spacing: 0.08em !important;
+    background: #48bb78 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2) !important;
   }
   #start-screen h1.game-title {
     font-size: clamp(1.5rem, 6.5vw, 2.2rem) !important;
     margin: 0 !important;
     line-height: 1.15 !important;
-    /* Warm fruit rainbow gradient */
-    background: linear-gradient(135deg, #e8871a 0%, #d4200a 30%, #4a8c3f 65%, #2980b9 100%) !important;
-    -webkit-background-clip: text !important;
-    background-clip: text !important;
-    -webkit-text-fill-color: transparent !important;
-    filter: drop-shadow(0 3px 6px rgba(60, 30, 10, 0.3)) !important;
   }
   #start-screen h1.game-title span {
     font-size: clamp(0.75rem, 3.2vw, 1.1rem) !important;
@@ -3295,16 +3298,21 @@ body:not(.playing) #pause-btn {
     min-height: 40px !important;
     border-radius: 12px !important;
     box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
+    background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, rgba(235, 210, 150, 0.4) 100%) !important;
+    border: 2px solid var(--parchment-border) !important;
   }
   #start-screen .score-badge .val {
     font-size: clamp(1.4rem, 4vw, 2rem) !important;
     line-height: 1 !important;
     font-weight: 900 !important;
+    color: var(--text-heading) !important;
   }
   #start-screen .score-badge .lbl {
     font-size: clamp(0.6rem, 1.8vw, 0.85rem) !important;
     margin-top: 2px !important;
     font-weight: 700 !important;
+    color: var(--text-muted) !important;
+    text-transform: uppercase !important;
   }
 
   /* ---- Brighten C'LARIBONG Title on small mobile screens (≤480px) ---- */
@@ -4294,4 +4302,5 @@ body.playing #grading-screen {
     margin: 6px 0 !important;
   }
 }
+
 
