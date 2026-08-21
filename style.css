@@ -3215,7 +3215,7 @@ body:not(.playing) #pause-btn {
     height: 100dvh !important;
     max-height: 100dvh !important;
     overflow: hidden !important;
-    padding: 10px 0 !important;
+    padding: 12px 0 !important;
     box-sizing: border-box !important;
     display: flex !important;
     flex-direction: column !important;
@@ -3239,53 +3239,65 @@ body:not(.playing) #pause-btn {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
-    gap: 2px !important;
+    gap: clamp(4px, 1.2vh, 8px) !important;
     flex-shrink: 0 !important;
     margin: 0 !important;
-    width: 100% !important;
+    width: 90% !important;
+    max-width: 90% !important;
   }
   #start-screen .menu-brand {
     margin: 0 auto !important;
-    margin-bottom: 2px !important;
-  }
-  #start-screen .nutrition-title-badge {
-    font-size: clamp(0.95rem, 3.8vw, 1.25rem) !important;
-    padding: 2px 14px !important;
-    border-radius: 999px !important;
-  }
-  #start-screen .nutrition-sub-ribbon {
-    font-size: clamp(0.48rem, 2vw, 0.6rem) !important;
-    padding: 1px 8px !important;
-    border-radius: 999px !important;
-    margin-top: 0 !important;
-  }
-  #start-screen h1.game-title {
-    font-size: clamp(1.1rem, 4.4vw, 1.5rem) !important;
-    margin: 0 !important;
-    line-height: 1.1 !important;
-  }
-  #start-screen h1.game-title span {
-    font-size: clamp(0.52rem, 2.1vw, 0.7rem) !important;
-    margin-top: 0 !important;
-  }
-  #start-screen .score-badge-container {
-    margin: 0 !important;
-    gap: 4px !important;
     margin-bottom: 4px !important;
   }
+  #start-screen .nutrition-title-badge {
+    font-size: clamp(1.2rem, 5.5vw, 1.8rem) !important;
+    padding: 6px 24px !important;
+    border-radius: 999px !important;
+    font-weight: 900 !important;
+    letter-spacing: 0.05em !important;
+  }
+  #start-screen .nutrition-sub-ribbon {
+    font-size: clamp(0.7rem, 3vw, 1rem) !important;
+    padding: 3px 16px !important;
+    border-radius: 999px !important;
+    margin-top: 0 !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.08em !important;
+  }
+  #start-screen h1.game-title {
+    font-size: clamp(1.5rem, 6.5vw, 2.2rem) !important;
+    margin: 0 !important;
+    line-height: 1.15 !important;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+  }
+  #start-screen h1.game-title span {
+    font-size: clamp(0.75rem, 3.2vw, 1.1rem) !important;
+    margin-top: 2px !important;
+    font-weight: 800 !important;
+  }
+  #start-screen .score-badge-container {
+    margin: clamp(4px, 1vh, 8px) 0 !important;
+    gap: clamp(8px, 2.5vw, 16px) !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+  }
   #start-screen .score-badge {
-    padding: 2px 14px !important;
-    min-width: 80px !important;
-    min-height: 28px !important;
-    border-radius: 8px !important;
+    padding: 6px 20px !important;
+    min-width: 100px !important;
+    min-height: 40px !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2) !important;
   }
   #start-screen .score-badge .val {
-    font-size: 1.1rem !important;
+    font-size: clamp(1.4rem, 4vw, 2rem) !important;
     line-height: 1 !important;
+    font-weight: 900 !important;
   }
   #start-screen .score-badge .lbl {
-    font-size: 0.44rem !important;
-    margin-top: 0 !important;
+    font-size: clamp(0.6rem, 1.8vw, 0.85rem) !important;
+    margin-top: 2px !important;
+    font-weight: 700 !important;
   }
 
   /* ---- Radial menu: MOBILE LARGER SIZE (320px cluster, 130px play, 76px satellites) ---- */
