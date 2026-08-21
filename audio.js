@@ -659,7 +659,7 @@ class WebMenuAudio {
     
     this.step = 0;
     this.stepTimeMs = 240; // ~125 BPM upbeat tempo
-    this.muted = localStorage.getItem('fr_music_enabled') === '0';
+    this.muted = localStorage.getItem('fr_music_enabled') === '0' || localStorage.getItem('fr_muted') === '1';
     const storedVol = parseFloat(localStorage.getItem('fr_volume') || '1');
     this.volume = isNaN(storedVol) ? 1 : storedVol;
   }
@@ -670,11 +670,11 @@ class WebMenuAudio {
       if (!AudioContextClass) return;
       this.ctx = new AudioContextClass();
       this.masterGain = this.ctx.createGain();
-      const gainVal = this.muted ? 0 : this.volume * 0.45;
+      const gainVal = this.muted ? 0 : this.volume * 0.5;
       this.masterGain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
     }
-    if (this.ctx.state === 'suspended') {
+    if (this.ctx && this.ctx.state === 'suspended') {
       this.ctx.resume().catch(() => {});
     }
   }
@@ -691,6 +691,11 @@ class WebMenuAudio {
     const tick = () => {
       if (!this.isPlaying || !this.ctx) return;
       
+      // Auto-resume if suspended
+      if (this.ctx.state === 'suspended') {
+        this.ctx.resume().catch(() => {});
+      }
+
       const now = this.ctx.currentTime;
       const stepIdx = this.step % this.melody.length;
       const freq = this.melody[stepIdx];
@@ -709,7 +714,7 @@ class WebMenuAudio {
         osc1.frequency.setValueAtTime(freq, now);
         osc2.frequency.setValueAtTime(freq, now);
 
-        leadGain.gain.setValueAtTime(0.28, now);
+        leadGain.gain.setValueAtTime(0.3, now);
         leadGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
 
         osc1.connect(leadGain);
@@ -730,7 +735,7 @@ class WebMenuAudio {
         bassOsc.type = 'triangle';
         bassOsc.frequency.setValueAtTime(bassFreq, now);
 
-        bassGain.gain.setValueAtTime(0.32, now);
+        bassGain.gain.setValueAtTime(0.35, now);
         bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
 
         bassOsc.connect(bassGain);
@@ -758,7 +763,7 @@ class WebMenuAudio {
   setVolume(v) {
     this.volume = Math.max(0, Math.min(1, v));
     if (this.masterGain && this.ctx) {
-      const gainVal = this.muted ? 0 : this.volume * 0.45;
+      const gainVal = this.muted ? 0 : this.volume * 0.5;
       this.masterGain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
     }
   }
@@ -766,7 +771,7 @@ class WebMenuAudio {
   toggleMute() {
     this.muted = !this.muted;
     if (this.masterGain && this.ctx) {
-      const gainVal = this.muted ? 0 : this.volume * 0.45;
+      const gainVal = this.muted ? 0 : this.volume * 0.5;
       this.masterGain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
     }
     return this.muted;
@@ -776,6 +781,12 @@ class WebMenuAudio {
 export const menuAudio = new WebMenuAudio();
 window.menuAudio = menuAudio; // Global access for menu toggle button
 
+// Attempt immediate automatic menu BGM playback on load
+try {
+  menuAudio.playMenuBGM();
+} catch (e) {}
+
 export const audio = new AudioEngine();
 window.gameAudio = audio; // Expose globally for dev/testing console access
+
 
