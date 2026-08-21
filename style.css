@@ -3282,6 +3282,7 @@ body:not(.playing) #pause-btn {
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
+    text-shadow: none !important;
     filter: drop-shadow(0 3px 6px rgba(60, 30, 10, 0.3)) !important;
   }
   #start-screen h1.game-title span {
@@ -3325,11 +3326,11 @@ body:not(.playing) #pause-btn {
     letter-spacing: 1.5px !important;
   }
 
-  /* ---- Brighten C'LARIBONG Title on small mobile screens (≤480px) ---- */
+  /* ---- Ensure bright light gradient for C'LARIBONG Title on small mobile screens (≤480px) ---- */
   @media (max-width: 480px) {
     #start-screen h1.game-title {
-      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4) !important;
-      filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.3)) !important;
+      text-shadow: none !important;
+      filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.35)) !important;
       opacity: 1 !important;
     }
   }
