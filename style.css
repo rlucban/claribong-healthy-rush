@@ -3288,20 +3288,20 @@ body:not(.playing) #pause-btn {
     margin-top: 0 !important;
   }
 
-  /* ---- Radial menu: UNIFIED SIZE (270px cluster, 110px play, 66px satellites) ---- */
+  /* ---- Radial menu: MOBILE LARGER SIZE (320px cluster, 130px play, 76px satellites) ---- */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: 270px !important;
-    height: 270px !important;
+    width: 320px !important;
+    height: 320px !important;
     margin: 5px auto !important;
     flex-shrink: 0 !important;
   }
 
-  /* Base satellite button - fixed 66px */
+  /* Base satellite button - fixed 76px */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: 66px !important;
-    height: 66px !important;
+    width: 76px !important;
+    height: 76px !important;
     flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
     padding: 2px !important;
@@ -3315,24 +3315,24 @@ body:not(.playing) #pause-btn {
     border-width: 2px !important;
   }
 
-  /* Center PLAY button - fixed 110px */
+  /* Center PLAY button - fixed 130px */
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
-    width: 110px !important;
-    height: 110px !important;
+    width: 130px !important;
+    height: 130px !important;
     border-width: 3px !important;
     background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%) !important;
   }
 
   .fruit-btn--play .fruit-icon {
-    font-size: 1.8rem !important;
+    font-size: 2.2rem !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
 
   .fruit-btn--play .fruit-label {
-    font-size: 0.7rem !important;
+    font-size: 0.8rem !important;
     font-weight: 900 !important;
     line-height: 1.1 !important;
     text-transform: uppercase !important;
@@ -3346,7 +3346,7 @@ body:not(.playing) #pause-btn {
     padding: 0 2px !important;
   }
 
-  /* Satellite positions - percentage based on 270px container */
+  /* Satellite positions - percentage based on 320px container */
   .fruit-btn--red    { left: 50% !important; top: 13% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }
   .fruit-btn--yellow { left: 83% !important; top: 38% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }
   .fruit-btn--kiwi   { left: 17% !important; top: 38% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }
@@ -3355,15 +3355,15 @@ body:not(.playing) #pause-btn {
 
 /* Satellite icon/label - fixed font sizes */
 #start-screen .fruit-btn .fruit-icon {
-    font-size: 1.2rem !important;
+    font-size: 1.4rem !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
 
-  /* Label text - unified 0.65rem */
+  /* Label text - unified 0.7rem */
   #start-screen .fruit-btn .fruit-label {
     font-family: var(--font-display) !important;
-    font-size: 0.65rem !important;
+    font-size: 0.7rem !important;
     line-height: 1.1 !important;
     padding: 0 2px !important;
     letter-spacing: normal !important;
