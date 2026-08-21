@@ -3268,12 +3268,19 @@ body:not(.playing) #pause-btn {
     font-size: clamp(1.5rem, 6.5vw, 2.2rem) !important;
     margin: 0 !important;
     line-height: 1.15 !important;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3) !important;
+    /* Warm fruit rainbow gradient */
+    background: linear-gradient(135deg, #e8871a 0%, #d4200a 30%, #4a8c3f 65%, #2980b9 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    filter: drop-shadow(0 3px 6px rgba(60, 30, 10, 0.3)) !important;
   }
   #start-screen h1.game-title span {
     font-size: clamp(0.75rem, 3.2vw, 1.1rem) !important;
     margin-top: 2px !important;
     font-weight: 800 !important;
+    color: var(--text-muted) !important;
+    -webkit-text-fill-color: var(--text-muted) !important;
   }
   #start-screen .score-badge-container {
     margin: clamp(4px, 1vh, 8px) 0 !important;
