@@ -3157,13 +3157,17 @@ body:not(.playing) #pause-btn {
 /* MAIN MENU - MOBILE / PHONE (max-width: 768px) */
 /* ============================================ */
 @media (max-width: 768px) {
+  /* ---- 1. LOCK MAIN MENU TO VIEWPORT (100dvh) ---- */
   #start-screen {
     height: 100vh !important;
     height: 100dvh !important;
     max-height: 100dvh !important;
     overflow: hidden !important;
-    padding: 4px 8px !important;
+    padding: 10px 12px 16px 12px !important;
     box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
   }
   #start-screen .start-menu {
     height: 100% !important;
@@ -3177,7 +3181,10 @@ body:not(.playing) #pause-btn {
     margin: 0 !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+    width: 100% !important;
   }
+
+  /* ---- 2. SCALE DOWN TOP LOGO & HEADER ---- */
   #start-screen .start-menu__header {
     display: flex !important;
     flex-direction: column !important;
@@ -3186,62 +3193,68 @@ body:not(.playing) #pause-btn {
     flex-shrink: 0 !important;
     margin: 0 !important;
     width: 100% !important;
+    margin-bottom: 2px !important;
+    transform: scale(0.85) !important;
+    transform-origin: top center !important;
   }
   #start-screen .menu-brand {
     margin: 0 auto !important;
+    margin-bottom: 2px !important;
   }
   #start-screen .nutrition-title-badge {
-    font-size: clamp(0.85rem, 3.4vw, 1.15rem) !important;
-    padding: 2px 14px !important;
+    font-size: clamp(0.75rem, 3vw, 1rem) !important;
+    padding: 2px 12px !important;
     border-radius: 999px !important;
   }
   #start-screen .nutrition-sub-ribbon {
-    font-size: clamp(0.46rem, 1.8vw, 0.58rem) !important;
-    padding: 1px 8px !important;
+    font-size: clamp(0.4rem, 1.6vw, 0.5rem) !important;
+    padding: 1px 6px !important;
     border-radius: 999px !important;
     margin-top: 1px !important;
   }
   #start-screen h1.game-title {
-    font-size: clamp(1.05rem, 4.2vw, 1.45rem) !important;
-    margin: 1px 0 !important;
+    font-size: clamp(0.95rem, 3.8vw, 1.3rem) !important;
+    margin: 0 !important;
+    line-height: 1.1 !important;
   }
   #start-screen h1.game-title span {
-    font-size: clamp(0.5rem, 2vw, 0.68rem) !important;
+    font-size: clamp(0.45rem, 1.8vw, 0.6rem) !important;
     margin-top: 0 !important;
   }
   #start-screen .score-badge-container {
-    margin: 1px 0 !important;
-    gap: 4px !important;
+    margin: 2px auto !important;
+    padding: 4px 12px !important;
+    gap: 6px !important;
   }
   #start-screen .score-badge {
-    padding: 2px 12px !important;
-    min-width: 80px !important;
-    min-height: 30px !important;
-    border-radius: 8px !important;
+    padding: 2px 10px !important;
+    min-width: 70px !important;
+    min-height: 28px !important;
+    border-radius: 6px !important;
   }
   #start-screen .score-badge .val {
-    font-size: 1.05rem !important;
+    font-size: 0.95rem !important;
     line-height: 1 !important;
   }
   #start-screen .score-badge .lbl {
-    font-size: 0.46rem !important;
+    font-size: 0.42rem !important;
     margin-top: 0 !important;
   }
 
-  /* Radial menu container - proportional, centered & compact */
+  /* ---- 3. REDUCE RADIAL MENU SIZE ---- */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: min(34vh, 66vw) !important;
-    height: min(34vh, 66vw) !important;
-    margin: 2px auto !important;
+    width: 230px !important;
+    height: 230px !important;
+    margin: 4px auto !important;
     flex-shrink: 0 !important;
   }
 
   /* Base button */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: clamp(58px, 24%, 74px) !important;
-    height: clamp(58px, 24%, 74px) !important;
+    width: 56px !important;
+    height: 56px !important;
     flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
     padding: 2px !important;
@@ -3252,27 +3265,27 @@ body:not(.playing) #pause-btn {
     justify-content: center !important;
     text-align: center !important;
     border-radius: 50% !important;
-    border-width: 3px !important;
+    border-width: 2px !important;
   }
 
   /* Center PLAY button */
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
-    width: 46% !important;
-    height: 46% !important;
-    border-width: 4px !important;
+    width: 75px !important;
+    height: 75px !important;
+    border-width: 3px !important;
     background: linear-gradient(160deg, #c6f8b2 0%, #7fe07e 45%, #43b05c 100%) !important;
   }
 
   .fruit-btn--play .fruit-icon {
-    font-size: clamp(1.4rem, 4.2vh, 2.0rem) !important;
+    font-size: 1.2rem !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
 
   .fruit-btn--play .fruit-label {
-    font-size: clamp(0.65rem, 1.8vh, 0.82rem) !important;
+    font-size: 0.75rem !important;
     font-weight: 900 !important;
     line-height: 1.05 !important;
     text-transform: uppercase !important;
@@ -3294,7 +3307,7 @@ body:not(.playing) #pause-btn {
   .fruit-btn--grape  { left: 29% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%) !important; }
 
   #start-screen .fruit-btn .fruit-icon {
-    font-size: clamp(0.95rem, 2.4vh, 1.3rem) !important;
+    font-size: 0.9rem !important;
     line-height: 1 !important;
     margin-bottom: 0 !important;
   }
@@ -3302,7 +3315,7 @@ body:not(.playing) #pause-btn {
   /* Label text wrapping - clean & readable without hyphen splitting */
   #start-screen .fruit-btn .fruit-label {
     font-family: var(--font-display) !important;
-    font-size: clamp(0.44rem, 1.1vh, 0.54rem) !important;
+    font-size: 0.55rem !important;
     font-weight: 800 !important;
     line-height: 1.05 !important;
     text-transform: uppercase !important;
@@ -3317,7 +3330,7 @@ body:not(.playing) #pause-btn {
     pointer-events: none !important;
   }
 
-  /* Footer / Roller Selector */
+  /* ---- 4. COMPACT ROLLER CARDS (SLIM HEIGHT & VISIBLE LOCKS) ---- */
   #start-screen .start-menu__footer {
     display: flex !important;
     flex-direction: column !important;
@@ -3325,65 +3338,78 @@ body:not(.playing) #pause-btn {
     gap: 2px !important;
     flex-shrink: 0 !important;
     width: 100% !important;
-    margin-bottom: 2px !important;
+    margin-bottom: 4px !important;
   }
 
   #start-screen .skin-section-title {
-    font-size: clamp(0.68rem, 1.6vh, 0.8rem) !important;
-    padding: 2px 14px !important;
+    font-size: 0.65rem !important;
+    padding: 1px 10px !important;
     margin: 0 !important;
   }
 
+  /* Roller selector container - horizontal scroll */
   #start-screen .skin-grid {
     display: flex !important;
-    flex-direction: row !important;
+    flex-wrap: nowrap !important;
     justify-content: flex-start !important;
-    align-items: stretch !important;
-    gap: 6px !important;
-    padding: 2px 6px !important;
-    width: 100% !important;
-    max-width: min(480px, 98vw) !important;
     overflow-x: auto !important;
     overflow-y: hidden !important;
+    gap: 8px !important;
+    padding: 4px 2px !important;
+    max-width: 100% !important;
+    margin-bottom: 4px !important;
     -webkit-overflow-scrolling: touch !important;
   }
 
+  /* Roller cards - compact size */
   #start-screen .skin-card {
-    flex: 0 0 74px !important;
-    width: 74px !important;
-    min-height: 82px !important;
+    min-width: 78px !important;
     height: 82px !important;
-    padding: 4px 2px !important;
+    padding: 4px !important;
+    flex-shrink: 0 !important;
+    font-size: 0.6rem !important;
     border-radius: 10px !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     justify-content: space-between !important;
-    gap: 2px !important;
+    gap: 1px !important;
   }
 
   #start-screen .skin-preview {
-    width: 26px !important;
-    height: 26px !important;
+    width: 24px !important;
+    height: 24px !important;
     border-width: 2px !important;
     margin-bottom: 0 !important;
   }
 
-  #start-screen .lock-icon {
-    font-size: 0.82rem !important;
+  /* Prominent padlock visual for locked cards */
+  #start-screen .skin-card.locked::after {
+    content: '🔒' !important;
+    font-size: 1.1rem !important;
+    display: block !important;
+    margin: 2px 0 !important;
+  }
+
+  #start-screen .skin-card.locked .lock-icon {
+    display: none !important; /* Hide old lock icon */
   }
 
   #start-screen .skin-name {
-    font-size: 0.46rem !important;
-    line-height: 1.05 !important;
+    font-size: 0.5rem !important;
+    line-height: 1 !important;
     margin: 0 !important;
   }
 
-  #start-screen .skin-req {
-    font-size: 0.4rem !important;
-    padding: 1px 3px !important;
-    border-radius: 4px !important;
+  #start-screen .skin-req,
+  #start-screen .skin-card .score-req {
+    font-size: 0.55rem !important;
     line-height: 1 !important;
+    color: #FFD700 !important;
+    font-weight: 800 !important;
+    text-shadow: 0 1px 2px #000 !important;
+    padding: 0 !important;
+    background: none !important;
   }
 
   /* Run Summary Box - Mobile */
