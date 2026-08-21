@@ -2963,15 +2963,19 @@ body:not(.playing) #pause-btn {
   gap: clamp(6px, 1.2vh, 12px);
   flex-shrink: 0;
   width: 100%;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 #start-screen .skin-section-title {
   display: inline-block;
-  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
+  font-size: clamp(0.85rem, 1.8vw, 1.15rem);
+  font-family: var(--font-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   margin-bottom: 0;
   color: #2D3748;
-  padding: 4px 16px;
+  padding: 4px 18px;
   background: linear-gradient(180deg, #ffffff 0%, #f2e2bd 100%);
   border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 999px;
@@ -2983,14 +2987,16 @@ body:not(.playing) #pause-btn {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-  gap: clamp(8px, 1.5vw, 16px);
-  max-width: min(600px, 94vw);
-  padding: 0 4px;
+  align-items: stretch;
+  gap: clamp(8px, 1.5vw, 14px);
+  width: 100%;
+  max-width: min(600px, 96vw);
+  padding: 6px 4px;
   overflow-x: auto;
   overflow-y: hidden;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
 }
 
 #start-screen .skin-grid::-webkit-scrollbar {
@@ -2998,76 +3004,137 @@ body:not(.playing) #pause-btn {
 }
 
 #start-screen .skin-card {
-  flex: 0 0 auto;
-  width: clamp(55px, 8vw, 75px);
-  height: clamp(75px, 10vw, 95px);
-  padding: clamp(4px, 0.8vh, 8px) 3px;
-  gap: 2px;
+  flex: 0 0 100px;
+  width: 100px;
+  min-height: 116px;
+  padding: 8px 6px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
   border-radius: 14px;
-  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  background: linear-gradient(180deg, #2a3d36 0%, #1a2824 100%);
+  border: 2px solid rgba(255, 255, 255, 0.22);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+  text-align: center;
 }
 
-/* Equipped skin card gets a bright green ring so its status pops on the
-   dark solid card. */
+#start-screen .skin-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* Equipped skin card gets a bright green ring so its status pops */
 #start-screen .skin-card.active {
-  border-color: var(--glow-green);
-  box-shadow: 0 0 18px rgba(0, 255, 136, 0.5), inset 0 0 12px rgba(0, 255, 136, 0.12);
+  border-color: #2ed573 !important;
+  background: linear-gradient(180deg, #1f4233 0%, #132e23 100%) !important;
+  box-shadow: 0 0 16px rgba(46, 213, 115, 0.5), inset 0 0 10px rgba(46, 213, 115, 0.15) !important;
 }
 
-/* Keep a locked look on the ball preview — dimmed grayscale + padlock
-   so the requirement text stays readable but the skin is clearly locked. */
+/* Locked skin styling */
 #start-screen .skin-card.locked {
-  opacity: 0.6;
-  filter: grayscale(70%);
-  pointer-events: none;
-}
-
-#start-screen .skin-card.locked .skin-preview {
-  filter: grayscale(70%);
-  opacity: 0.7;
+  opacity: 0.75;
+  background: linear-gradient(180deg, #1b2622 0%, #121a17 100%) !important;
+  border: 2px dashed rgba(255, 255, 255, 0.25) !important;
+  cursor: not-allowed;
 }
 
 #start-screen .skin-card.locked:hover {
-  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
   transform: none;
 }
 
 #start-screen .skin-preview {
-  width: 35px;
-  height: 35px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
   position: relative;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+#start-screen .skin-card.active .skin-preview {
+  border-color: #2ed573;
+}
+
+#start-screen .lock-icon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  line-height: 1;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.45);
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.9));
+  pointer-events: none;
 }
 
 #start-screen .skin-name {
-  font-size: clamp(0.5rem, 1.2vh, 0.7rem);
-  color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-}
-
-/* Unlock requirements + status read bright yellow/green on the dark cards */
-#start-screen .skin-req {
-  font-size: clamp(0.42rem, 0.9vh, 0.58rem);
-  color: #ffea00;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
   font-weight: 800;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: #ffffff;
+  line-height: 1.15;
+  margin: 0;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.85);
+  word-break: normal;
+  overflow-wrap: normal;
 }
 
+/* Unlock requirements / Status Pill */
+#start-screen .skin-req {
+  font-family: var(--font-display);
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-align: center;
+  line-height: 1.1;
+  padding: 3px 6px;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+  color: #ffda6a;
+  background: rgba(0, 0, 0, 0.45);
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+#start-screen .skin-req.equipped,
 #start-screen .skin-card.active .skin-req {
-  color: #69ffb4;
-  text-shadow: 0 0 8px rgba(105, 255, 180, 0.5), 0 1px 3px rgba(0, 0, 0, 0.8);
+  color: #042614 !important;
+  background: #2ed573 !important;
+  font-weight: 900 !important;
+  box-shadow: 0 0 8px rgba(46, 213, 115, 0.4);
+}
+
+#start-screen .skin-req.unlocked {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.22) !important;
+}
+
+#start-screen .skin-req.locked {
+  color: #ffda6a !important;
+  background: rgba(0, 0, 0, 0.5) !important;
 }
 
 #start-screen .skin-card .equipped-badge {
-  background: var(--glow-green);
-  color: #06281a;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
-  font-weight: 900;
+  display: none !important;
 }
 
 /* ============================================ */
-/* MAIN MENU — DESKTOP / WEB (min-width: 769px) */
+/* MAIN MENU - DESKTOP / WEB (min-width: 769px) */
 /* ============================================ */
 @media (min-width: 769px) {
   #start-screen h1.game-title {
@@ -3083,13 +3150,11 @@ body:not(.playing) #pause-btn {
   }
   #start-screen .skin-grid {
     justify-content: center;
-    gap: clamp(8px, 1.5vw, 16px);
-    max-width: min(600px, 94vw);
   }
 }
 
 /* ============================================ */
-/* MAIN MENU — MOBILE / PHONE (max-width: 768px) */
+/* MAIN MENU - MOBILE / PHONE (max-width: 768px) */
 /* ============================================ */
 @media (max-width: 768px) {
   #start-screen {
@@ -3115,33 +3180,33 @@ body:not(.playing) #pause-btn {
     padding: 3px 12px;
   }
 
-  /* Radial menu container - match desktop proportional sizing */
+  /* Radial menu container - matches viewport cleanly */
   #start-screen .arcade-cluster {
     position: relative !important;
-    width: min(50vh, 85vw) !important;
-    height: min(50vh, 85vw) !important;
-    margin: 15px auto !important;
+    width: min(48vh, 85vw) !important;
+    height: min(48vh, 85vw) !important;
+    margin: 8px auto !important;
     flex-shrink: 0;
   }
 
-  /* Base button - match desktop proportional sizing (24% of container) */
+  /* Base button - percentage-based sizing with proper bounds */
   #start-screen .fruit-btn {
     position: absolute !important;
-    width: clamp(72px, 24%, 90px) !important;
-    height: clamp(72px, 24%, 90px) !important;
+    width: clamp(76px, 24%, 96px) !important;
+    height: clamp(76px, 24%, 96px) !important;
     flex-shrink: 0 !important;
     transform: translate(-50%, -50%);
-    font-size: clamp(0.55rem, 1.5vh, 0.7rem) !important;
-    font-weight: 800 !important;
-    line-height: 1.1 !important;
-    overflow: visible !important;
-    word-break: normal !important;
-    hyphens: manual !important;
+    padding: 4px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
     text-align: center !important;
-    padding: 2px !important;
+    border-radius: 50% !important;
   }
 
-  /* Center PLAY button - match desktop proportional sizing (46% of container) */
+  /* Center PLAY button */
   #start-screen .fruit-btn--play {
     top: 50% !important;
     left: 50% !important;
@@ -3152,344 +3217,73 @@ body:not(.playing) #pause-btn {
   }
 
   .fruit-btn--play .fruit-icon {
-    font-size: clamp(1.8rem, 6vh, 2.8rem) !important;
-  }
-
-  .fruit-btn--play .fruit-label {
-    font-size: clamp(0.75rem, 2.5vh, 1.1rem) !important;
-    hyphens: manual !important;
-    word-break: normal !important;
-    white-space: normal !important;
-    line-height: 1.1 !important;
-    overflow: visible !important;
-    text-align: center !important;
-    padding: 2px !important;
-  }
-
-  /* Satellite buttons - match desktop percentage-based radial positions (35% radius from center) */
-  .fruit-btn--red    { left: 50% !important; top: 15% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }       /* 90° (top) */
-  .fruit-btn--yellow { left: 83% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }    /* 18° (top-right) */
-  .fruit-btn--kiwi   { left: 17% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }    /* 162° (top-left) */
-  .fruit-btn--orange { left: 71% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }    /* 306° (bottom-right) */
-  .fruit-btn--grape  { left: 29% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }    /* 234° (bottom-left) */
-
-  /* Label text wrapping fix for all buttons - prevent clipping, match desktop */
-  #start-screen .fruit-label {
-    hyphens: manual !important;
-    word-break: normal !important;
-    white-space: normal !important;
-    line-height: 1.1 !important;
-    font-size: clamp(0.55rem, 1.5vh, 0.7rem) !important;
-    font-weight: 800 !important;
-    overflow: visible !important;
-    text-align: center !important;
-    padding: 2px !important;
-  }
-}
-
-/* ---- BOTTOM: centered horizontal skin carousel ---- */
-#start-screen .start-menu__footer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: clamp(6px, 1.2vh, 12px);
-  flex-shrink: 0;
-  width: 100%;
-  margin-bottom: 25px;
-}
-
-#start-screen .skin-section-title {
-  display: inline-block;
-  font-size: clamp(0.9rem, 1.8vw, 1.2rem);
-  margin-bottom: 0;
-  color: #2D3748;
-  padding: 4px 16px;
-  background: linear-gradient(180deg, #ffffff 0%, #f2e2bd 100%);
-  border: 2px solid rgba(255, 255, 255, 0.9);
-  border-radius: 999px;
-  box-shadow: 0 0 14px rgba(255, 255, 255, 0.45), 0 2px 8px rgba(0, 0, 0, 0.4);
-  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.7);
-}
-
-#start-screen .skin-grid {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  gap: clamp(8px, 1.5vw, 16px);
-  max-width: min(600px, 94vw);
-  padding: 0 4px;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  -webkit-overflow-scrolling: touch;
-}
-
-#start-screen .skin-grid::-webkit-scrollbar {
-  display: none;
-}
-
-#start-screen .skin-card {
-  flex: 0 0 auto;
-  width: clamp(55px, 8vw, 75px);
-  height: clamp(75px, 10vw, 95px);
-  padding: clamp(4px, 0.8vh, 8px) 3px;
-  gap: 2px;
-  border-radius: 14px;
-  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
-  border: 2px solid rgba(255, 255, 255, 0.35);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* Equipped skin card gets a bright green ring so its status pops on the
-   dark solid card. */
-#start-screen .skin-card.active {
-  border-color: var(--glow-green);
-  box-shadow: 0 0 18px rgba(0, 255, 136, 0.5), inset 0 0 12px rgba(0, 255, 136, 0.12);
-}
-
-/* Keep a locked look on the ball preview — dimmed grayscale + padlock
-   so the requirement text stays readable but the skin is clearly locked. */
-#start-screen .skin-card.locked {
-  opacity: 0.6;
-  filter: grayscale(70%);
-  pointer-events: none;
-}
-
-#start-screen .skin-card.locked .skin-preview {
-  filter: grayscale(70%);
-  opacity: 0.7;
-}
-
-#start-screen .skin-card.locked:hover {
-  background: linear-gradient(180deg, #33464E 0%, #24333A 100%);
-  transform: none;
-}
-
-#start-screen .skin-preview {
-  width: 35px;
-  height: 35px;
-  position: relative;
-}
-
-#start-screen .skin-name {
-  font-size: clamp(0.5rem, 1.2vh, 0.7rem);
-  color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.8);
-}
-
-/* Unlock requirements + status read bright yellow/green on the dark cards */
-#start-screen .skin-req {
-  font-size: clamp(0.42rem, 0.9vh, 0.58rem);
-  color: #ffea00;
-  font-weight: 800;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-#start-screen .skin-card.active .skin-req {
-  color: #69ffb4;
-  text-shadow: 0 0 8px rgba(105, 255, 180, 0.5), 0 1px 3px rgba(0, 0, 0, 0.8);
-}
-
-#start-screen .skin-card .equipped-badge {
-  background: var(--glow-green);
-  color: #06281a;
-  box-shadow: 0 0 10px rgba(0, 255, 136, 0.6);
-  font-weight: 900;
-}
-
-/* ============================================ */
-/* MAIN MENU — DESKTOP / WEB (min-width: 769px) */
-/* ============================================ */
-@media (min-width: 769px) {
-  #start-screen h1.game-title {
-    font-size: clamp(2rem, 3.5vw, 3rem);
-  }
-  #start-screen .fruit-btn {
-    width: clamp(80px, 24%, 110px);
-    height: clamp(80px, 24%, 110px);
-  }
-  #start-screen .fruit-btn--play {
-    width: 46%;
-    height: 46%;
-  }
-  #start-screen .skin-grid {
-    justify-content: center;
-    gap: clamp(8px, 1.5vw, 16px);
-    max-width: min(600px, 94vw);
-  }
-}
-
-/* ============================================ */
-/* MAIN MENU — MOBILE / PHONE (max-width: 768px) */
-/* ============================================ */
-@media (max-width: 768px) {
-  #start-screen {
-    padding: clamp(6px, 1.5vh, 12px);
-  }
-  #start-screen .start-menu,
-  #start-screen .start-menu__header,
-  #start-screen .start-menu__footer {
-    gap: clamp(4px, 1.2vh, 10px);
-  }
-  #start-screen h1.game-title {
-    font-size: clamp(1.4rem, 5.5vw, 2.2rem);
-  }
-  #start-screen h1.game-title span {
-    font-size: clamp(0.6rem, 3vw, 0.85rem);
-  }
-  #start-screen .nutrition-title-badge {
-    font-size: clamp(1.1rem, 4.5vw, 1.6rem);
-    padding: 6px 18px;
-  }
-  #start-screen .nutrition-sub-ribbon {
-    font-size: clamp(0.55rem, 2.5vw, 0.75rem);
-    padding: 3px 12px;
-  }
-  /* Radial menu container - matches desktop: viewport-relative sizing */
-  #start-screen .arcade-cluster {
-    position: relative;
-    width: min(50vh, 88vw);
-    height: min(50vh, 88vw);
-  }
-
-  /* Base button - same percentage-based sizing as desktop */
-  #start-screen .fruit-btn {
-    width: clamp(80px, 24%, 110px);
-    height: clamp(80px, 24%, 110px);
-    padding: 6px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  /* Center PLAY button - same percentage as desktop */
-  #start-screen .fruit-btn--play {
-    width: 46%;
-    height: 46%;
-    border-width: 6px;
-  }
-
-  /* Icon sizing - responsive like desktop */
-  #start-screen .fruit-btn .fruit-icon {
-    font-size: clamp(1.1rem, 4vh, 2rem);
+    font-size: clamp(2rem, 6.5vh, 2.8rem) !important;
     line-height: 1;
     margin-bottom: 2px;
   }
-  #start-screen .fruit-btn--play .fruit-icon {
-    font-size: clamp(2rem, 8vh, 3.5rem);
-  }
 
-  #start-screen .fruit-btn--play .fruit-label {
-    font-size: clamp(0.85rem, 3vh, 1.4rem);
-    line-height: 1.0 !important;
+  .fruit-btn--play .fruit-label {
+    font-size: clamp(0.8rem, 2.4vh, 1.05rem) !important;
+    font-weight: 900 !important;
+    line-height: 1.05 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.02em !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
     margin: 0 !important;
     padding: 0 4px !important;
-    word-break: break-word;
-    text-align: center;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
   }
 
-  #start-screen .fruit-btn .fruit-label {
-    font-size: 0.65rem !important;
-    line-height: 1.0 !important;
-    margin: 0 !important;
-    padding: 0 4px !important;
-    word-break: break-word;
-    text-align: center;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    pointer-events: none;
-    overflow: hidden;
-  }
+  /* Satellite buttons - 35% radius */
+  .fruit-btn--red    { left: 50% !important; top: 15% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffd6d6 0%, #ff9d9d 100%); }
+  .fruit-btn--yellow { left: 83% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #fff3b8 0%, #ffe066 100%); }
+  .fruit-btn--kiwi   { left: 17% !important; top: 39% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #d8f5b8 0%, #a8dd6e 100%); }
+  .fruit-btn--orange { left: 71% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #ffe0c2 0%, #ffb270 100%); }
+  .fruit-btn--grape  { left: 29% !important; top: 78% !important; transform: translate(-50%, -50%) !important; background: linear-gradient(160deg, #e6d6ff 0%, #c3a1f0 100%); }
 
-  /* Radial positions matching web version - 35% radius from center */
-  .fruit-btn--red    { left: 50%; top: 15%; }
-  .fruit-btn--yellow { left: 83%; top: 39%; }
-  .fruit-btn--kiwi   { left: 17%; top: 39%; }
-  .fruit-btn--orange { left: 71%; top: 78%; }
-  .fruit-btn--grape  { left: 29%; top: 78%; }
-
-  #start-screen .skin-section-title {
-    font-size: clamp(0.8rem, 2.2vh, 1rem);
-    transform: scale(0.9);
-    transform-origin: center bottom;
-  }
-  #start-screen .skin-grid {
-    max-width: 100%;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    gap: clamp(6px, 1.4vw, 10px);
-    padding: 0 2px;
-    transform: scale(0.9);
-    transform-origin: center bottom;
-  }
-  #start-screen .skin-card {
-    width: clamp(50px, 12vw, 70px);
-    height: clamp(64px, 14vw, 84px);
-    padding: clamp(3px, 0.7vh, 6px) 3px;
-  }
-  #start-screen .skin-preview {
-    width: clamp(28px, 7vw, 34px);
-    height: clamp(28px, 7vw, 34px);
-  }
-  #start-screen .skin-name {
-    font-size: clamp(0.48rem, 1.2vh, 0.62rem);
-  }
-#start-screen .skin-req {
-    font-size: clamp(0.4rem, 0.9vh, 0.52rem);
-  }
-
-  /* ---- MOBILE ROLLER/SKIN SELECTOR FIXES ---- */
-  #start-screen .skin-grid {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    justify-content: flex-start !important;
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    gap: 12px !important;
-    padding: 10px 16px !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    -webkit-overflow-scrolling: touch !important;
-  }
-
-  #start-screen .skin-card {
-    min-width: 85px !important;
-    flex-shrink: 0 !important;
-    padding: 8px 6px !important;
-    border-radius: 12px !important;
-  }
-
-  #start-screen .skin-card.locked {
-    opacity: 0.85 !important;
-    background: rgba(0, 0, 0, 0.6) !important;
-    border: 2px dashed #9CA3AF !important;
-    filter: none !important;
-  }
-
-  #start-screen .skin-card.locked .skin-req {
-    color: #FDE047 !important;
-    font-size: 0.6rem !important;
-    font-weight: bold !important;
-  }
-
-  #start-screen .skin-card.locked::before {
-    content: '🔒';
-    font-size: 1rem;
-    display: block;
+  #start-screen .fruit-btn .fruit-icon {
+    font-size: clamp(1.15rem, 3.6vh, 1.8rem) !important;
+    line-height: 1;
     margin-bottom: 2px;
   }
 
-  #start-screen .skin-card.locked .skin-preview {
-    filter: none !important;
-    opacity: 0.7;
+  /* Label text wrapping - prevent broken words (NO "CHARACTE-R" or "LEADERBO-ARD"!) */
+  #start-screen .fruit-btn .fruit-label {
+    font-family: var(--font-display) !important;
+    font-size: clamp(0.55rem, 1.4vh, 0.68rem) !important;
+    font-weight: 800 !important;
+    line-height: 1.08 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.02em !important;
+    text-align: center !important;
+    white-space: normal !important;
+    word-break: keep-all !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    margin: 0 !important;
+    padding: 0 4px !important;
+    pointer-events: none;
+  }
+
+  #start-screen .skin-section-title {
+    font-size: clamp(0.8rem, 2vh, 0.95rem);
+  }
+
+  #start-screen .skin-grid {
+    justify-content: flex-start !important;
+    gap: 10px !important;
+    padding: 6px 8px !important;
+    max-width: 100vw !important;
+  }
+
+  #start-screen .skin-card {
+    flex: 0 0 96px !important;
+    width: 96px !important;
+    min-height: 114px !important;
+    padding: 8px 4px !important;
   }
 
   /* Run Summary Box - Mobile */
@@ -3519,106 +3313,78 @@ body:not(.playing) #pause-btn {
   }
 }
 
-/* Short screens: compress the cluster + fonts so the whole menu still
-   fits with zero scrolling. */
+/* Short screens: compress the cluster + fonts so the whole menu fits with zero scrolling */
 @media (max-height: 620px) {
   #start-screen .arcade-cluster {
-    width: min(44vh, 78vw);
-    height: min(44vh, 78vw);
+    width: min(44vh, 76vw) !important;
+    height: min(44vh, 76vw) !important;
+    margin: 4px auto !important;
   }
   #start-screen .start-menu__header {
     gap: clamp(2px, 0.6vh, 6px);
   }
   #start-screen .nutrition-title-badge {
-    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-    padding: 6px 18px;
+    font-size: clamp(1.0rem, 2.5vw, 1.4rem);
+    padding: 4px 14px;
   }
   #start-screen .nutrition-sub-ribbon {
-    font-size: clamp(0.55rem, 1.2vw, 0.7rem);
-    padding: 3px 12px;
+    font-size: clamp(0.5rem, 1.2vw, 0.65rem);
+    padding: 2px 10px;
   }
   #start-screen h1.game-title {
-    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-size: clamp(1.3rem, 3vw, 1.8rem);
   }
   #start-screen h1.game-title span {
-    font-size: clamp(0.6rem, 1.4vw, 0.9rem);
+    font-size: clamp(0.55rem, 1.4vw, 0.8rem);
   }
   #start-screen .start-menu__footer {
-    gap: clamp(3px, 0.6vh, 6px);
+    gap: clamp(2px, 0.6vh, 6px);
+    margin-bottom: 8px;
   }
   #start-screen .skin-section-title {
-    font-size: clamp(0.7rem, 1.6vh, 0.9rem);
-    transform: scale(0.9);
-    transform-origin: center bottom;
+    font-size: clamp(0.72rem, 1.6vh, 0.85rem);
+    padding: 3px 12px;
   }
   #start-screen .skin-grid {
-    transform: scale(0.9);
-    transform-origin: center bottom;
+    gap: 8px !important;
+    padding: 4px 6px !important;
   }
   #start-screen .skin-card {
-    width: clamp(55px, 9vw, 70px);
-    height: clamp(60px, 9vw, 75px);
-    padding: clamp(3px, 0.6vh, 6px) 3px;
+    flex: 0 0 88px !important;
+    width: 88px !important;
+    min-height: 104px !important;
+    padding: 6px 3px !important;
   }
   #start-screen .skin-preview {
-    width: clamp(28px, 4.5vh, 34px);
-    height: clamp(28px, 4.5vh, 34px);
+    width: 32px !important;
+    height: 32px !important;
   }
   #start-screen .skin-name {
-    font-size: clamp(0.5rem, 1.1vh, 0.62rem);
+    font-size: 0.58rem !important;
   }
   #start-screen .skin-req {
-    font-size: clamp(0.4rem, 0.8vh, 0.52rem);
+    font-size: 0.48rem !important;
+    padding: 2px 4px !important;
   }
   #start-screen .fruit-btn {
-    width: clamp(80px, 24%, 110px);
-    height: clamp(80px, 24%, 110px);
-    padding: 6px;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    width: clamp(68px, 24%, 86px) !important;
+    height: clamp(68px, 24%, 86px) !important;
   }
   #start-screen .fruit-btn--play {
-    width: 46%;
-    height: 46%;
-    border-width: 6px;
+    width: 46% !important;
+    height: 46% !important;
   }
   #start-screen .fruit-btn .fruit-icon {
-    font-size: clamp(1.1rem, 4vh, 2rem);
-    line-height: 1;
-    margin-bottom: 2px;
+    font-size: clamp(1rem, 3.2vh, 1.5rem) !important;
   }
   #start-screen .fruit-btn--play .fruit-icon {
-    font-size: clamp(2rem, 8vh, 3.5rem);
+    font-size: clamp(1.8rem, 6vh, 2.4rem) !important;
   }
   #start-screen .fruit-btn--play .fruit-label {
-    font-size: clamp(0.85rem, 3vh, 1.4rem);
-    line-height: 1.0 !important;
-    margin: 0 !important;
-    padding: 0 4px !important;
-    word-break: break-word;
-    text-align: center;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    padding: 0 4px;
+    font-size: clamp(0.75rem, 2.2vh, 0.95rem) !important;
   }
   #start-screen .fruit-btn .fruit-label {
-    font-size: 0.65rem !important;
-    line-height: 1.0 !important;
-    margin: 0 !important;
-    padding: 0 4px !important;
-    word-break: break-word;
-    text-align: center;
-    word-wrap: break-word;
-    white-space: normal;
-    max-width: 100%;
-    padding: 0 4px;
-    pointer-events: none;
-    overflow: hidden;
+    font-size: clamp(0.5rem, 1.2vh, 0.62rem) !important;
   }
 }
 

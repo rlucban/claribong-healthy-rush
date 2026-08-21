@@ -641,15 +641,27 @@ class WebMenuAudio {
     this.isPlaying = false;
     this.timer = null;
     this.masterGain = null;
-    // Upbeat 8-bit style melody: C4-E4-G4-C5-E5-G5-C5 (arpeggiated major chord)
-    this.notes = [
-      261.63, 329.63, 392.00, 523.25, // C4-E4-G4-C5
-      392.00, 523.25, 659.25, 523.25, // G4-C5-E5-C5
-      392.00, 329.63, 261.63, 329.63  // G4-E4-C4-E4
+    
+    // Catchy upbeat tropical arcade melody in C Major (16 beats)
+    this.melody = [
+      523.25, 659.25, 783.99, 880.00,  // C5 - E5 - G5 - A5
+      783.99, 659.25, 523.25, 587.33,  // G5 - E5 - C5 - D5
+      659.25, 783.99, 880.00, 1046.50, // E5 - G5 - A5 - C6
+      987.77, 783.99, 880.00, 783.99   // B5 - G5 - A5 - G5
     ];
+    // Warm bouncy bassline: C3, C3, F3, F3, G3, G3, C3, G3
+    this.bass = [
+      130.81, 130.81, 174.61, 174.61,
+      196.00, 196.00, 130.81, 196.00,
+      130.81, 130.81, 174.61, 174.61,
+      196.00, 246.94, 261.63, 196.00
+    ];
+    
     this.step = 0;
-    this.intervalMs = 280; // Slightly faster for more energy
-    this.muted = false;
+    this.stepTimeMs = 240; // ~125 BPM upbeat tempo
+    this.muted = localStorage.getItem('fr_music_enabled') === '0';
+    const storedVol = parseFloat(localStorage.getItem('fr_volume') || '1');
+    this.volume = isNaN(storedVol) ? 1 : storedVol;
   }
 
   init() {
@@ -658,54 +670,81 @@ class WebMenuAudio {
       if (!AudioContextClass) return;
       this.ctx = new AudioContextClass();
       this.masterGain = this.ctx.createGain();
-      this.masterGain.gain.setValueAtTime(0.5, this.ctx.currentTime); // Boosted master volume
+      const gainVal = this.muted ? 0 : this.volume * 0.45;
+      this.masterGain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
       this.masterGain.connect(this.ctx.destination);
     }
     if (this.ctx.state === 'suspended') {
-      this.ctx.resume();
+      this.ctx.resume().catch(() => {});
     }
   }
 
   playMenuBGM() {
     this.init();
+    if (this.ctx && this.ctx.state === 'suspended') {
+      this.ctx.resume().catch(() => {});
+    }
     if (this.isPlaying) return;
     this.isPlaying = true;
     this.step = 0;
 
-    const playNote = () => {
+    const tick = () => {
       if (!this.isPlaying || !this.ctx) return;
       
-      // Dual oscillator: Sine (warmth) + Triangle (bite) for 8-bit richness
-      const osc1 = this.ctx.createOscillator();
-      const osc2 = this.ctx.createOscillator();
-      const gain = this.ctx.createGain();
-      
-      osc1.type = 'sine';
-      osc2.type = 'triangle';
-      osc2.detune.value = 2; // Slight detune for chorus effect
-      
-      const freq = this.notes[this.step % this.notes.length];
-      osc1.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      osc2.frequency.setValueAtTime(freq, this.ctx.currentTime);
-      
-      // Boosted note gain for louder, punchier sound
-      gain.gain.setValueAtTime(0.35, this.ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.35);
-      
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(this.masterGain);
-      
-      osc1.start();
-      osc2.start();
-      osc1.stop(this.ctx.currentTime + 0.4);
-      osc2.stop(this.ctx.currentTime + 0.4);
-      
+      const now = this.ctx.currentTime;
+      const stepIdx = this.step % this.melody.length;
+      const freq = this.melody[stepIdx];
+      const bassFreq = this.bass[stepIdx];
+
+      // 1. Lead Melody Note (Dual oscillator for sparkling 8-bit sound)
+      if (freq && !this.muted) {
+        const osc1 = this.ctx.createOscillator();
+        const osc2 = this.ctx.createOscillator();
+        const leadGain = this.ctx.createGain();
+
+        osc1.type = 'triangle';
+        osc2.type = 'sine';
+        osc2.detune.setValueAtTime(4, now);
+
+        osc1.frequency.setValueAtTime(freq, now);
+        osc2.frequency.setValueAtTime(freq, now);
+
+        leadGain.gain.setValueAtTime(0.28, now);
+        leadGain.gain.exponentialRampToValueAtTime(0.001, now + 0.22);
+
+        osc1.connect(leadGain);
+        osc2.connect(leadGain);
+        leadGain.connect(this.masterGain);
+
+        osc1.start(now);
+        osc2.start(now);
+        osc1.stop(now + 0.24);
+        osc2.stop(now + 0.24);
+      }
+
+      // 2. Warm Bass Note (every beat)
+      if (bassFreq && !this.muted) {
+        const bassOsc = this.ctx.createOscillator();
+        const bassGain = this.ctx.createGain();
+
+        bassOsc.type = 'triangle';
+        bassOsc.frequency.setValueAtTime(bassFreq, now);
+
+        bassGain.gain.setValueAtTime(0.32, now);
+        bassGain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+
+        bassOsc.connect(bassGain);
+        bassGain.connect(this.masterGain);
+
+        bassOsc.start(now);
+        bassOsc.stop(now + 0.38);
+      }
+
       this.step++;
-      this.timer = setTimeout(playNote, this.intervalMs);
+      this.timer = setTimeout(tick, this.stepTimeMs);
     };
 
-    playNote();
+    tick();
   }
 
   stopBGM() {
@@ -717,18 +756,20 @@ class WebMenuAudio {
   }
 
   setVolume(v) {
+    this.volume = Math.max(0, Math.min(1, v));
     if (this.masterGain && this.ctx) {
-      this.masterGain.gain.setValueAtTime(Math.max(0, Math.min(1, v)) * 0.5, this.ctx.currentTime);
+      const gainVal = this.muted ? 0 : this.volume * 0.45;
+      this.masterGain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
     }
   }
 
   toggleMute() {
+    this.muted = !this.muted;
     if (this.masterGain && this.ctx) {
-      this.muted = !this.muted;
-      this.masterGain.gain.setValueAtTime(this.muted ? 0 : 0.5, this.ctx.currentTime);
-      return this.muted;
+      const gainVal = this.muted ? 0 : this.volume * 0.45;
+      this.masterGain.gain.setValueAtTime(gainVal, this.ctx.currentTime);
     }
-    return false;
+    return this.muted;
   }
 }
 
@@ -737,3 +778,4 @@ window.menuAudio = menuAudio; // Global access for menu toggle button
 
 export const audio = new AudioEngine();
 window.gameAudio = audio; // Expose globally for dev/testing console access
+

@@ -440,6 +440,39 @@ this.updateHighScoreDisplay();
         document.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
         window.addEventListener(evt, unlockAudioOnInteraction, { once: true, passive: true });
       });
+
+      // FORCE AUDIO UNLOCK ON MOBILE TAP — aggressive unlock on first touch/pointer
+      // Ensures Web Audio Context is resumed and menu BGM plays immediately
+      const forceUnlockAudio = () => {
+        // Resume both audio contexts
+        if (menuAudio.ctx && menuAudio.ctx.state === 'suspended') {
+          menuAudio.ctx.resume();
+        }
+        if (audio.ctx && audio.ctx.state === 'suspended') {
+          audio.ctx.resume();
+        }
+        // Unlock Speech Synthesis (TTS)
+        if ('speechSynthesis' in window) {
+          const silentUtterance = new SpeechSynthesisUtterance('');
+          window.speechSynthesis.speak(silentUtterance);
+          window.speechSynthesis.getVoices();
+        }
+        // Start menu BGM immediately
+        menuAudio.playMenuBGM();
+        
+        // Clean up force unlock listeners
+        window.removeEventListener('touchstart', forceUnlockAudio);
+        window.removeEventListener('pointerdown', forceUnlockAudio);
+        document.removeEventListener('touchstart', forceUnlockAudio);
+        document.removeEventListener('pointerdown', forceUnlockAudio);
+        console.log("Mobile audio force-unlocked and BGM started");
+      };
+      
+      // Attach force unlock to window and document for earliest possible trigger
+      window.addEventListener('touchstart', forceUnlockAudio, { once: true, passive: true });
+      window.addEventListener('pointerdown', forceUnlockAudio, { once: true, passive: true });
+      document.addEventListener('touchstart', forceUnlockAudio, { once: true, passive: true });
+      document.addEventListener('pointerdown', forceUnlockAudio, { once: true, passive: true });
     
     // Check persistent unlocks against stored stats (high score / level)
     // before rendering the skin grid so already-earned skins display unlocked.
@@ -631,17 +664,24 @@ this.updateHighScoreDisplay();
       card.className = `skin-card${isEquipped ? ' active' : ''}${!isUnlocked ? ' locked' : ''}`;
       card.dataset.skinId = skin.id;
 
+      // Clean, concise unlock requirement text for mobile cards
+      let reqText = 'Default';
+      if (!isUnlocked) {
+        reqText = skin.requirementLabel
+          .replace(' to Unlock', '')
+          .replace('Score 10,000 or Level 10', 'Score 10k / Lvl 10');
+      } else {
+        reqText = isEquipped ? 'EQUIPPED' : 'EQUIP';
+      }
+
       card.innerHTML = `
         <div class="skin-preview" style="background: ${skin.color}; ${isEquipped ? `box-shadow: 0 0 12px ${skin.color};` : ''}">
           ${!isUnlocked ? '<span class="lock-icon" aria-hidden="true">🔒</span>' : ''}
         </div>
         <span class="skin-name">${skin.name}</span>
-        <span class="skin-req">
-          ${isUnlocked
-            ? (isEquipped ? 'EQUIPPED' : 'EQUIP')
-            : skin.requirementLabel}
+        <span class="skin-req ${isEquipped ? 'equipped' : (!isUnlocked ? 'locked' : 'unlocked')}">
+          ${reqText}
         </span>
-        ${isEquipped ? '<span class="equipped-badge">ON</span>' : ''}
       `;
 
       skinGrid.appendChild(card);
@@ -1618,8 +1658,7 @@ this.updateHighScoreDisplay();
     if (this.dom.pauseScreen) this.dom.pauseScreen.classList.remove('active');
     if (this.dom.pauseBtn) this.dom.pauseBtn.style.display = 'none';
     audio.setGameState('menu');
-    menuAudio.stopBGM(); // Ensure menu music is stopped — menu is silent
-    audio.suspend(); // Suspend audio context to silence all SFX/music
+    menuAudio.playMenuBGM(); // Resume cheerful menu BGM
     this.resetGameValues();
     this.showMenuScreen();
   }
@@ -1639,6 +1678,7 @@ this.updateHighScoreDisplay();
     if (this.dom.charSelectScreen) this.dom.charSelectScreen.classList.remove('active');
     if (this.dom.settingsScreen) this.dom.settingsScreen.classList.remove('active');
     this.state = 'menu';
+    menuAudio.playMenuBGM();
   }
 
   showCharSelect() {
@@ -1681,6 +1721,7 @@ this.updateHighScoreDisplay();
     if (this.dom.triviaScreen) this.dom.triviaScreen.classList.remove('active');
     this.dom.startScreen.classList.add('active');
     this.state = 'menu';
+    menuAudio.playMenuBGM();
   }
 
   // ---- FRUIT TRIVIA BOOK ----
