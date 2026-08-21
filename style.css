@@ -3307,6 +3307,15 @@ body:not(.playing) #pause-btn {
     font-weight: 700 !important;
   }
 
+  /* ---- Brighten C'LARIBONG Title on small mobile screens (≤480px) ---- */
+  @media (max-width: 480px) {
+    #start-screen h1.game-title {
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.4) !important;
+      filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.3)) !important;
+      opacity: 1 !important;
+    }
+  }
+
   /* ---- Radial menu: MOBILE LARGER SIZE (320px cluster, 130px play, 76px satellites) ---- */
   #start-screen .arcade-cluster {
     position: relative !important;
