@@ -1119,8 +1119,8 @@ h1.game-title {
   text-transform: uppercase;
   letter-spacing: 0.02em;
   line-height: 1.1;
-  /* Warm fruit rainbow gradient */
-  background: linear-gradient(135deg, #e8871a 0%, #d4200a 30%, #4a8c3f 65%, #2980b9 100%);
+  /* Warm fruit rainbow gradient matching reference screenshot */
+  background: linear-gradient(90deg, #f56500 0%, #e51c00 18%, #ed8936 34%, #c09516 48%, #38a169 66%, #319795 84%, #2b72c7 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3277,8 +3277,8 @@ body:not(.playing) #pause-btn {
     font-size: clamp(1.5rem, 6.5vw, 2.2rem) !important;
     margin: 0 !important;
     line-height: 1.15 !important;
-    /* Warm fruit rainbow gradient (matches desktop) */
-    background: linear-gradient(135deg, #e8871a 0%, #d4200a 30%, #4a8c3f 65%, #2980b9 100%) !important;
+    /* Warm fruit rainbow gradient (matches reference screenshot) */
+    background: linear-gradient(90deg, #f56500 0%, #e51c00 18%, #ed8936 34%, #c09516 48%, #38a169 66%, #319795 84%, #2b72c7 100%) !important;
     -webkit-background-clip: text !important;
     background-clip: text !important;
     -webkit-text-fill-color: transparent !important;
